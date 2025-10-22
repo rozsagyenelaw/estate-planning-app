@@ -25,13 +25,57 @@ To the extent practicable, for the purpose of transferring property to the trust
 
 For all purposes concerning the identity of the trust or any property titled in or payable to the trust, any description referring to the trust will be effective if it reasonably identifies the trust and indicates that the trust property is held in a fiduciary capacity.
 
-Section 1.02      ${formData.isRestatement ? 'Restatement of Trust' : 'Creation of Trust'}
+Section 1.02      Reliance by Third Parties
 
-${formData.isRestatement ? `This document represents the First Restatement of the original trust created on ${formData.originalTrustDate}. We, ${formData.client.firstName} ${formData.client.lastName} and ${formData.spouse.firstName} ${formData.spouse.lastName}, as Grantors, hereby completely restate and supersede the original trust document in its entirety. All property and assets previously held in the original trust shall continue to be held in this restated trust under the terms and conditions set forth herein.` : `We, ${formData.client.firstName} ${formData.client.lastName} and ${formData.spouse.firstName} ${formData.spouse.lastName}, as Grantors, hereby declare that we have set aside and are holding, and will hold, all property described in Schedule A attached hereto, and any other property that may be added to this trust, in trust according to the terms and conditions set forth in this trust agreement.`}
+Third parties may require documentation to verify the existence of this trust, or particular provisions of it, including the name of the Trustee or the powers held by the Trustee. To protect the confidentiality of the trust, California Probate Code Section 18100.5, Chapter 530, Statutes of 1993 provides that the Trustee may use a certification of trust that identifies the Trustee and sets forth the authority of the Trustee to transact business on behalf of the trust instead of providing a copy of this instrument to protect the confidentiality of the trust. The certification may include pertinent pages from this instrument, including title or signature pages.
 
-Section 1.03      Grantor Trust Status and Community Property
+A third party may rely upon a certification of trust that is signed by the Trustee with respect to the representations contained in it. A third party relying upon a certification of trust will be exonerated from any liability for actions the third party takes or does not take in reliance upon the representations contained in the certification of trust.
 
-By reserving broad rights and powers, we intend to qualify this trust as a Grantor Trust under Internal Revenue Code Sections 671 to 677. For federal income tax purposes, each of us will be treated as the owner of one-half of all community property held in the trust and as the owner of our respective separate property.
+A third party dealing with the Trustee will not be required to inquire into this trust's terms or the authority of the Trustee, or to see to the application of funds or other property received by the Trustee. The Trustee's receipt of any money or property paid, transferred, or delivered to the Trustee will be a sufficient discharge to the third party from all liability in connection with its application. A written statement by the Trustee is conclusive evidence of the Trustee's authority. Third parties are not liable for any loss resulting from their reliance on a written statement by the Trustee asserting the Trustee's authority or seeking to effect a transfer of property to or from the trust.
+
+California Probate Code Section 18100.5(h) provides that a person making a demand for the trust document in addition to the certification of trust, may be liable for damages, including attorney fees, as a result of the refusal to accept the certification of trust.
+
+Section 1.03      Transferring Property to the Trust
+
+Any person or entity may transfer any property to the trust in any manner authorized by law.
+
+        (a)      Initial Funding of the Trust
+
+By executing this instrument, we transfer to the Trustee the properties listed in the Schedule of Assets.
+
+        (b)      Acceptance by the Trustee
+
+By executing this instrument, the Trustee accepts and agrees to hold the properties listed in the Schedule of Assets as trust property. All property transferred to the trust after the date of this trust must be acceptable to the Trustee. The Trustee may refuse to accept any property. The Trustee shall hold, administer, and dispose of all accepted trust property for our benefit and for the benefit of our beneficiaries, in accordance with the terms of this trust.
+
+Section 1.04      Powers Reserved by Us as Grantors
+
+As Grantors, we retain the powers set forth in this Section in addition to any powers that we reserve in other provisions of this instrument.
+
+        (a)      Action on Behalf of the Trust
+
+Whenever both of us are serving as Trustees, either or both of us may act for and conduct business on behalf of the trust without the consent of the other.
+
+        (b)      Amendment, Restatement, or Revocation
+
+We may jointly amend, restate, or revoke this instrument, in whole or in part, for any purpose. Any amendment, restatement, or revocation must be made in writing and delivered to the then-serving Trustee.
+
+        (c)      Addition or Removal of Trust Property
+
+We may add property to the trust and may remove any property from the trust at any time. If either or both of us is incapacitated, the non-incapacitated Grantor may add or remove property.
+
+        (d)      Control of Income and Principal Distributions
+
+We retain the right to control the distribution of income and principal from the trust. We may direct the Trustee to distribute as much of the net income and principal of the trust property as we consider advisable to ourselves or to other persons or entities. The Trustee may distribute the net income and principal to us or for our unrestricted use and benefit, even to the exhaustion of all trust property. Any undistributed net income is to be added to the principal of the trust.
+
+        (e)      Approval of Investment Decisions
+
+We reserve the absolute right to review and change the Trustee's investment decisions. But the Trustee is not required to seek our approval before making investment decisions.
+
+Section 1.05      Grantor Trust Status and Community Property
+
+By reserving the broad rights and powers set forth in Section 1.04 of this Article, we intend to qualify the trust as a Grantor Trust under Internal Revenue Code Sections 671 to 677. This means that, for federal income tax purposes, each of us will be treated as the owner of one-half of all community property held in the trust and as the owner of our respective separate property.
+
+During any period that the trust is a Grantor Trust, the Taxpayer Identification Number of the trust will be one of our Social Security numbers, in accordance with Treasury Regulation Section 301.6109-1(a)(2).
 
 Any community property transferred to the trust, including the property's income and proceeds from sale or exchange, will retain its character as community property during our lives, to the same extent as if it had not been transferred to the trust.
 
@@ -49,70 +93,194 @@ All references in this document to our children are references to these children
 Article Three
 Trustee Succession Provisions
 
-Section 3.01      Initial Trustees
+Section 3.01      Resignation of a Trustee
 
-${formData.client.firstName} ${formData.client.lastName} and ${formData.spouse.firstName} ${formData.spouse.lastName} are the initial Trustees of this trust. While we are both alive and serving as Trustees, either or both of us may act for and conduct business on behalf of the trust without the consent of the other.
+A Trustee may resign by giving written notice to either of us. If we are both incapacitated or deceased, a resigning Trustee must give written notice to the trust's Income Beneficiaries and to any other then-serving Trustee.
 
-Section 3.02      Trustee Succession While Both Grantors Are Alive
+Upon the resignation of a Trustee, the resigning Trustee may appoint the resigning Trustee's successor as Trustee in the manner set forth in Section 2.04, concurrent with the written notice described above. If the resigning Trustee fails to make the appointment, the other provisions of this Article regarding Trustee succession upon incapacity or death will govern, and the next named successors to the resigning Trustee will serve in the order listed. Likewise, if no named successors to the resigning Trustees are available to serve and the resigning Trustee fails to designate a successor, the other provisions of this Article regarding the filling of a vacant Trustee office will govern.
 
-By joint agreement, we may remove any Trustee at any time, with or without cause. If one of us is incapacitated, the non-incapacitated Grantor may serve as sole Trustee.
+Section 3.02      Trustee Succession while Both of Us Are Alive
 
-If neither of us is able to serve as Trustee, then we name the following to serve as successor Trustees:
+While we are both alive, this Section governs the removal and replacement of the Trustees.
 
-${formData.successorTrustees && formData.successorTrustees.length > 0 ? formData.successorTrustees.map((trustee, i) => `     ${i + 1}. ${trustee.name}, residing at ${trustee.address}, Phone: ${trustee.phone}${trustee.jointly ? ', to serve jointly with the next named trustee' : ''}`).join('\n') : '     [No successor trustees named]'}
+        (a)      Removal and Replacement by Both of Us
 
-Each successor Trustee named in this Section will serve in the order named. If a named Trustee is unable or unwilling to serve, the next named Trustee will serve.
+By joint agreement, we may remove any Trustee at any time, with or without cause. If a Trustee is removed, resigns, or cannot continue to serve for any reason, either or both of us may serve as Trustee, we may appoint a Trustee to serve with either or both of us, or we may appoint a successor Trustee.
 
-Section 3.03      Trustee Succession After Death of First Grantor
+        (b)      Removal and Replacement by One of Us
 
-Upon the death of the first of us to die, the surviving Grantor may serve as sole Trustee of all trusts created under this instrument.
+If one of us is incapacitated, the non-incapacitated Grantor may remove any Trustee at any time, with or without cause. If a Trustee is removed, resigns, or cannot continue to serve for any reason, the non-incapacitated Grantor may serve as sole Trustee, appoint a Trustee to serve with the non-incapacitated Grantor, or appoint a successor Trustee.
 
-If the surviving Grantor is unable or unwilling to serve, then the successor Trustees named in Section 3.02 shall serve in the order listed.
+        (c)      Successor Trustee during Incapacity of a Grantor
 
-Section 3.04      Resignation of a Trustee
+During the incapacity of a Grantor, the other Grantor may serve as sole Trustee.
 
-A Trustee may resign by giving written notice to both of us. If one or both of us is incapacitated or deceased, a resigning Trustee must give written notice to the trust's Income Beneficiaries and to any other then-serving Trustee.
+If the other Grantor is unable or unwilling to serve for any reason, then we name ${formData.successorTrustees && formData.successorTrustees.length > 0 ? formData.successorTrustees.map((trustee, i) => `${trustee.name}${trustee.jointly && i < formData.successorTrustees.length - 1 ? ' and ' : i < formData.successorTrustees.length - 1 ? ', ' : ''}`).join('') : '[No successor trustees named]'}${formData.successorTrustees && formData.successorTrustees.some(t => t.jointly) ? ', jointly, or the survivor of them,' : ''} to serve as successor Trustee.
 
-Section 3.05      Removal of a Trustee
+        (d)      Removal of Trustee during Incapacity of Both of Us
 
-While both of us are alive and not incapacitated, we may jointly remove any Trustee, including any successor Trustee, with or without cause, by giving written notice to the Trustee.
+During any time both of us are incapacitated, a Trustee may be removed only for cause; an interested party must petition a court of competent jurisdiction and receive approval from the court for the Trustee removal to be effective.
 
-After the death or incapacity of either of us, the surviving non-incapacitated Grantor may remove any Trustee, with or without cause, by giving written notice to the Trustee.
+        (e)      Designation Default
 
-Section 3.06      Appointment of a Successor Trustee
+If the office of Trustee of a trust created under this instrument is vacant and no designated Trustee is able and willing to act during any time that one of us is incapacitated, the other Grantor may appoint a successor Trustee.
 
-If there is no Trustee able and willing to serve, the last acting Trustee or a majority of the Income Beneficiaries may appoint a successor Trustee. Any appointment must be in writing and delivered to the appointed Trustee.
+The Legal Representative of either of us may petition a court of competent jurisdiction to appoint a successor Trustee to fill any vacancy lasting longer than 30 days. The petitioned court acquires jurisdiction over the trust only to the extent necessary to make the appointment. The trust is not subject to the court's continuing jurisdiction.
 
-Section 3.07      Co-Trustees
+If a Trustee vacancy arises due to resignation, the previous provisions apply only if the resigning Trustee fails to appoint a successor Trustee under Section 3.01.
 
-If more than one Trustee is serving at the same time, any or all of the Co-Trustees may act for the trust. Third parties may rely on the authority of any Co-Trustee acting alone without inquiry concerning the consent of the other Co-Trustees.
+If a Trustee vacancy arises due to resignation, the previous provisions apply only if the resigning Trustee fails to appoint a successor Trustee in the manner more fully set forth in Section 3.01.
 
-Section 3.08      Trustee Acceptance
+All appointments, removals, and revocations must be by signed written instrument.
 
-By acting as Trustee, a successor Trustee accepts the trust, confirms that the Trustee has received a copy of this trust instrument, and agrees to be bound by its terms.
+Section 3.03      Trustee Succession after the Death of Either or Both of Us
+
+After the death of either or both of us, this Section governs the removal and replacement of the Trustees.
+
+        (a)      Upon the Death of a Grantor
+
+Upon the death of a Grantor, the other Grantor may serve as sole Trustee of all trusts created under this instrument.
+
+If the other Grantor is unable or unwilling to serve for any reason, then we name ${formData.successorTrustees && formData.successorTrustees.length > 0 ? formData.successorTrustees.map((trustee, i) => `${trustee.name}${trustee.jointly && i < formData.successorTrustees.length - 1 ? ' and ' : i < formData.successorTrustees.length - 1 ? ', ' : ''}`).join('') : '[No successor trustees named]'}${formData.successorTrustees && formData.successorTrustees.some(t => t.jointly) ? ', jointly, or the survivor of them,' : ''} to serve as successor Trustee.
+
+        (b)      Appointment of Successor Trustees by the Surviving Grantor
+
+After the death of one of us, the surviving Grantor may appoint the current or successor Trustees for any trust created under this instrument. The surviving Grantor may amend or revoke this appointment. Except for the Trustee of the Survivor's Trust, any Trustee appointed by the surviving Grantor to a trust of which the surviving Grantor is a beneficiary must be an individual or corporate fiduciary that is not related or subordinate to the surviving Grantor within the meaning of Internal Revenue Code Section 672(c).
+
+        (c)      Removal of a Trustee
+
+After the death of one of us, the surviving Grantor may remove any Trustee, with or without cause. If the surviving Grantor is incapacitated, a Trustee may be removed only for cause, and only if a court of competent jurisdiction approves the removal upon the petition of an interested party.
+
+After both of our deaths, a Trustee of any trust created under this instrument may be removed by the unanimous decision of all the trust's Income Beneficiaries, with or without cause.
+
+A Trustee may be removed under this Subsection only if the person or persons having the right of removal appoints an individual or corporate fiduciary by the effective removal date and this appointee simultaneously commences service as Trustee. The Trustee appointed to serve as successor Trustee may not be related or subordinate to any person having the right of removal within the meaning of Internal Revenue Code Section 672(c).
+
+The right to remove a Trustee under this Subsection is not to be interpreted to grant the person holding that right any of the powers of that Trustee.
+
+A minor or incapacitated beneficiary's parent or Legal Representative may act on his or her behalf.
+
+        (d)      Default of Designation
+
+If the office of Trustee of a trust created under this instrument is vacant and no designated Trustee is able and willing to act, the surviving Grantor may appoint an individual or corporate fiduciary as successor Trustee.
+
+If the surviving Grantor is unable or unwilling to name a successor Trustee or if both of us are deceased, the trust's Primary Beneficiary may appoint an individual or corporate fiduciary as successor Trustee.
+
+Any beneficiary may petition a court of competent jurisdiction to appoint a successor Trustee to fill any vacancy lasting longer than 30 days. The petition may subject the trust to the jurisdiction of the court only to the extent necessary to make the appointment and may not subject the trust to the continuing jurisdiction of the court.
+
+A minor or incapacitated beneficiary's parent or Legal Representative may act on his or her behalf.
+
+If a Trustee vacancy arises due to resignation, the previous provisions apply only if the resigning Trustee fails to appoint a successor Trustee in the manner more fully set forth in Section 3.01.
+
+Section 3.04      Notice of Removal and Appointment
+
+Notice of removal must be in writing and delivered to the Trustee being removed and to any other then-serving Trustees. The removal becomes effective in accordance with its provisions.
+
+Notice of appointment must be in writing and delivered to the successor Trustee and to any other then-serving Trustees. The appointment becomes effective at the time of acceptance by the successor Trustee. A copy of the notice may be attached to this instrument.
+
+Section 3.05      Appointment of a Co-Trustee
+
+Any individual Trustee may appoint an individual or a corporate fiduciary as a Co-Trustee. This Co-Trustee serves only as long as the appointing Trustee serves, or as long as the last to serve if more than one Trustee appointed the Co-Trustee. This Co-Trustee will not become a successor Trustee upon the death, resignation, or incapacity of the appointing Trustee, unless appointed under the terms of this instrument. Although this Co-Trustee may exercise all the powers of the appointing Trustee, the combined powers of this Co-Trustee and the appointing Trustee may not exceed the powers of the appointing Trustee alone. The Trustee appointing a Co-Trustee may revoke the appointment at any time, with or without cause.
+
+Section 3.06      Corporate Fiduciaries
+
+Any corporate fiduciary serving under this instrument as a Trustee must be a bank, trust company, or public charity that is qualified to act as a fiduciary under applicable federal and state law and that is not related or subordinate to any beneficiary within the meaning of Internal Revenue Code Section 672(c).
+
+Section 3.07      Incapacity of a Trustee
+
+If any individual Trustee becomes incapacitated, the incapacitated Trustee need not resign as Trustee. For Trustees other than us, a written declaration of incapacity by the Co-Trustee or, if none, by the party designated to succeed the incapacitated Trustee, made in good faith and supported by a written opinion of incapacity by a physician who has examined the incapacitated Trustee, will terminate the trusteeship.
+
+Section 3.08      Appointment of Independent Special Trustee
+
+If for any reason the Trustee of any trust created under this instrument is unwilling or unable to act with respect to any trust property or any provision of this instrument, the Trustee shall appoint, in writing, a corporate fiduciary or an individual to serve as an Independent Special Trustee as to this property or with respect to this provision. The Independent Special Trustee appointed may not be related or subordinate to any trust beneficiary within the meaning of Internal Revenue Code Section 672(c).
+
+An Independent Special Trustee will exercise all fiduciary powers granted by this trust unless expressly limited elsewhere in this instrument or by the Trustee in the instrument appointing the Independent Special Trustee. An Independent Special Trustee may resign at any time by delivering written notice of resignation to the Trustee. Notice of resignation will be effective in accordance with the terms of the notice.
+
+Section 3.09      Rights of Successor Trustees
+
+Each successor Trustee serving under this instrument, whether individual or corporate, will have all of the title, rights, powers and privileges granted to the initial Trustees named under this instrument as to the trust of which he or she is named Trustee. In addition, each successor Trustee will be subject to all of the restrictions imposed upon, as well as all obligations and duties, both discretionary and ministerial, given to the original Trustees.
 
 Article Four
-Administration During Incapacity
+Administration of the Trust During a Grantor's Incapacity
 
-Section 4.01      Trust Distributions During a Grantor's Incapacity
+Section 4.01      Trust Distributions during a Grantor's Incapacity
 
-During any period when a Grantor is incapacitated, the Trustee shall regularly and conscientiously make appropriate distributions of income and principal for the benefit of the incapacitated Grantor under the circumstances existing at the time each distribution is made.
+For purposes of this Article, incapacitated Grantor's trust property refers to the net income and principal of the incapacitated Grantor's separate property and the net income and principal of the incapacitated Grantor's share of the community property, during any period when a Grantor is incapacitated.
 
-The Trustee may also distribute as much of the net income and principal of the incapacitated Grantor's trust as the Trustee considers necessary for the health, education, maintenance and support in reasonable comfort of the other Grantor.
+The Trustee shall administer the incapacitated Grantor's trust property as follows.
 
-When making distributions, the Trustee shall give equal consideration to the incapacitated Grantor's needs and the needs of the other Grantor without any priority between us.
+        (a)      Distributions for the Incapacitated Grantor's Benefit
 
-        (a)      Determination of Incapacity
+The Trustee shall regularly and conscientiously make appropriate distributions of income and principal for the benefit of the incapacitated Grantor under the circumstances existing at the time each distribution is made.
 
-A Grantor shall be considered incapacitated if two (2) licensed physicians examine the Grantor and certify in writing that the Grantor is unable to manage financial affairs by reason of physical or mental impairment. The written certification shall be made a part of this trust. In addition, a Grantor shall be considered incapacitated if a court of competent jurisdiction determines that he or she is unable to manage his or her property and financial affairs.
+Appropriate distributions under this Subsection include the payment of any of the incapacitated Grantor's enforceable legal obligations and premiums for insurance policies owned by the incapacitated Grantor or by the trust, including life, medical, disability, property and casualty, errors and omissions, and longterm health care policies.
 
-        (b)      Restoration to Capacity
+The examples included in this Subsection are for purposes of illustration only and are not intended to limit the authority of the Trustee to make any distribution for the incapacitated Grantor's benefit that the Trustee determines appropriate.
 
-If a Grantor has been determined to be incapacitated, and two (2) licensed physicians thereafter certify in writing that the Grantor is no longer incapacitated, the Grantor will be considered to have the capacity to manage his or her property and affairs. The Grantor may then resume acting as Trustee if he or she was serving as Trustee before becoming incapacitated, subject to the provisions in Article Three governing the return to service of a Trustee.
+        (b)      Manner of Making Distributions
 
-Section 4.02      Powers Reserved During Incapacity
+The Trustee may make distributions for the incapacitated Grantor's benefit in any one or more of the following ways:
 
-During any period when one Grantor is incapacitated and the other Grantor is not incapacitated, the non-incapacitated Grantor retains all rights and powers that we reserved while both of us were not incapacitated, including the right to amend or revoke this trust, in whole or in part.
+to the incapacitated Grantor, but only to the extent he or she is able to manage these distributions;
+
+to other persons and entities for the incapacitated Grantor's use and benefit;
+
+to an agent or attorney in fact authorized to act for the incapacitated Grantor under a legally valid durable power of attorney executed by the incapacitated Grantor before his or her incapacity; and
+
+to the incapacitated Grantor's guardian or conservator who has assumed responsibility for the incapacitated Grantor under any court order, decree, or judgment issued by a court of competent jurisdiction.
+
+        (c)      Distributions for the Other Grantor's Benefit
+
+The Trustee may distribute as much of the net income and principal of the incapacitated Grantor's trust as the Trustee considers necessary for the health, education, maintenance and support in reasonable comfort of the other Grantor.
+
+        (d)      Guidance for the Trustee Regarding Distributions
+
+When making distributions under Subsections (a) and (c), the Trustee shall give equal consideration to the incapacitated Grantor's needs and the needs of the other Grantor without any priority between us.
+
+The Trustee may make unequal distributions, distributions to one of us but not the other, or no distributions.
+
+A distribution made to the other Grantor under this Section will not be considered an advancement, and will not be charged against any trust share of the other Grantor that may be distributable to the other Grantor for the other Grantor's benefit under any other provision of this trust.
+
+        (e)      Power to Make Gifts
+
+The Trustee is authorized to make gifts from the incapacitated Grantor's trust as follows.
+
+                 (1)      Continuation of Gifting Program
+
+The Trustee is authorized to honor pledges and to continue to make gifts to charitable organizations that the incapacitated Grantor regularly supported before his or her incapacity in the previously given amounts. The Trustee may continue any gifting program initiated by the incapacitated Grantor before his or her incapacity.
+
+                 (2)      Gifts to Trust Beneficiaries
+
+The Trustee may make gifts on the incapacitated Grantor's behalf, to or for the benefit of any remainder or contingent beneficiary named in this instrument for purposes the Trustee considers to be in the best interest of both the incapacitated Grantor and the beneficiary, including the minimization of income, estate, inheritance, or gift taxes. Any gifts the Trustee makes under this Subsection must be limited to the federal annual gift tax exclusion amount.
+
+                 (3)      Gifts for Tuition
+
+The Trustee may prepay the cost of tuition for any remainder or contingent beneficiary named in this trust. The Trustee may make these payments directly to the educational institution, or by establishing and contributing to a Qualified State Tuition Program established under Internal Revenue Code Section 529.
+
+                 (4)      Gifts for Medical Expenses
+
+The Trustee may pay medical expenses for any remainder or contingent beneficiary named in this trust as permitted under Internal Revenue Code Section 2503(e). The Trustee shall make these payments directly to the medical provider.
+
+                 (5)      Gift Splitting Authorized
+
+The Trustee is authorized to consent to the splitting of gifts under Internal Revenue Code Section 2513 or under similar provisions of any state or local gift tax laws.
+
+                 (6)      Gifts Limited to Ascertainable Standards
+
+An Interested Trustee may only make gifts that are necessary for the health, education, maintenance and support in reasonable comfort of the person to whom a gift is made. The Trustee is not required to consider other income and resources available to the recipient.
+
+                 (7)      Methods of Making Gifts
+
+The Trustee may make gifts of trust property under this Subsection outright, in trust, or in any other manner that the Trustee, in its sole and absolute discretion, considers appropriate.
+
+By way of example and without limiting the Trustee's powers under this Subsection, the Trustee is specifically authorized to make gifts by creating tenancy in common and joint tenancy interests, or by establishing irrevocable trusts (including charitable or noncharitable split interest trusts). The Trustee may make gifts of trust property by establishing and contributing trust property to corporations, family limited partnerships, limited liability partnerships, limited liability companies, or other similar entities, and by making gifts of interests in any of those entities.
+
+To accomplish the objectives described in this Subsection, the Trustee may establish and maintain financial accounts of all types and may execute, acknowledge, seal, and deliver deeds, assignments, agreements, authorizations, checks, and other instruments. The Trustee may prosecute, defend, submit to arbitration, or settle, propose, or accept a compromise with respect to a claim existing in favor of or against the incapacitated Grantor, based on or involving a gift transaction on the incapacitated Grantor's behalf. The Trustee may intervene in any related action or proceeding.
+
+The Trustee may perform any other act the Trustee considers necessary or desirable to complete a gift on the incapacitated Grantor's behalf in accordance with the provisions of this Subsection.
+
+                 (8)      Standard for Making Gifts
+
+We desire that in making gifts on the incapacitated Grantor's behalf, the Trustee consider the history of the incapacitated Grantor's gift making and our estate plan. To the extent reasonably possible, we direct the Trustee to avoid disrupting the dispositive provisions of our estate plan as established by us prior to the Grantor's incapacity.
 
 Article Five
 Administration Upon Death of a Grantor
