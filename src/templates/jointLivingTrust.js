@@ -604,28 +604,56 @@ If ${ben.name} dies before the establishment of ${pronoun} trust, the Trustee sh
 Article Eleven
 Remote Contingent Distribution
 
-If at any time no person or entity is qualified to receive final distribution of any part of our trust estate, this portion of our trust estate must be distributed one-half to those persons who would inherit it had ${formData.client.firstName} ${formData.client.lastName} then died intestate owning this property, and one-half to those persons who would inherit it had ${formData.spouse.firstName} ${formData.spouse.lastName} then died intestate owning this property, as determined under the laws of California then in effect.
+If at any time no person or entity is qualified to receive final distribution of any part of our trust estate, this portion of our trust estate must be distributed one-half to those persons who would inherit it had ${formData.client.firstName} ${formData.client.lastName} then died intestate owning this property, and one-half to those persons who would inherit it had ${formData.spouse.firstName} ${formData.spouse.lastName} then died intestate owning this property. This distribution will be as determined and proportioned under the laws of California then in effect.
 
 Article Twelve
-Distributions to Minors and Incapacitated Beneficiaries
+Distributions to Underage and Incapacitated Beneficiaries
 
-Section 12.01      Retention in Trust
+If the Trustee is authorized or directed under any provision of this trust to distribute net income or principal to a person who has not yet reached 18 years of age or who is incapacitated as defined in Section 16.07(g), the Trustee may make the distribution by any one or more of the methods described in Section 12.01. Alternatively, the Trustee may retain the trust property in a separate trust to be administered by the Trustee under Section 12.02.
 
-If the Trustee is authorized or directed to distribute property to a person who has not yet reached 21 years of age or who is incapacitated, the Trustee may retain and administer the property in a separate trust for that beneficiary's benefit.
+We request that before making a distribution to a beneficiary, the Trustee consider, to the extent reasonable, the ability the beneficiary has demonstrated in managing prior distributions of trust property.
 
-The Trustee shall distribute to the beneficiary as much of the net income and principal as the Trustee determines necessary for the beneficiary's health, education, maintenance, or support. Any undistributed net income will be accumulated and added to principal.
+Section 12.01      Methods of Distribution
 
-When the beneficiary reaches 21 years of age or is no longer incapacitated, the beneficiary may withdraw all or any portion of the accumulated net income and principal from the trust.
+The Trustee may distribute trust property for any beneficiary's benefit, subject to the provisions of this Article in any one or more of the following methods:
 
-Section 12.02      Testamentary Power of Appointment
+The Trustee may distribute trust property directly to the beneficiary.
 
-Each beneficiary whose trust is created under this Article has a testamentary general power to appoint the remaining trust property at the beneficiary's death. If not effectively appointed, the Trustee shall distribute the balance per stirpes to the beneficiary's descendants, or if none, to our descendants.
+The Trustee may distribute trust property to the beneficiary's guardian, conservator, parent, other family member, or any person who has assumed the responsibility of caring for the beneficiary.
 
-Section 12.03      Custodial Accounts
+The Trustee may distribute trust property to any person or entity, including the Trustee, as custodian for the beneficiary under the Uniform Transfers to Minors Act or similar statute.
 
-As an alternative to retaining property in trust under Section 12.01, the Trustee may distribute the property to a custodian for the minor beneficiary's benefit under the California Uniform Transfers to Minors Act or the corresponding law of any other state.
+The Trustee may distribute trust property to other persons and entities for the beneficiary's use and benefit.
 
-The custodian may be the Trustee or any other person. Distributions to a custodian discharge the Trustee from all further accountability for the distributed property.
+The Trustee may distribute trust property to an agent or attorney in fact authorized to act for the beneficiary under a valid durable power of attorney executed by the beneficiary before becoming incapacitated.
+
+Section 12.02      Retention in Trust
+
+The Trustee may retain and administer trust property in a separate trust for any beneficiary's benefit, subject to the provisions of this Article as follows.
+
+        (a)      Distribution of Net Income and Principal
+
+The Independent Trustee may distribute to the beneficiary as much of the net income and principal of any trust created under this Section as the Independent Trustee may determine advisable for any purpose. If there is no then-serving Independent Trustee, the Trustee shall distribute to the beneficiary as much of the net income and principal of the trust created under this Section as the Trustee determines is necessary or advisable for the beneficiary's health, education, maintenance, or support. Any undistributed net income will be accumulated and added to principal.
+
+        (b)      Right of Withdrawal
+
+When the beneficiary whose trust is created under this Section either reaches 21 years of age or is no longer incapacitated, the beneficiary may withdraw all or any portion of the accumulated net income and principal from the trust.
+
+        (c)      Distribution upon the Death of the Beneficiary
+
+Subject to the terms of the next paragraph, the beneficiary whose trust is created under this Section may appoint all or any portion of the principal and undistributed net income remaining in the beneficiary's trust at the beneficiary's death among one or more persons or entities, and the creditors of the beneficiary's estate. The beneficiary has the exclusive right to exercise this general power of appointment.
+
+The beneficiary may not exercise this power of appointment to appoint to the beneficiary, the beneficiary's estate, the beneficiary's creditors, or creditors of the beneficiary's estate from the limited share of the beneficiary's trust. For purposes of this power of appointment, the limited share of the beneficiary's trust is that portion of the beneficiary's trust that has an inclusion ratio for generation-skipping transfer tax purposes of zero or that without the exercise of the power of appointment, would not constitute a taxable generation-skipping transfer at the beneficiary's death. If the generation-skipping tax does not then apply, the limited share will be the beneficiary's entire trust.
+
+If any part of the beneficiary's trust is not effectively appointed, the Trustee shall distribute the remaining unappointed balance per stirpes to the beneficiary's descendants. If the beneficiary has no then-living descendants, the Trustee shall distribute the unappointed balance per stirpes to the then-living descendants of the beneficiary's nearest lineal ancestor who was a descendant of ours or, if there is no then-living descendant, per stirpes to our descendants.
+
+If we have no then-living descendants, the Trustee shall distribute the balance of the trust property as provided in Article Eleven.
+
+Section 12.03      Application of Article
+
+Any decision made by the Trustee under this Article is final, controlling, and binding upon all beneficiaries subject to the provisions of this Article.
+
+The provisions of this Article do not apply to distributions to either of us from any trust established under this trust.
 
 Article Thirteen
 Retirement Plans and Life Insurance Policies
