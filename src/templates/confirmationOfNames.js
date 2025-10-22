@@ -6,12 +6,15 @@ export const confirmationOfNamesTemplate = () => {
   <meta charset="UTF-8">
   <style>
     @page { size: letter; margin: 1in; }
-    body { font-family: 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.4; color: #000; }
+    body { font-family: 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.6; color: #000; }
     h1 { text-align: center; font-size: 14pt; font-weight: bold; margin: 20px 0; }
-    h2 { font-size: 12pt; font-weight: bold; margin: 15px 0 5px 0; }
-    p { margin: 5px 0; text-align: left; text-indent: 0; }
+    h2 { font-size: 11pt; font-weight: bold; margin: 20px 0 10px 0; }
+    p { margin: 8px 0; text-align: left; text-indent: 0; }
     .section { margin: 20px 0; }
-    .indent { margin-left: 0.5in; }
+    .indent { margin-left: 40px; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    th { text-align: left; padding: 8px 5px; border-bottom: 1px solid #000; font-weight: bold; }
+    td { padding: 8px 5px; }
   </style>
 </head>
 <body>

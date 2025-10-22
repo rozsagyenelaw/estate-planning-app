@@ -27,6 +27,9 @@ import { tableOfContentsTemplate } from '../templates/tableOfContents';
 import { introductionPageTemplate } from '../templates/introductionPage';
 import { overviewPageTemplate } from '../templates/overviewPage';
 import { revocableLivingTrustSectionPageTemplate } from '../templates/revocableLivingTrustSectionPage';
+import { nominationsPageTemplate } from '../templates/nominationsPage';
+import { personalInformationPageTemplate } from '../templates/personalInformationPage';
+import { fundingInstructionsPageTemplate } from '../templates/fundingInstructionsPage';
 
 /**
  * Add a professional cover page to the PDF
@@ -1100,7 +1103,39 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
       combinedContent += pourOverSpouseText;
     }
 
-    // 5. Durable Power of Attorney - CLIENT (separate for each grantor)
+    // ADDITIONAL PORTFOLIO SECTIONS
+
+    // 5. Nominations Page
+    console.log('Adding Nominations Page...');
+    combinedContent += addDocumentSeparator('');
+    const nominationsTemplate = nominationsPageTemplate();
+    const nominationsText = processTemplate(nominationsTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += nominationsText;
+
+    // 6. Confirmation of Names and Fiduciaries
+    console.log('Adding Confirmation of Names and Fiduciaries...');
+    combinedContent += addDocumentSeparator('');
+    const confirmationTemplate = confirmationOfNamesTemplate();
+    const confirmationText = processTemplate(confirmationTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += confirmationText;
+
+    // 7. Personal Information Page
+    console.log('Adding Personal Information Page...');
+    combinedContent += addDocumentSeparator('');
+    const personalInfoTemplate = personalInformationPageTemplate();
+    const personalInfoText = processTemplate(personalInfoTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += personalInfoText;
+
+    // 8. Funding Instructions Page
+    console.log('Adding Funding Instructions Page...');
+    combinedContent += addDocumentSeparator('');
+    const fundingTemplate = fundingInstructionsPageTemplate();
+    const fundingText = processTemplate(fundingTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += fundingText;
+
+    // POWER OF ATTORNEY AND HEALTHCARE DOCUMENTS
+
+    // 9. Durable Power of Attorney - CLIENT (separate for each grantor)
     console.log('Adding Durable Power of Attorney...');
     combinedContent += addDocumentSeparator('DURABLE POWER OF ATTORNEY - ' + (isJoint ? 'CLIENT' : ''));
     const durableTemplate = durablePowerOfAttorneyTemplate('client');
@@ -1282,7 +1317,39 @@ export const generateCompleteEstatePlanningPackageWord = async (formData) => {
       combinedContent += pourOverSpouseText;
     }
 
-    // 5. Durable Power of Attorney - CLIENT (separate for each grantor)
+    // ADDITIONAL PORTFOLIO SECTIONS
+
+    // 5. Nominations Page
+    console.log('Adding Nominations Page...');
+    combinedContent += addDocumentSeparator('');
+    const nominationsTemplate = nominationsPageTemplate();
+    const nominationsText = processTemplate(nominationsTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += nominationsText;
+
+    // 6. Confirmation of Names and Fiduciaries
+    console.log('Adding Confirmation of Names and Fiduciaries...');
+    combinedContent += addDocumentSeparator('');
+    const confirmationTemplate = confirmationOfNamesTemplate();
+    const confirmationText = processTemplate(confirmationTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += confirmationText;
+
+    // 7. Personal Information Page
+    console.log('Adding Personal Information Page...');
+    combinedContent += addDocumentSeparator('');
+    const personalInfoTemplate = personalInformationPageTemplate();
+    const personalInfoText = processTemplate(personalInfoTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += personalInfoText;
+
+    // 8. Funding Instructions Page
+    console.log('Adding Funding Instructions Page...');
+    combinedContent += addDocumentSeparator('');
+    const fundingTemplate = fundingInstructionsPageTemplate();
+    const fundingText = processTemplate(fundingTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += fundingText;
+
+    // POWER OF ATTORNEY AND HEALTHCARE DOCUMENTS
+
+    // 9. Durable Power of Attorney - CLIENT (separate for each grantor)
     console.log('Adding Durable Power of Attorney...');
     combinedContent += addDocumentSeparator('DURABLE POWER OF ATTORNEY - ' + (isJoint ? 'CLIENT' : ''));
     const durableTemplate = durablePowerOfAttorneyTemplate('client');
