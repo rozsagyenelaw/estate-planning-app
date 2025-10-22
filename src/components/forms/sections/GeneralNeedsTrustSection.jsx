@@ -105,7 +105,7 @@ const GeneralNeedsTrustSection = () => {
                     }
                   />
 
-                  {trust.distributionType === 'age' ? (
+                  {(trust.distributionType === 'age' || !trust.distributionType) ? (
                     <div className="ml-4 p-4 bg-gray-50 rounded-lg space-y-3">
                       <p className="text-sm font-medium text-gray-700">
                         Age-Based Distribution Milestones:
