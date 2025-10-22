@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useFormContext } from '../../context/FormContext';
 import { Button, Card } from '../common';
-import { generateLivingTrust, generateLivingTrustWord, generateAllDocuments, downloadDocument } from '../../services/documentGenerator';
+import { generateLivingTrust, generateLivingTrustWord, generateAllDocuments, generateCompleteEstatePlanningPackage, downloadDocument } from '../../services/documentGenerator';
 import { sampleFormData } from '../../utils/testDocumentGeneration';
 import { saveFormDraft } from '../../services/autocompleteService';
 
@@ -74,13 +74,13 @@ const EstatePlanningForm = () => {
 
   const handleGenerateAllDocuments = async () => {
     setLoading(true);
-    setStatus('Generating all estate planning documents...');
+    setStatus('Generating complete estate planning package...');
     try {
-      const documents = await generateAllDocuments(formData);
-      documents.forEach(({ name, doc }) => {
-        downloadDocument(doc, name);
-      });
-      setStatus(`Successfully generated ${documents.length} documents!`);
+      const completePDF = await generateCompleteEstatePlanningPackage(formData);
+      const clientName = formData.client.firstName + '_' + formData.client.lastName;
+      const filename = `${clientName}_Complete_Estate_Planning_Package.pdf`;
+      downloadDocument(completePDF, filename);
+      setStatus('Successfully generated complete estate planning package!');
       setTimeout(() => setStatus(''), 3000);
     } catch (error) {
       console.error('Error generating documents:', error);
