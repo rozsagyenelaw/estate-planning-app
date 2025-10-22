@@ -1,11 +1,13 @@
 /**
  * Document Generator Service
- * Generates PDF documents from form data
+ * Generates PDF documents from form data using template engine
  */
 
 import jsPDF from 'jspdf';
 import { formatDate, formatPhoneNumber } from '../utils/formatters';
 import { DOCUMENT_TYPES } from '../utils/constants';
+import { processTemplate, prepareTemplateData } from './templateEngine';
+import { singleLivingTrustTemplate } from '../templates/singleLivingTrust';
 
 /**
  * Generate Living Trust document
@@ -13,24 +15,59 @@ import { DOCUMENT_TYPES } from '../utils/constants';
  * @returns {jsPDF} PDF document
  */
 export const generateLivingTrust = async (formData) => {
-  const doc = new jsPDF();
+  try {
+    // Prepare data for template
+    const templateData = prepareTemplateData(formData);
 
-  // This is a placeholder implementation
-  // Will be replaced with actual document templates
+    // Process template with data
+    const processedHtml = processTemplate(singleLivingTrustTemplate, templateData);
 
-  doc.setFontSize(20);
-  doc.text('LIVING TRUST', 105, 20, { align: 'center' });
+    // Create PDF from HTML
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'in',
+      format: 'letter'
+    });
 
-  doc.setFontSize(12);
-  doc.text(`Trust Name: ${formData.trustName || 'N/A'}`, 20, 40);
-  doc.text(`Trustor: ${formData.client.name || 'N/A'}`, 20, 50);
-  doc.text(`Date: ${formatDate(formData.client.notaryDate)}`, 20, 60);
+    // Convert HTML to PDF
+    await new Promise((resolve, reject) => {
+      doc.html(processedHtml, {
+        callback: (doc) => {
+          resolve(doc);
+        },
+        x: 0,
+        y: 0,
+        width: 8.5,
+        windowWidth: 816, // 8.5 inches * 96 DPI
+        margin: [0.5, 0.5, 0.5, 0.5],
+        html2canvas: {
+          scale: 0.8,
+          logging: false,
+          letterRendering: true
+        },
+        error: (error) => {
+          console.error('Error converting HTML to PDF:', error);
+          reject(error);
+        }
+      });
+    });
 
-  doc.setFontSize(10);
-  doc.text('This is a placeholder document.', 20, 80);
-  doc.text('Actual trust templates will be added based on your requirements.', 20, 90);
+    return doc;
+  } catch (error) {
+    console.error('Error generating Living Trust:', error);
 
-  return doc;
+    // Fallback to simple text document if HTML conversion fails
+    const doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.text('LIVING TRUST', 105, 20, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text(`Trust Name: ${formData.trustName || 'N/A'}`, 20, 40);
+    doc.text(`Error: Failed to generate document. Please try again.`, 20, 60);
+    doc.setFontSize(10);
+    doc.text(`Error details: ${error.message}`, 20, 80);
+
+    return doc;
+  }
 };
 
 /**

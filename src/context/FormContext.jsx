@@ -220,6 +220,7 @@ export const FormProvider = ({ children }) => {
 
   const value = {
     formData,
+    setFormData,
     updateFormData,
     updateClientData,
     updateSpouseData,
