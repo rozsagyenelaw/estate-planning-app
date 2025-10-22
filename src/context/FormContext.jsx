@@ -120,13 +120,19 @@ export const FormProvider = ({ children }) => {
 
   // Update client data
   const updateClientData = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      client: {
-        ...prev.client,
-        [field]: value,
-      },
-    }));
+    console.log('🔄 updateClientData called', { field, value });
+    setFormData((prev) => {
+      console.log('  → Previous client[' + field + ']:', prev.client[field]);
+      const newData = {
+        ...prev,
+        client: {
+          ...prev.client,
+          [field]: value,
+        },
+      };
+      console.log('  → New client[' + field + ']:', newData.client[field]);
+      return newData;
+    });
 
     // Add to autocomplete suggestions
     if (field === 'address' && value) addAddressSuggestion(value);
