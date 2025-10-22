@@ -39,8 +39,13 @@ const addCoverPage = (doc, formData, documentTitle) => {
   const pageWidth = 8.5;
   let yPos = 3.5; // Start 3.5 inches from top
 
-  // Trust name (uppercase) with date
-  const trustName = `THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} LIVING TRUST DATED ${formData.currentDate.toUpperCase()}`;
+  // Trust name (uppercase) with date - handle joint vs single trusts
+  let trustName;
+  if (formData.isJoint || formData.trustType === 'joint') {
+    trustName = `THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} AND ${formData.spouse.firstName.toUpperCase()} ${formData.spouse.lastName.toUpperCase()} LIVING TRUST DATED ${formData.currentDate.toUpperCase()}`;
+  } else {
+    trustName = `THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} LIVING TRUST DATED ${formData.currentDate.toUpperCase()}`;
+  }
 
   // Split into multiple lines if too long
   const trustLines = doc.splitTextToSize(trustName, 6.5);
@@ -515,27 +520,29 @@ export const generateLivingTrust = async (formData) => {
     formData.currentDate = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
   }
 
-  // For single living trust, use the old system (function-based template)
+  // For single and joint living trusts, use the function-based template system
   let content;
-  if (formData.trustType === 'single' || !formData.trustType) {
-    console.log('Using OLD SYSTEM: singleLivingTrustTemplate is a function');
+  if (formData.trustType === 'single' || formData.trustType === 'joint' || !formData.trustType) {
+    console.log('Using function-based template system');
 
     // Call the template function with formData directly
-    content = singleLivingTrustTemplate(formData);
+    if (formData.trustType === 'joint' || formData.isJoint) {
+      content = jointLivingTrustTemplate(formData);
+      console.log('Joint trust template function returned content length:', content.length);
+    } else {
+      content = singleLivingTrustTemplate(formData);
+      console.log('Single trust template function returned content length:', content.length);
+    }
 
-    console.log('Template function returned content length:', content.length);
     console.log('First 200 chars:', content.substring(0, 200));
   } else {
-    // For other trust types, use the new system (placeholder-based templates)
-    console.log('Using NEW SYSTEM: placeholder-based template');
+    // For irrevocable trusts, use the placeholder-based template system
+    console.log('Using placeholder-based template system for irrevocable trust');
 
     const templateData = prepareTemplateData(formData);
     let template;
 
     switch (formData.trustType) {
-      case 'joint':
-        template = jointLivingTrustTemplate;
-        break;
       case 'single_irrevocable':
         template = singleIrrevocableTrustTemplate;
         break;
@@ -543,7 +550,7 @@ export const generateLivingTrust = async (formData) => {
         template = jointIrrevocableTrustTemplate;
         break;
       default:
-        template = formData.isJoint ? jointLivingTrustTemplate : singleLivingTrustTemplate;
+        template = singleIrrevocableTrustTemplate;
     }
 
     content = processTemplate(template, templateData);
@@ -555,13 +562,13 @@ export const generateLivingTrust = async (formData) => {
   const isIrrevocable = formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable';
   const docTitle = isIrrevocable ? 'Irrevocable Trust' : 'Living Trust';
 
-  // For old system (plain text), use direct text-to-PDF conversion
-  if (formData.trustType === 'single' || !formData.trustType) {
+  // For function-based templates (single and joint living trusts), use direct text-to-PDF conversion
+  if (formData.trustType === 'single' || formData.trustType === 'joint' || !formData.trustType) {
     console.log('Using text-based PDF generation (no HTML)...');
     return generatePDFFromText(content, docTitle, formData);
   }
 
-  // For new system, use HTML-based PDF generation
+  // For placeholder-based templates (irrevocable trusts), use HTML-based PDF generation
   console.log('Using HTML-based PDF generation...');
   return generatePDFFromHTML(content, docTitle);
 };
@@ -584,16 +591,19 @@ export const generateLivingTrustWord = async (formData) => {
 
   // Generate content
   let content;
-  if (formData.trustType === 'single' || !formData.trustType) {
-    content = singleLivingTrustTemplate(formData);
+  if (formData.trustType === 'single' || formData.trustType === 'joint' || !formData.trustType) {
+    // Function-based templates for living trusts
+    if (formData.trustType === 'joint' || formData.isJoint) {
+      content = jointLivingTrustTemplate(formData);
+    } else {
+      content = singleLivingTrustTemplate(formData);
+    }
   } else {
+    // Placeholder-based templates for irrevocable trusts
     const templateData = prepareTemplateData(formData);
     let template;
 
     switch (formData.trustType) {
-      case 'joint':
-        template = jointLivingTrustTemplate;
-        break;
       case 'single_irrevocable':
         template = singleIrrevocableTrustTemplate;
         break;
@@ -601,7 +611,7 @@ export const generateLivingTrustWord = async (formData) => {
         template = jointIrrevocableTrustTemplate;
         break;
       default:
-        template = formData.isJoint ? jointLivingTrustTemplate : singleLivingTrustTemplate;
+        template = singleIrrevocableTrustTemplate;
     }
 
     content = processTemplate(template, templateData);
