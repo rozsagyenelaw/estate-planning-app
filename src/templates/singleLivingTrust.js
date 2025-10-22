@@ -181,31 +181,41 @@ If ${dist.beneficiaryName} is deceased, then this distribution will lapse, and t
 Property passing under this Section passes free of any administrative expenses or death taxes.
 `).join('\n') || ''}
 
-Section 6.05      Distribution of Tangible Personal Property by Memorandum
+Section 6.0${(formData.specificDistributions?.length || 0) + 1}      Distribution of Tangible Personal Property by Memorandum
 I may dispose of items of tangible personal property by a signed written memorandum executed after I sign this instrument.  The memorandum must refer to the trust and must reasonably identify the items and the beneficiary designated to receive each item.  If I execute a memorandum, the Trustee shall incorporate the memorandum by reference into this instrument to the extent permitted by law.
+
 The Trustee shall distribute the items of tangible personal property listed in the memorandum as promptly as practicable after my death, together with any insurance policies covering the property and any claims under those policies, as provided in the memorandum.  If I leave multiple written memoranda that conflict as to the disposition of any item of tangible personal property, the memorandum with the most recent date will control as to that item.
+
 If the law does not permit incorporation of the memorandum by reference, the memorandum will then serve as an amendment to the trust, but only to the extent this amendment solely disposes of tangible personal property.  I request that the Trustee follow my wishes and distribute the items of tangible personal property listed in the memorandum according to its terms.
-Section 6.06      Distribution of Remaining Tangible Personal Property
+
+Section 6.0${(formData.specificDistributions?.length || 0) + 2}      Distribution of Remaining Tangible Personal Property
 The Trustee shall distribute any remaining tangible personal property not disposed of by a written memorandum as provided in the following Articles.
-Section 6.07      Definition of Tangible Personal Property
+
+Section 6.0${(formData.specificDistributions?.length || 0) + 3}      Definition of Tangible Personal Property
 For purposes of this Article, the term tangible personal property includes household furnishings, appliances and fixtures, works of art, motor vehicles, pictures, collectibles, apparel and jewelry, books, sporting goods, and hobby paraphernalia.  The term does not include any property that the Trustee, in its sole and absolute discretion, determines to be part of any business or business interest owned by me or the trust.
+
 After my death, if the Trustee receives property to be distributed under this Article from the probate estate or in any other manner, the Trustee shall distribute the property in accordance with this Article's terms.  The fact that an item of tangible personal property was not received by the trust until after my death does not diminish the validity of the gift.  If property to be distributed under this Article is not part of the trust property upon my death and is not subsequently transferred to the Trustee from the probate estate or in any other manner, then the specific distribution of property made in this Article is null and void, without any legal or binding effect.
-Section 6.08      Incidental Expenses and Encumbrances
+
+Section 6.0${(formData.specificDistributions?.length || 0) + 4}      Incidental Expenses and Encumbrances
 Until property distributed in accordance with this Article is delivered to the appropriate beneficiary or his or her Legal Representative, the Trustee shall pay the reasonable expenses of securing, storing, insuring, packing, transporting, and otherwise caring for the property as an administration expense.  Except as otherwise provided in the trust, the Trustee shall distribute property under this Article subject to all liens, security interests, and other encumbrances on the property.
-Section 6.09      Residuary Distribution
+
+Section 6.0${(formData.specificDistributions?.length || 0) + 5}      Residuary Distribution
 Any property not distributed under this or prior Articles of this instrument will be distributed as provided in the following Articles.
 Article Seven
 Distribution to My Beneficiaries
 The Trustee shall administer and distribute my remaining trust property (not distributed under prior Articles of this instrument) under the terms of this Article.
 Section 7.01      Division of Remaining Trust Property
 The Trustee shall divide my remaining trust property into shares as follows:
-Name    Relationship    Share
+
+                                    Name                                    Relationship                                    Share
 ${formData.residuaryBeneficiaries?.map(b => {
   const totalBeneficiaries = formData.residuaryBeneficiaries.length;
   const sharePercent = parseFloat(b.share);
-  // Convert to fraction if equal shares
+  // Convert to fraction
   let shareFraction;
-  if (Math.abs(sharePercent - (100 / totalBeneficiaries)) < 0.01) {
+  if (totalBeneficiaries === 1 || sharePercent === 100) {
+    shareFraction = 'all';
+  } else if (Math.abs(sharePercent - (100 / totalBeneficiaries)) < 0.01) {
     shareFraction = `1/${totalBeneficiaries}`;
   } else {
     // Calculate GCD for fraction
@@ -215,15 +225,22 @@ ${formData.residuaryBeneficiaries?.map(b => {
     const divisor = gcd(numerator, denominator);
     shareFraction = `${numerator / divisor}/${denominator / divisor}`;
   }
-  return `${b.name}    ${b.relationship || 'Child'}    ${shareFraction}`;
+  // Center align the columns
+  const namePadding = ' '.repeat(Math.max(0, 40 - b.name.length));
+  const relationshipPadding = ' '.repeat(Math.max(0, 40 - (b.relationship || 'child').length));
+  return `                                    ${b.name}${namePadding}${b.relationship || 'child'}${relationshipPadding}${shareFraction}`;
 }).join('\n')}
+
 The Trustee shall administer the share of each beneficiary as provided in the Sections that follow.
 
 ${formData.residuaryBeneficiaries?.map((beneficiary, index) => `
 Section 7.0${index + 2}      Distribution of the Share for ${beneficiary.name}
-The Trustee shall distribute the share set aside for ${beneficiary.name} in trust as provided in this Section.
+${beneficiary.distributionType === 'outright' ? `The Trustee shall distribute the share set aside for ${beneficiary.name} to ${beneficiary.gender === 'male' ? 'him' : beneficiary.gender === 'female' ? 'her' : 'them'} outright and free of trust.
+
+If ${beneficiary.name} is deceased, the Trustee shall distribute ${beneficiary.name}'s share per stirpes to ${beneficiary.gender === 'male' ? 'his' : beneficiary.gender === 'female' ? 'her' : 'their'} descendants. If ${beneficiary.name} has no descendants, the Trustee shall distribute ${beneficiary.name}'s share pro rata to the other beneficiaries named in this Article. If no other named beneficiaries exist, the Trustee shall distribute ${beneficiary.name}'s share under the terms of Article 8.` : `The Trustee shall distribute the share set aside for ${beneficiary.name} in trust as provided in this Section.
            (a)      Distributions of Income and Principal
 The Independent Trustee may distribute to ${beneficiary.name} as much of the income and principal of ${beneficiary.gender === 'male' ? 'his' : 'her'} trust as the Independent Trustee may determine advisable for any purpose. If no Independent Trustee is then serving, the Trustee shall distribute to ${beneficiary.name} as much of the income and principal of ${beneficiary.gender === 'male' ? 'his' : 'her'} trust as the Trustee determines necessary or advisable for ${beneficiary.gender === 'male' ? 'his' : 'her'} health, education, maintenance, or support.
+
 The Trustee shall add any undistributed net income to principal.
            (b)      Guidelines for Discretionary Distributions
 In making discretionary distributions to ${beneficiary.name}, I desire to provide for ${beneficiary.gender === 'male' ? 'his' : 'her'} well-being and happiness.  Although I request that the Trustee consider the other known resources available to ${beneficiary.name} before making distributions, I also request that the Trustee be liberal in making any distributions to, or for ${beneficiary.name}'s benefit.  I acknowledge that the principal of the trust established for ${beneficiary.name} may be exhausted in making these distributions.
@@ -232,10 +249,12 @@ At the intervals set forth below, ${beneficiary.name} may withdraw from ${benefi
 ${beneficiary.withdrawalAge ? `100% of the accumulated trust income and principal at ${beneficiary.withdrawalAge} years of age;` : '100% of the accumulated trust income and principal at 30 years of age;'}
            (d)      Distribution upon the Death of ${beneficiary.name}
 Subject to the terms of the next paragraph, ${beneficiary.name} has the unlimited testamentary general power to appoint all or any portion of the principal and undistributed income remaining in ${beneficiary.gender === 'male' ? 'his' : 'her'} trust at ${beneficiary.gender === 'male' ? 'his' : 'her'} death among one or more persons or entities and ${beneficiary.name}'s estate's creditors. ${beneficiary.name} has the exclusive right to exercise this general power of appointment.
+
 ${beneficiary.name} may not exercise this power of appointment to appoint to ${beneficiary.gender === 'male' ? 'himself' : 'herself'}, ${beneficiary.gender === 'male' ? 'his' : 'her'} estate, ${beneficiary.gender === 'male' ? 'his' : 'her'} creditors, or the creditors of ${beneficiary.gender === 'male' ? 'his' : 'her'} estate from the limited share of ${beneficiary.gender === 'male' ? 'his' : 'her'} trust.  For purposes of this power of appointment, the limited share of ${beneficiary.name}'s trust is that portion of ${beneficiary.gender === 'male' ? 'his' : 'her'} trust that has an inclusion ratio of zero for generation-skipping transfer tax purposes, or that would not constitute a taxable generation-skipping transfer at ${beneficiary.gender === 'male' ? 'his' : 'her'} death in the absence of the power of appointment's exercise. If the generation-skipping tax does not then apply, the limited share is ${beneficiary.name}'s entire trust.
+
 If any part of ${beneficiary.name}'s trust is not effectively appointed, the Trustee shall distribute the remaining unappointed balance per stirpes to ${beneficiary.name}'s descendants. If ${beneficiary.name} has no descendants, the Trustee shall distribute the remaining unappointed balance pro rata to the other beneficiaries named in this Article. If no other named beneficiaries exist, the Trustee shall distribute the remaining unappointed balance share under the terms of Article 8.
            (e)      Distribution if ${beneficiary.name} Is Deceased
-If ${beneficiary.name} dies before the establishment of ${beneficiary.gender === 'male' ? 'his' : 'her'} trust, the Trustee shall distribute ${beneficiary.name}'s share per stirpes to ${beneficiary.gender === 'male' ? 'his' : 'her'} descendants. If ${beneficiary.name} has no descendants, the Trustee shall distribute ${beneficiary.name}'s share pro rata to the other beneficiaries named in this Article. If no other named beneficiaries exist, the Trustee shall distribute ${beneficiary.name}'s share under the terms of Article 8.
+If ${beneficiary.name} dies before the establishment of ${beneficiary.gender === 'male' ? 'his' : 'her'} trust, the Trustee shall distribute ${beneficiary.name}'s share per stirpes to ${beneficiary.gender === 'male' ? 'his' : 'her'} descendants. If ${beneficiary.name} has no descendants, the Trustee shall distribute ${beneficiary.name}'s share pro rata to the other beneficiaries named in this Article. If no other named beneficiaries exist, the Trustee shall distribute ${beneficiary.name}'s share under the terms of Article 8.`}
 `).join('\n')}
 
 ${formData.generalNeedsTrust?.enabled ? `

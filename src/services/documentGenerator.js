@@ -118,11 +118,9 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
     const lines = textContent.split('\n');
     console.log('Processing', lines.length, 'lines with formatting...');
 
+    // Removed page numbers per user request
     const addPageNumber = () => {
-      const pageNum = doc.internal.getNumberOfPages();
-      doc.setFont('times', 'normal');
-      doc.setFontSize(10);
-      doc.text(`Page ${pageNum}`, pageWidth / 2, pageHeight - 0.5, { align: 'center' });
+      // No page numbers
     };
 
     for (let i = 0; i < lines.length; i++) {
@@ -141,13 +139,24 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
         continue;
       }
 
-      // Detect Article headers (e.g., "Article One", "Article Two")
-      if (line.match(/^Article (One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen)$/)) {
-        currentY += baseLineHeight * 1.5; // Extra space before article
+      // Detect Article headers (e.g., "Article One", "Article Two") - CENTER THEM
+      if (line.match(/^Article (One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Seven-A)$/)) {
+        currentY += baseLineHeight * 2; // Extra space before article
+        doc.setFont('times', 'bold');
+        doc.setFontSize(16);
+        doc.text(line, pageWidth / 2, currentY, { align: 'center' });
+        currentY += baseLineHeight * 1.5;
+        doc.setFont('times', 'normal');
+        doc.setFontSize(12);
+        continue;
+      }
+
+      // Detect Article subtitles (line after Article header) - CENTER THEM
+      if (i > 0 && lines[i-1].match(/^Article (One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Seven-A)$/)) {
         doc.setFont('times', 'bold');
         doc.setFontSize(14);
-        doc.text(line, marginLeft, currentY);
-        currentY += baseLineHeight * 1.2;
+        doc.text(line, pageWidth / 2, currentY, { align: 'center' });
+        currentY += baseLineHeight * 1.5;
         doc.setFont('times', 'normal');
         doc.setFontSize(12);
         continue;
