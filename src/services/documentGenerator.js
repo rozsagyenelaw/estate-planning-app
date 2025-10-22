@@ -24,6 +24,9 @@ import { memorialInstructionsTemplate } from '../templates/memorialInstructions'
 import { confirmationOfNamesTemplate } from '../templates/confirmationOfNames';
 import { estatePlanningCoverPageTemplate } from '../templates/estatePlanningCoverPage';
 import { tableOfContentsTemplate } from '../templates/tableOfContents';
+import { introductionPageTemplate } from '../templates/introductionPage';
+import { overviewPageTemplate } from '../templates/overviewPage';
+import { revocableLivingTrustSectionPageTemplate } from '../templates/revocableLivingTrustSectionPage';
 
 /**
  * Add a professional cover page to the PDF
@@ -1030,8 +1033,47 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
       return `\n\n\n[PAGE_BREAK]\n\n\n${title}\n\n`;
     };
 
-    // 1. Certificate of Trust (joint document - one for both grantors)
+    // INTRO PAGES - Portfolio Cover and Information Pages
+
+    // 1. Cover Page
+    console.log('Adding Cover Page...');
+    const coverTemplate = estatePlanningCoverPageTemplate();
+    const coverText = processTemplate(coverTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += coverText;
+
+    // 2. Table of Contents
+    console.log('Adding Table of Contents...');
+    combinedContent += addDocumentSeparator('');
+    const tocTemplate = tableOfContentsTemplate();
+    const tocText = processTemplate(tocTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += tocText;
+
+    // 3. Introduction Page
+    console.log('Adding Introduction Page...');
+    combinedContent += addDocumentSeparator('');
+    const introTemplate = introductionPageTemplate();
+    const introText = processTemplate(introTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += introText;
+
+    // 4. Overview Page (Trust Information)
+    console.log('Adding Overview Page...');
+    combinedContent += addDocumentSeparator('');
+    const overviewTemplate = overviewPageTemplate();
+    const overviewText = processTemplate(overviewTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += overviewText;
+
+    // 5. Revocable Living Trust Section Page
+    console.log('Adding Revocable Living Trust Section Page...');
+    combinedContent += addDocumentSeparator('');
+    const trustSectionTemplate = revocableLivingTrustSectionPageTemplate();
+    const trustSectionText = processTemplate(trustSectionTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += trustSectionText;
+
+    // LEGAL DOCUMENTS START HERE
+
+    // 6. Certificate of Trust (joint document - one for both grantors)
     console.log('Adding Certificate of Trust...');
+    combinedContent += addDocumentSeparator('');
     const certTemplate = certificateOfTrustTemplate();
     const certText = processTemplate(certTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
     combinedContent += certText;
@@ -1173,8 +1215,47 @@ export const generateCompleteEstatePlanningPackageWord = async (formData) => {
       return `\n\n\n[PAGE_BREAK]\n\n\n${title}\n\n`;
     };
 
-    // 1. Certificate of Trust (joint document - one for both grantors)
+    // INTRO PAGES - Portfolio Cover and Information Pages
+
+    // 1. Cover Page
+    console.log('Adding Cover Page...');
+    const coverTemplate = estatePlanningCoverPageTemplate();
+    const coverText = processTemplate(coverTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += coverText;
+
+    // 2. Table of Contents
+    console.log('Adding Table of Contents...');
+    combinedContent += addDocumentSeparator('');
+    const tocTemplate = tableOfContentsTemplate();
+    const tocText = processTemplate(tocTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += tocText;
+
+    // 3. Introduction Page
+    console.log('Adding Introduction Page...');
+    combinedContent += addDocumentSeparator('');
+    const introTemplate = introductionPageTemplate();
+    const introText = processTemplate(introTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += introText;
+
+    // 4. Overview Page (Trust Information)
+    console.log('Adding Overview Page...');
+    combinedContent += addDocumentSeparator('');
+    const overviewTemplate = overviewPageTemplate();
+    const overviewText = processTemplate(overviewTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += overviewText;
+
+    // 5. Revocable Living Trust Section Page
+    console.log('Adding Revocable Living Trust Section Page...');
+    combinedContent += addDocumentSeparator('');
+    const trustSectionTemplate = revocableLivingTrustSectionPageTemplate();
+    const trustSectionText = processTemplate(trustSectionTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += trustSectionText;
+
+    // LEGAL DOCUMENTS START HERE
+
+    // 6. Certificate of Trust (joint document - one for both grantors)
     console.log('Adding Certificate of Trust...');
+    combinedContent += addDocumentSeparator('');
     const certTemplate = certificateOfTrustTemplate();
     const certText = processTemplate(certTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
     combinedContent += certText;

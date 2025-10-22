@@ -13,46 +13,40 @@ export const estatePlanningCoverPageTemplate = () => {
       color: #000;
       text-align: center;
     }
-    .horizontal-line {
+    .yellow-line {
       width: 100%;
-      height: 2px;
-      background: repeating-linear-gradient(
-        to right,
-        #000 0px,
-        #000 2px,
-        transparent 2px,
-        transparent 6px
-      );
-      margin: 20px 0;
+      height: 3px;
+      background-color: #FFD700;
+      margin: 15px 0;
     }
     .title {
-      font-size: 18pt;
+      font-size: 16pt;
       font-weight: bold;
-      margin: 40px 0 20px 0;
-      letter-spacing: 2px;
+      margin: 30px 0;
+      letter-spacing: 1px;
     }
     .for {
       font-size: 14pt;
       margin: 20px 0;
     }
     .client-names {
-      font-size: 16pt;
+      font-size: 14pt;
       font-weight: bold;
       margin: 20px 0;
       text-transform: uppercase;
     }
     .law-firm {
-      font-size: 12pt;
-      font-weight: bold;
-      margin: 10px 0;
-      line-height: 1.6;
+      font-size: 11pt;
+      font-weight: normal;
+      margin: 5px 0;
+      line-height: 1.4;
     }
   </style>
 </head>
 <body>
 
-<div style="margin-top: 100px;">
-<div class="horizontal-line"></div>
+<div style="margin-top: 150px;">
+<div class="yellow-line"></div>
 
 <div class="title">ESTATE PLANNING PORTFOLIO</div>
 
@@ -62,7 +56,7 @@ export const estatePlanningCoverPageTemplate = () => {
 {{CLIENT_FULL_NAME}}{{#IF_JOINT}} AND {{SPOUSE_FULL_NAME}}{{/IF_JOINT}}
 </div>
 
-<div class="horizontal-line"></div>
+<div class="yellow-line"></div>
 
 <div class="law-firm">
 LAW OFFICES OF ROZSA GYENE, PC<br/>

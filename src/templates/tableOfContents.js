@@ -12,17 +12,11 @@ export const tableOfContentsTemplate = () => {
       line-height: 1.6;
       color: #000;
     }
-    .horizontal-line {
+    .yellow-line {
       width: 100%;
-      height: 2px;
-      background: repeating-linear-gradient(
-        to right,
-        #000 0px,
-        #000 2px,
-        transparent 2px,
-        transparent 6px
-      );
-      margin: 20px 0;
+      height: 3px;
+      background-color: #FFD700;
+      margin: 15px 0;
     }
     h1 {
       text-align: center;
@@ -46,7 +40,7 @@ export const tableOfContentsTemplate = () => {
 <body>
 
 <h1>TABLE OF CONTENTS</h1>
-<div class="horizontal-line"></div>
+<div class="yellow-line"></div>
 
 <p style="margin: 20px 0; text-align: justify;">This portfolio serves as a recordkeeping system for your estate plan: it contains every document that your successor Trustees and agents will need to follow your instructions. The portfolio is organized as follows:</p>
 
