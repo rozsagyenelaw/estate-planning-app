@@ -1,208 +1,157 @@
 export const fundingInstructionsPageTemplate = () => {
-  return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <style>
-    @page { size: letter; margin: 1in; }
-    body {
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 11pt;
-      line-height: 1.6;
-      color: #000;
-    }
-    .yellow-line {
-      width: 100%;
-      height: 3px;
-      background-color: #FFD700;
-      margin: 15px 0;
-    }
-    h1 {
-      text-align: center;
-      font-size: 14pt;
-      font-weight: bold;
-      margin: 20px 0;
-    }
-    h2 {
-      text-align: center;
-      font-size: 12pt;
-      font-weight: bold;
-      margin: 25px 0 15px 0;
-    }
-    h3 {
-      font-size: 11pt;
-      font-weight: bold;
-      margin: 20px 0 10px 0;
-    }
-    p {
-      margin: 10px 0;
-      text-align: justify;
-    }
-    .indent {
-      margin-left: 40px;
-    }
-  </style>
-</head>
-<body>
+  return `FUNDING INSTRUCTIONS
+_______________________________________________________________________
 
-<h1>FUNDING INSTRUCTIONS</h1>
-<div class="yellow-line"></div>
+The instructions in this section tell you how to transfer various types of assets. You must transfer the assets that you currently own and that you acquire in the future to your Revocable Living Trust. This transfer is vitally important.
 
-<p>The instructions in this section tell you how to transfer various types of assets. You must transfer the assets that you currently own and that you acquire in the future to your Revocable Living Trust. This transfer is vitally important.</p>
+If you ever need any assistance in transferring assets to your Revocable Living Trust, do not hesitate to make an appointment with our office. It is your responsibility to ensure that all of your property is transferred to your Revocable Living Trust.
 
-<p>If you ever need any assistance in transferring assets to your Revocable Living Trust, do not hesitate to make an appointment with our office. It is your responsibility to ensure that all of your property is transferred to your Revocable Living Trust.</p>
+[PAGE_BREAK]
 
-<div style="page-break-before: always;"></div>
+Revocable Living Trust Funding Instructions for {{TRUST_NAME}}
 
-<h2>Revocable Living Trust Funding Instructions for {{TRUST_NAME}}</h2>
+We cannot overemphasize the importance of having a fully funded Revocable Living Trust. An unfunded or partially funded Revocable Living Trust does not avoid probate. These instructions will help you fund your Revocable Living Trust.
 
-<p>We cannot overemphasize the importance of having a fully funded Revocable Living Trust. An unfunded or partially funded Revocable Living Trust does not avoid probate. These instructions will help you fund your Revocable Living Trust.</p>
+    • You will make ownership changes to change the title of most of your assets from your name as an individual to your name as Trustee of your Revocable Living Trust.
 
-<p class="indent">• You will make ownership changes to change the title of most of your assets from your name as an individual to your name as Trustee of your Revocable Living Trust.</p>
+    • For other assets, such as life insurance and retirement accounts, you will make beneficiary changes to properly distribute those assets upon your death. The beneficiary will not necessarily be your Revocable Living Trust –please see the Retirement Plans and Life Insurance Policies and Annuities sections of this document.
 
-<p class="indent">• For other assets, such as life insurance and retirement accounts, you will make beneficiary changes to properly distribute those assets upon your death. The beneficiary will not necessarily be your Revocable Living Trust –please see the Retirement Plans and Life Insurance Policies and Annuities sections of this document.</p>
+Generally, to transfer assets to your trust, you must execute new documents of title, deeds to real property, and signature cards for your bank accounts, as well as change of beneficiary forms for pension plans, individual retirement plans and life insurance.
 
-<p>Generally, to transfer assets to your trust, you must execute new documents of title, deeds to real property, and signature cards for your bank accounts, as well as change of beneficiary forms for pension plans, individual retirement plans and life insurance.</p>
+Your financial advisor, accountant, broker, or life insurance agent may need to help you make ownership or beneficiary changes. These instructions will give you general knowledge of how to fund your trust, but they cannot comprehensively address every type of transfer. Please call us if you must make transfers that are not addressed in these instructions.
 
-<p>Your financial advisor, accountant, broker, or life insurance agent may need to help you make ownership or beneficiary changes. These instructions will give you general knowledge of how to fund your trust, but they cannot comprehensively address every type of transfer. Please call us if you must make transfers that are not addressed in these instructions.</p>
+We recommend you place copies of all written documents which evidence the interest of your Revocable Living Trust into your Revocable Living Trust Portfolio. These assets may include your accounts, real property, business interests, insurance policy proceeds, or any other property. Your final step in the transfer process should always be to place a document in the TRUST ASSETS section of your Revocable Living Trust Portfolio that proves your trust is the owner or beneficiary of each asset. The bolded, italicized sentence ending the transfer instructions for each type of asset tells you what documents to put into your Revocable Living Trust Portfolio.
 
-<p>We recommend you place copies of all written documents which evidence the interest of your Revocable Living Trust into your Revocable Living Trust Portfolio. These assets may include your accounts, real property, business interests, insurance policy proceeds, or any other property. Your final step in the transfer process should always be to place a document in the TRUST ASSETS section of your Revocable Living Trust Portfolio that proves your trust is the owner or beneficiary of each asset. <strong><em>The bolded, italicized sentence ending the transfer instructions for each type of asset tells you what documents to put into your Revocable Living Trust Portfolio.</em></strong></p>
+Using Your Certification of Trust
 
-<h3>Using Your Certification of Trust</h3>
+Your Revocable Living Trust Portfolio contains a Certification of Trust. In your certification, you state in writing that:
 
-<p>Your Revocable Living Trust Portfolio contains a Certification of Trust. In your certification, you state in writing that:</p>
+    your trust exists;
+    you are one of the Trustees; and
+    you have the authority and power to transact business as a Trustee.
 
-<p class="indent">your trust exists;</p>
-<p class="indent">you are one of the Trustees; and</p>
-<p class="indent">you have the authority and power to transact business as a Trustee.</p>
+Most institutions have their own certification forms for you to fill out. If the institution you are dealing with does not have a form, you should provide them with a copy of your Certification of Trust form. Your Certification of Trust provides only the information that the persons you deal with need to see without disclosing confidential details.
 
-<p>Most institutions have their own certification forms for you to fill out. If the institution you are dealing with does not have a form, you should provide them with a copy of your Certification of Trust form. Your Certification of Trust provides only the information that the persons you deal with need to see without disclosing confidential details.</p>
+Your Tax Identification Number
 
-<h3>Your Tax Identification Number</h3>
+As long as you are acting as Trustee of your Revocable Living Trust, you do not need to obtain a separate tax identification number for your trust or to file a separate trust tax return. The Internal Revenue Service (IRS) prefers that you use your own Social Security number. You should report all of the income generated by trust assets on your personal IRS Form 1040 and California Form 540.
 
-<p>As long as you are acting as Trustee of your Revocable Living Trust, you do not need to obtain a separate tax identification number for your trust or to file a separate trust tax return. The Internal Revenue Service (IRS) prefers that you use your own Social Security number. You should report all of the income generated by trust assets on your personal IRS Form 1040 and California Form 540.</p>
+When you die, your trust becomes irrevocable for tax purposes. It may split into multiple trusts, each of which may be treated as a separate taxable entity for income tax purposes. We will work with your successor Trustee and your accountant to see that your heirs get the full benefit of your estate planning upon your death.
 
-<p>When you die, your trust becomes irrevocable for tax purposes. It may split into multiple trusts, each of which may be treated as a separate taxable entity for income tax purposes. We will work with your successor Trustee and your accountant to see that your heirs get the full benefit of your estate planning upon your death.</p>
+Titling Assets in Your Name as Trustee
 
-<h3>Titling Assets in Your Name as Trustee</h3>
+Generally, you should title all of your currently owned and newly acquired assets in the name of your trust. We prefer the following format for titling assets in the name of your trust:
 
-<p>Generally, you should title all of your currently owned and newly acquired assets in the name of your trust. We prefer the following format for titling assets in the name of your trust:</p>
+{{CLIENT_FULL_NAME}}{{#IF_JOINT}} and {{SPOUSE_FULL_NAME}}{{/IF_JOINT}}, Trustees, or their successors in interest, of {{TRUST_NAME}} dated {{TRUST_DATE_FORMATTED}}, and any amendments thereto.
 
-<p style="text-align: center; margin: 20px 0;"><strong>{{CLIENT_FULL_NAME}}{{#IF_JOINT}} and {{SPOUSE_FULL_NAME}}{{/IF_JOINT}}, Trustees, or their successors in interest, of {{TRUST_NAME}} dated {{TRUST_DATE_FORMATTED}}, and any amendments thereto.</strong></p>
+Instructions for Transferring Specific Assets
 
-<h3>Instructions for Transferring Specific Assets</h3>
+Cash Accounts
 
-<h3>Cash Accounts</h3>
+You should sign new signature and ownership cards to retitle any sizeable bank accounts or cash equivalents, including treasury bills, money market accounts, and certificates of deposit, to name yourself as Trustee of those accounts. You need not change any small joint or other checking accounts used primarily for household expenses.
 
-<p>You should sign new signature and ownership cards to retitle any sizeable bank accounts or cash equivalents, including treasury bills, money market accounts, and certificates of deposit, to name yourself as Trustee of those accounts. You need not change any small joint or other checking accounts used primarily for household expenses.</p>
+Before you retitle your certificates of deposit, consult with a bank officer to make sure that the institution does not consider the change in account name to be an early withdrawal that incurs a penalty. Generally, this should not be a problem because your tax identification number for the account will remain the same.
 
-<p>Before you retitle your certificates of deposit, consult with a bank officer to make sure that the institution does not consider the change in account name to be an early withdrawal that incurs a penalty. Generally, this should not be a problem because your tax identification number for the account will remain the same.</p>
+Instruct your financial institution by letter or in person to change the title to your trust. The tax identification number (your Social Security number) on the account for withholding and reporting purposes will remain the same. For joint trustee trusts, be sure to give each trustee signature power with respect to the account. Sign the new signature cards as Trustees.
 
-<p>Instruct your financial institution by letter or in person to change the title to your trust. The tax identification number (your Social Security number) on the account for withholding and reporting purposes will remain the same. For joint trustee trusts, be sure to give each trustee signature power with respect to the account. Sign the new signature cards as Trustees.</p>
+Retitling the account records should have no effect on the name you wish to have printed on your checks. There is no reason to have the name of your trust on your printed checks. Ask your bank to continue to print your individual name on the checks.
 
-<p>Retitling the account records should have no effect on the name you wish to have printed on your checks. There is no reason to have the name of your trust on your printed checks. Ask your bank to continue to print your individual name on the checks.</p>
+After changing title, your next account statement will confirm the retitling by listing you as Trustee of your trust. Please put a copy of this account statement in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p><strong><em>After changing title, your next account statement will confirm the retitling by listing you as Trustee of your trust. Please put a copy of this account statement in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Investment Accounts
 
-<h3>Investment Accounts</h3>
+If you hold publicly traded stocks and bonds that are already in brokerage or investment accounts, contact your brokers or custodians and direct them to change the title of the accounts to the name of your trust. The procedure for doing so is the same as the procedure for retitling cash accounts explained above. You may have to complete new account applications and present a copy of your Affidavit or Certification of Trust in order to change the title. Title to the accounts should be in the trust name.
 
-<p>If you hold publicly traded stocks and bonds that are already in brokerage or investment accounts, contact your brokers or custodians and direct them to change the title of the accounts to the name of your trust. The procedure for doing so is the same as the procedure for retitling cash accounts explained above. You may have to complete new account applications and present a copy of your Affidavit or Certification of Trust in order to change the title. Title to the accounts should be in the trust name.</p>
+After changing title, your next account statement will confirm the retitling by listing you as Trustee of your trust. Please put a copy of this account statement in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p><strong><em>After changing title, your next account statement will confirm the retitling by listing you as Trustee of your trust. Please put a copy of this account statement in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Stocks and Bonds Not Held in Investment Accounts
 
-<h3>Stocks and Bonds Not Held in Investment Accounts</h3>
+If you possess original stock or bond certificates, there are two ways to transfer the certificates to your trust.
 
-<p>If you possess original stock or bond certificates, there are two ways to transfer the certificates to your trust.</p>
+    • Open a brokerage or investment account in the name of your Revocable Living Trust and deposit your original certificates in the account. (You may later have your broker deliver the certificates to you made out in the name of the trust if you wish.) Your future account statements that will be titled in the name of your Revocable Living Trust will prove your ownership of the transferred stock or bonds. Please be sure to put a copy of an account statement proving ownership by the trust into the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p class="indent">• Open a brokerage or investment account in the name of your Revocable Living Trust and deposit your original certificates in the account. (You may later have your broker deliver the certificates to you made out in the name of the trust if you wish.) Your future account statements that will be titled in the name of your Revocable Living Trust will prove your ownership of the transferred stock or bonds. <strong><em>Please be sure to put a copy of an account statement proving ownership by the trust into the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+    • Work directly with the transfer agent for the stock or bond and direct the agent to reissue your stock with your Revocable Living Trust named as the new owner. Please put a copy of both the front and back of the new bond or stock certificate in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p class="indent">• Work directly with the transfer agent for the stock or bond and direct the agent to reissue your stock with your Revocable Living Trust named as the new owner. <strong><em>Please put a copy of both the front and back of the new bond or stock certificate in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Stock Options
 
-<h3>Stock Options</h3>
+Transferring or assigning stock options requires a careful analysis of the tax and legal issues. We recommend you ask your Certified Public Accountant (CPA) and your stock plan administrator about your choices in assigning your interests to your Revocable Living Trust. If you would like us to assist you, we would be willing to do so under a separate representation agreement.
 
-<p>Transferring or assigning stock options requires a careful analysis of the tax and legal issues. We recommend you ask your Certified Public Accountant (CPA) and your stock plan administrator about your choices in assigning your interests to your Revocable Living Trust. If you would like us to assist you, we would be willing to do so under a separate representation agreement.</p>
+Personal Effects
 
-<h3>Personal Effects</h3>
+Tangible personal property refers to such items as household furnishings, appliances and fixtures, works of art, motor vehicles, pictures, collectibles, personal wearing apparel and jewelry, books, sporting goods, and hobby paraphernalia. Your tangible personal property has been transferred to your Revocable Living Trust by declaration in Article One of the Trust.
 
-<p>Tangible personal property refers to such items as household furnishings, appliances and fixtures, works of art, motor vehicles, pictures, collectibles, personal wearing apparel and jewelry, books, sporting goods, and hobby paraphernalia. Your tangible personal property has been transferred to your Revocable Living Trust by declaration in Article One of the Trust.</p>
+Your personal vehicles can be titled in the name of your Revocable Living Trust, but we find that most of our clients prefer to leave their vehicles outside their trust for several reasons. One, if they have a vehicle accident, the fact they have a Revocable Living Trust could cause the other parties to the accident to assume they have deep pockets and encourage a lawsuit. Second, heirs can usually transfer vehicles without formal probate proceedings. If you decide to title your vehicle in the name of your trust, consult your casualty insurance agent to make certain the transfer will not result in a business rating on your insurance policy that would increase your premiums.
 
-<p>Your personal vehicles can be titled in the name of your Revocable Living Trust, but we find that most of our clients prefer to leave their vehicles outside their trust for several reasons. One, if they have a vehicle accident, the fact they have a Revocable Living Trust could cause the other parties to the accident to assume they have deep pockets and encourage a lawsuit. Second, heirs can usually transfer vehicles without formal probate proceedings. If you decide to title your vehicle in the name of your trust, consult your casualty insurance agent to make certain the transfer will not result in a business rating on your insurance policy that would increase your premiums.</p>
+Retirement Plans
 
-<h3>Retirement Plans</h3>
+You should never transfer the ownership of a qualified retirement or pension plan or individual retirement account to your Revocable Living Trust. Instead, if you have pre-retirement death benefits under such a plan, our general recommendation is that you choose from among your spouse, children, or partner as primary and contingent beneficiaries.
 
-<p>You should never transfer the ownership of a qualified retirement or pension plan or individual retirement account to your Revocable Living Trust. Instead, if you have pre-retirement death benefits under such a plan, our general recommendation is that you choose from among your spouse, children, or partner as primary and contingent beneficiaries.</p>
+Making the proper beneficiary designations for retirement plans involves many complex tax and individual family issues. Therefore, making a recommendation without further consultation is difficult. You have many tradeoffs to consider in naming your beneficiaries–tradeoffs that affect your required minimum distributions and the taxation of your benefits after your death.
 
-<p>Making the proper beneficiary designations for retirement plans involves many complex tax and individual family issues. Therefore, making a recommendation without further consultation is difficult. You have many tradeoffs to consider in naming your beneficiaries–tradeoffs that affect your required minimum distributions and the taxation of your benefits after your death.</p>
+If you would like to discuss the issues and solutions for designating your retirement plan beneficiaries to best match your unique goals, we would be pleased to do so. But this additional planning must be done under a subsequent written representation agreement.
 
-<p>If you would like to discuss the issues and solutions for designating your retirement plan beneficiaries to best match your unique goals, we would be pleased to do so. But this additional planning must be done under a subsequent written representation agreement.</p>
+Your retirement plan administrator should send you a letter confirming the change of beneficiaries in your retirement plan records. Please put a copy of this confirmation letter in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p><strong><em>Your retirement plan administrator should send you a letter confirming the change of beneficiaries in your retirement plan records. Please put a copy of this confirmation letter in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Qualified Tuition Plans (529 Plans)
 
-<h3>Qualified Tuition Plans (529 Plans)</h3>
+Transferring a 529 plan to your Revocable Living Trust often makes sense, but your trust must contain specific language enabling the Trustee to manage the account. We recommend that you contact us before naming your trust as an owner of a 529 plan.
 
-<p>Transferring a 529 plan to your Revocable Living Trust often makes sense, but your trust must contain specific language enabling the Trustee to manage the account. We recommend that you contact us before naming your trust as an owner of a 529 plan.</p>
+Life Insurance Policies and Annuities
 
-<h3>Life Insurance Policies and Annuities</h3>
+You may want to tax-proof your major life insurance policies by creating one or more irrevocable life insurance trusts. In any event, you will probably want some policy proceeds paid directly to your Revocable Living Trust. Please consult with us so we can help you determine the proper ownership and beneficiary designation for each.
 
-<p>You may want to tax-proof your major life insurance policies by creating one or more irrevocable life insurance trusts. In any event, you will probably want some policy proceeds paid directly to your Revocable Living Trust. Please consult with us so we can help you determine the proper ownership and beneficiary designation for each.</p>
+If you decide to name your Revocable Living Trust as the beneficiary of a policy, here are several points you should consider.
 
-<p>If you decide to name your Revocable Living Trust as the beneficiary of a policy, here are several points you should consider.</p>
+Your policy beneficiary designation, not your Will and Revocable Living Trust, controls the disposition of the policy benefits.
 
-<p>Your policy beneficiary designation, not your Will and Revocable Living Trust, controls the disposition of the policy benefits.</p>
+Generally, you should designate your Revocable Living Trust as the beneficiary of your life insurance policies so the policy proceeds will be governed by the terms of the Revocable Living Trust. To do so, we recommend you advise your insurance agent that you want your Revocable Living Trust as the beneficiary. Your agent will make the change for you or provide you the beneficiary designation form for you to complete.
 
-<p>Generally, you should designate your Revocable Living Trust as the beneficiary of your life insurance policies so the policy proceeds will be governed by the terms of the Revocable Living Trust. To do so, we recommend you advise your insurance agent that you want your Revocable Living Trust as the beneficiary. Your agent will make the change for you or provide you the beneficiary designation form for you to complete.</p>
+If you name your Revocable Living Trust as the primary beneficiary, you should name your spouse, partner, or children as the secondary beneficiary.
 
-<p>If you name your Revocable Living Trust as the primary beneficiary, you should name your spouse, partner, or children as the secondary beneficiary.</p>
+Each insurance company will have its own preferred format for designating your Revocable Living Trust as the beneficiary. Here is a typical format:
 
-<p>Each insurance company will have its own preferred format for designating your Revocable Living Trust as the beneficiary. Here is a typical format:</p>
+    Primary Beneficiary: The {{TRUST_NAME}} dated {{TRUST_DATE_FORMATTED}}
+    Secondary Beneficiary: Spouse, partner, children, or other heirs.
 
-<p class="indent">Primary Beneficiary: The {{TRUST_NAME}} dated {{TRUST_DATE_FORMATTED}}</p>
-<p class="indent">Secondary Beneficiary: Spouse, partner, children, or other heirs.</p>
+Your insurance company should send you a letter confirming the change of beneficiaries in your insurance policy or annuity records. Please put a copy of this confirmation letter in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p><strong><em>Your insurance company should send you a letter confirming the change of beneficiaries in your insurance policy or annuity records. Please put a copy of this confirmation letter in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Mortgage, Notes, and Other Receivables
 
-<h3>Mortgage, Notes, and Other Receivables</h3>
+If you have loaned money to anyone, you should assign your interest as lender to your Revocable Living Trust by a written document and notify your debtor of the assignment. We can prepare assignment documents for each interest for your signature. Please put a copy of each assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p>If you have loaned money to anyone, you should assign your interest as lender to your Revocable Living Trust by a written document and notify your debtor of the assignment. We can prepare assignment documents for each interest for your signature. <strong><em>Please put a copy of each assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Partnership Interest
 
-<h3>Partnership Interest</h3>
+If there are no restrictions in your general partnership agreement, your interest in the general partnership should be transferred through a written assignment of interest signed by you and acknowledged by your partners. Transfer of an interest in a limited partnership is accomplished in the same way as the transfer of a general partnership interest.
 
-<p>If there are no restrictions in your general partnership agreement, your interest in the general partnership should be transferred through a written assignment of interest signed by you and acknowledged by your partners. Transfer of an interest in a limited partnership is accomplished in the same way as the transfer of a general partnership interest.</p>
+We can prepare assignment documents for each interest for your signature. Please put a copy of each assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p>We can prepare assignment documents for each interest for your signature. <strong><em>Please put a copy of each assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Corporate Business or Professional Interests
 
-<h3>Corporate Business or Professional Interests</h3>
+You should contact your corporate counsel or ask us to assist you in transferring your professional business interests to the Revocable Living Trust.
 
-<p>You should contact your corporate counsel or ask us to assist you in transferring your professional business interests to the Revocable Living Trust.</p>
+    • If your business is a corporation, you will have to cancel shares held in your name and reissue them in your name as Trustee of your Revocable Living Trust. Please put a copy of both the front and back of the new stock certificate in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p class="indent">• If your business is a corporation, you will have to cancel shares held in your name and reissue them in your name as Trustee of your Revocable Living Trust. <strong><em>Please put a copy of both the front and back of the new stock certificate in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+    • If your business is a limited liability company, we will draft assignment documents to assign your interest to your Revocable Living Trust. Please put a copy of the assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p class="indent">• If your business is a limited liability company, we will draft assignment documents to assign your interest to your Revocable Living Trust. <strong><em>Please put a copy of the assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Sole Proprietorship Business Interests
 
-<h3>Sole Proprietorship Business Interests</h3>
+A sole proprietorship is a business entity owned by one person. Ownership of a sole proprietorship can be transferred to a Revocable Living Trust with a written assignment of interest. All items of tangible personal property should be listed individually or by category in the assignment. Please put a copy of the assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p>A sole proprietorship is a business entity owned by one person. Ownership of a sole proprietorship can be transferred to a Revocable Living Trust with a written assignment of interest. All items of tangible personal property should be listed individually or by category in the assignment. <strong><em>Please put a copy of the assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Oil, Gas, and Mineral Interests
 
-<h3>Oil, Gas, and Mineral Interests</h3>
+The method of transferring interests in oil, minerals, and gas depends on whether you own or lease the interests. Generally, if you own the interests, you should record a deed that titles your interests to your Revocable Living Trust. If your interest is a lease, you should assign your rights as a lessee to your Revocable Living Trust by a written assignment. Please put a copy of the deed or assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p>The method of transferring interests in oil, minerals, and gas depends on whether you own or lease the interests. Generally, if you own the interests, you should record a deed that titles your interests to your Revocable Living Trust. If your interest is a lease, you should assign your rights as a lessee to your Revocable Living Trust by a written assignment. <strong><em>Please put a copy of the deed or assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Real Property
 
-<h3>Real Property</h3>
+Transferring your real property to your trust will require attention to ownership and tax issues based on the nature of the current title to the property. Ultimately, the transfer will require preparing, executing, and recording new deeds for each property. This should be done through an attorney. At your request, we will assist you with this. Please put a copy of each deed in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p>Transferring your real property to your trust will require attention to ownership and tax issues based on the nature of the current title to the property. Ultimately, the transfer will require preparing, executing, and recording new deeds for each property. This should be done through an attorney. At your request, we will assist you with this. <strong><em>Please put a copy of each deed in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Regarding your homeowner's policy, contact your insurance provider to discuss adding your trust as an additional endorsee on your policy.
 
-<p>Regarding your homeowner's policy, contact your insurance provider to discuss adding your trust as an additional endorsee on your policy.</p>
+Anticipated Inheritance, Gift, or Lawsuit Judgment
 
-<h3>Anticipated Inheritance, Gift, or Lawsuit Judgment</h3>
+If you are the beneficiary of an estate of someone who has already died, or if you are a plaintiff in a lawsuit, you can assign your interest in the estate or lawsuit to your Revocable Living Trust in case you are disabled or deceased before receiving distributions or payments. Please put a copy of the assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.
 
-<p>If you are the beneficiary of an estate of someone who has already died, or if you are a plaintiff in a lawsuit, you can assign your interest in the estate or lawsuit to your Revocable Living Trust in case you are disabled or deceased before receiving distributions or payments. <strong><em>Please put a copy of the assignment in the TRUST ASSETS section of your Revocable Living Trust Portfolio.</em></strong></p>
+Reviewing Your Estate Plan
 
-<h3>Reviewing Your Estate Plan</h3>
-
-<p>You should review your estate plan with an attorney every two to three years because all estate plans require on-going maintenance. In particular, a change in your family, an increase in your net worth, or a change in the tax law could significantly affect the effectiveness of your plan.</p>
-
-</body>
-</html>
-  `.trim();
+You should review your estate plan with an attorney every two to three years because all estate plans require on-going maintenance. In particular, a change in your family, an increase in your net worth, or a change in the tax law could significantly affect the effectiveness of your plan.`;
 };
