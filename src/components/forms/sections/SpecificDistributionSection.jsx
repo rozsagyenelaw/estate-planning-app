@@ -24,7 +24,7 @@ const SpecificDistributionSection = () => {
   const handleAddAgeDistribution = (distIndex) => {
     const distribution = specificDistributions[distIndex];
     const newAgeDistributions = [
-      ...distribution.ageDistributions,
+      ...(distribution.ageDistributions || [{ age: '', percentage: '' }]),
       { age: '', percentage: '' },
     ];
     updateArrayItem('specificDistributions', distIndex, {
@@ -34,7 +34,7 @@ const SpecificDistributionSection = () => {
 
   const handleRemoveAgeDistribution = (distIndex, ageIndex) => {
     const distribution = specificDistributions[distIndex];
-    const newAgeDistributions = distribution.ageDistributions.filter(
+    const newAgeDistributions = (distribution.ageDistributions || [{ age: '', percentage: '' }]).filter(
       (_, i) => i !== ageIndex
     );
     updateArrayItem('specificDistributions', distIndex, {
@@ -44,7 +44,7 @@ const SpecificDistributionSection = () => {
 
   const handleAgeDistributionChange = (distIndex, ageIndex, field, value) => {
     const distribution = specificDistributions[distIndex];
-    const newAgeDistributions = distribution.ageDistributions.map((ad, i) =>
+    const newAgeDistributions = (distribution.ageDistributions || [{ age: '', percentage: '' }]).map((ad, i) =>
       i === ageIndex ? { ...ad, [field]: value } : ad
     );
     updateArrayItem('specificDistributions', distIndex, {
@@ -130,7 +130,7 @@ const SpecificDistributionSection = () => {
                       <p className="text-sm font-medium text-gray-700">
                         Age-Based Distributions:
                       </p>
-                      {distribution.ageDistributions.map((ageDist, ageIndex) => (
+                      {(distribution.ageDistributions || [{ age: '', percentage: '' }]).map((ageDist, ageIndex) => (
                         <div
                           key={ageIndex}
                           className="flex items-end gap-3 p-3 bg-white rounded border border-gray-200"
@@ -165,7 +165,7 @@ const SpecificDistributionSection = () => {
                             placeholder="50"
                             className="flex-1"
                           />
-                          {distribution.ageDistributions.length > 1 && (
+                          {(distribution.ageDistributions || [{ age: '', percentage: '' }]).length > 1 && (
                             <Button
                               variant="danger"
                               size="sm"

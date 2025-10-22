@@ -25,19 +25,19 @@ const GeneralNeedsTrustSection = () => {
 
   const handleAddAgeMilestone = (trustIndex) => {
     const trust = generalNeedsTrusts[trustIndex];
-    const newMilestones = [...trust.ageMilestones, { age: '', percentage: '' }];
+    const newMilestones = [...(trust.ageMilestones || [{ age: '', percentage: '' }]), { age: '', percentage: '' }];
     updateArrayItem('generalNeedsTrusts', trustIndex, { ageMilestones: newMilestones });
   };
 
   const handleRemoveAgeMilestone = (trustIndex, milestoneIndex) => {
     const trust = generalNeedsTrusts[trustIndex];
-    const newMilestones = trust.ageMilestones.filter((_, i) => i !== milestoneIndex);
+    const newMilestones = (trust.ageMilestones || [{ age: '', percentage: '' }]).filter((_, i) => i !== milestoneIndex);
     updateArrayItem('generalNeedsTrusts', trustIndex, { ageMilestones: newMilestones });
   };
 
   const handleAgeMilestoneChange = (trustIndex, milestoneIndex, field, value) => {
     const trust = generalNeedsTrusts[trustIndex];
-    const newMilestones = trust.ageMilestones.map((milestone, i) =>
+    const newMilestones = (trust.ageMilestones || [{ age: '', percentage: '' }]).map((milestone, i) =>
       i === milestoneIndex ? { ...milestone, [field]: value } : milestone
     );
     updateArrayItem('generalNeedsTrusts', trustIndex, { ageMilestones: newMilestones });
@@ -145,7 +145,7 @@ const GeneralNeedsTrustSection = () => {
                             placeholder="50"
                             className="flex-1"
                           />
-                          {trust.ageMilestones?.length > 1 && (
+                          {(trust.ageMilestones || [{ age: '', percentage: '' }]).length > 1 && (
                             <Button
                               variant="danger"
                               size="sm"
