@@ -238,6 +238,20 @@ If any part of ${beneficiary.name}'s trust is not effectively appointed, the Tru
 If ${beneficiary.name} dies before the establishment of ${beneficiary.gender === 'male' ? 'his' : 'her'} trust, the Trustee shall distribute ${beneficiary.name}'s share per stirpes to ${beneficiary.gender === 'male' ? 'his' : 'her'} descendants. If ${beneficiary.name} has no descendants, the Trustee shall distribute ${beneficiary.name}'s share pro rata to the other beneficiaries named in this Article. If no other named beneficiaries exist, the Trustee shall distribute ${beneficiary.name}'s share under the terms of Article 8.
 `).join('\n')}
 
+${formData.generalNeedsTrust?.enabled ? `
+Article Seven-A
+General Needs Trust for ${formData.generalNeedsTrust.beneficiaryName}
+If ${formData.generalNeedsTrust.beneficiaryName} is living at my death, the Trustee shall set aside a separate trust (the "General Needs Trust") for the benefit of ${formData.generalNeedsTrust.beneficiaryName}.
+Section 7A.01      Trust Property
+The General Needs Trust shall be funded with property as specified in this trust or as the Trustee determines appropriate.
+Section 7A.02      Distributions
+The Trustee may distribute to or for the benefit of ${formData.generalNeedsTrust.beneficiaryName} as much of the net income and principal of the General Needs Trust as the Trustee determines necessary or advisable for ${formData.generalNeedsTrust.beneficiaryName}'s general needs, health, education, maintenance, and support.
+${formData.generalNeedsTrust.specialProvisions ? `Section 7A.03      Special Provisions
+${formData.generalNeedsTrust.specialProvisions}` : ''}
+Section 7A.04      Termination
+Upon the death of ${formData.generalNeedsTrust.beneficiaryName}, the Trustee shall distribute the remaining trust property in accordance with the provisions of this trust.
+` : ''}
+
 Article Eight
 Remote Contingent Distribution
 If at any time no person or entity is qualified to receive final distribution of any part of my trust estate, this portion of my trust estate must be distributed to those persons who would inherit it had I then died intestate owning the property, as determined and in the proportions provided by the laws of ${formData.client.state} then in effect.
