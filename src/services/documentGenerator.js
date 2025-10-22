@@ -1,9 +1,10 @@
 /**
  * Document Generator Service
- * Generates PDF documents from form data using template engine
+ * Generates PDF and Word documents from form data using template engine
  */
 
 import jsPDF from 'jspdf';
+import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel } from 'docx';
 import { formatDate, formatPhoneNumber } from '../utils/formatters';
 import { DOCUMENT_TYPES } from '../utils/constants';
 import { processTemplate, prepareTemplateData } from './templateEngine';
@@ -110,7 +111,7 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
     const marginTop = 1.0;
     const marginBottom = 1.0;
     const contentWidth = pageWidth - marginLeft - marginRight;
-    const baseLineHeight = 0.17;
+    const baseLineHeight = 0.21;
 
     let currentY = marginTop;
 
@@ -136,6 +137,19 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
       // Skip empty lines but add small spacing
       if (!line) {
         currentY += baseLineHeight * 0.5;
+        continue;
+      }
+
+      // Detect "Schedule of Assets" - force new page and center
+      if (line.match(/^Schedule of Assets$/i)) {
+        doc.addPage();
+        currentY = marginTop;
+        doc.setFont('times', 'bold');
+        doc.setFontSize(16);
+        doc.text(line, pageWidth / 2, currentY, { align: 'center' });
+        currentY += baseLineHeight * 1.5;
+        doc.setFont('times', 'normal');
+        doc.setFontSize(12);
         continue;
       }
 
@@ -177,6 +191,8 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
           doc.text(w, marginLeft, currentY);
           currentY += baseLineHeight;
         }
+        // Add blank line after section header
+        currentY += baseLineHeight;
         doc.setFont('times', 'normal');
         continue;
       }
@@ -312,6 +328,181 @@ const generatePDFFromHTML = async (htmlContent, documentTitle) => {
 };
 
 /**
+ * Generate Word document from plain text
+ * @param {string} textContent - Plain text content from template
+ * @param {string} documentTitle - Title for the document
+ * @param {Object} formData - Form data (for cover page)
+ * @returns {Promise<Blob>} Word document as Blob
+ */
+const generateWordFromText = async (textContent, documentTitle, formData = null) => {
+  try {
+    const paragraphs = [];
+
+    // Add cover page if formData is provided
+    if (formData) {
+      // Trust name (uppercase)
+      const trustName = `THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} LIVING TRUST DATED ${formData.currentDate.toUpperCase()}`;
+      paragraphs.push(
+        new Paragraph({
+          children: [new TextRun({ text: trustName, bold: true, size: 36 })],
+          alignment: AlignmentType.CENTER,
+          spacing: { before: 3000, after: 1200 },
+        })
+      );
+
+      // Client name
+      paragraphs.push(
+        new Paragraph({
+          children: [new TextRun({ text: `${formData.client.firstName} ${formData.client.lastName}`, size: 28 })],
+          alignment: AlignmentType.CENTER,
+          spacing: { after: 1200 },
+        })
+      );
+
+      // Law office info
+      paragraphs.push(
+        new Paragraph({
+          children: [new TextRun({ text: 'Prepared by:', size: 24 })],
+          alignment: AlignmentType.CENTER,
+          spacing: { before: 4000, after: 300 },
+        })
+      );
+      paragraphs.push(
+        new Paragraph({
+          children: [new TextRun({ text: 'LAW OFFICES OF ROZSA GYENE, PC', bold: true, size: 24 })],
+          alignment: AlignmentType.CENTER,
+          spacing: { after: 200 },
+        })
+      );
+      paragraphs.push(
+        new Paragraph({
+          children: [new TextRun({ text: '450 N Brand Blvd, Suite 623', size: 22 })],
+          alignment: AlignmentType.CENTER,
+          spacing: { after: 200 },
+        })
+      );
+      paragraphs.push(
+        new Paragraph({
+          children: [new TextRun({ text: 'Glendale, California 91203', size: 22 })],
+          alignment: AlignmentType.CENTER,
+          spacing: { after: 1200 },
+        })
+      );
+
+      // Page break after cover
+      paragraphs.push(
+        new Paragraph({
+          children: [new TextRun({ text: '', size: 1 })],
+          pageBreakBefore: true,
+        })
+      );
+    }
+
+    // Process content lines
+    const lines = textContent.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+
+      if (!line) {
+        paragraphs.push(new Paragraph({ children: [new TextRun({ text: '' })] }));
+        continue;
+      }
+
+      // Schedule of Assets - start new page
+      if (line.match(/^Schedule of Assets$/i)) {
+        paragraphs.push(
+          new Paragraph({
+            children: [new TextRun({ text: line, bold: true, size: 32 })],
+            alignment: AlignmentType.CENTER,
+            heading: HeadingLevel.HEADING_1,
+            pageBreakBefore: true,
+          })
+        );
+        continue;
+      }
+
+      // Article headers
+      if (line.match(/^Article (One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Seven-A)$/)) {
+        paragraphs.push(
+          new Paragraph({
+            children: [new TextRun({ text: line, bold: true, size: 32 })],
+            alignment: AlignmentType.CENTER,
+            heading: HeadingLevel.HEADING_1,
+            spacing: { before: 400, after: 200 },
+          })
+        );
+        continue;
+      }
+
+      // Article subtitles
+      if (i > 0 && lines[i-1].match(/^Article (One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen|Seven-A)$/)) {
+        paragraphs.push(
+          new Paragraph({
+            children: [new TextRun({ text: line, bold: true, size: 28 })],
+            alignment: AlignmentType.CENTER,
+            heading: HeadingLevel.HEADING_2,
+            spacing: { after: 300 },
+          })
+        );
+        continue;
+      }
+
+      // Section headers
+      if (line.match(/^Section \d+\.\d+/)) {
+        paragraphs.push(
+          new Paragraph({
+            children: [new TextRun({ text: line, bold: true, size: 24 })],
+            spacing: { before: 300, after: 200 },
+          })
+        );
+        continue;
+      }
+
+      // Subsections (a), (b), etc.
+      if (line.match(/^\s*\([a-z]\)\s+/)) {
+        paragraphs.push(
+          new Paragraph({
+            children: [new TextRun({ text: line, bold: true })],
+            indent: { left: 720 },
+          })
+        );
+        continue;
+      }
+
+      // Regular paragraphs
+      paragraphs.push(
+        new Paragraph({
+          children: [new TextRun({ text: line })],
+          spacing: { after: 100 },
+        })
+      );
+    }
+
+    const doc = new Document({
+      sections: [{
+        properties: {
+          page: {
+            margin: {
+              top: 1440,
+              right: 1440,
+              bottom: 1440,
+              left: 1440,
+            },
+          },
+        },
+        children: paragraphs,
+      }],
+    });
+
+    const blob = await Packer.toBlob(doc);
+    return blob;
+  } catch (error) {
+    console.error(`ERROR generating Word document:`, error);
+    throw error;
+  }
+};
+
+/**
  * Generate Living Trust document
  * @param {Object} formData - Complete form data
  * @returns {jsPDF} PDF document
@@ -378,6 +569,53 @@ export const generateLivingTrust = async (formData) => {
   // For new system, use HTML-based PDF generation
   console.log('Using HTML-based PDF generation...');
   return generatePDFFromHTML(content, docTitle);
+};
+
+/**
+ * Generate Living Trust Word document
+ * @param {Object} formData - Complete form data
+ * @returns {Promise<Blob>} Word document as Blob
+ */
+export const generateLivingTrustWord = async (formData) => {
+  console.log('=== DEBUG: generateLivingTrustWord ===');
+
+  // Add currentDate if not present
+  if (!formData.currentDate) {
+    const today = new Date();
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                   'July', 'August', 'September', 'October', 'November', 'December'];
+    formData.currentDate = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+  }
+
+  // Generate content
+  let content;
+  if (formData.trustType === 'single' || !formData.trustType) {
+    content = singleLivingTrustTemplate(formData);
+  } else {
+    const templateData = prepareTemplateData(formData);
+    let template;
+
+    switch (formData.trustType) {
+      case 'joint':
+        template = jointLivingTrustTemplate;
+        break;
+      case 'single_irrevocable':
+        template = singleIrrevocableTrustTemplate;
+        break;
+      case 'joint_irrevocable':
+        template = jointIrrevocableTrustTemplate;
+        break;
+      default:
+        template = formData.isJoint ? jointLivingTrustTemplate : singleLivingTrustTemplate;
+    }
+
+    content = processTemplate(template, templateData);
+  }
+
+  const isIrrevocable = formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable';
+  const docTitle = isIrrevocable ? 'Irrevocable Trust' : 'Living Trust';
+
+  return generateWordFromText(content, docTitle, formData);
 };
 
 /**

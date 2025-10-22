@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useFormContext } from '../../context/FormContext';
 import { Button, Card } from '../common';
-import { generateLivingTrust, generateAllDocuments, downloadDocument } from '../../services/documentGenerator';
+import { generateLivingTrust, generateLivingTrustWord, generateAllDocuments, downloadDocument } from '../../services/documentGenerator';
 import { sampleFormData } from '../../utils/testDocumentGeneration';
 import { saveFormDraft } from '../../services/autocompleteService';
 
@@ -28,16 +28,44 @@ const EstatePlanningForm = () => {
 
   const handleGenerateTrust = async () => {
     setLoading(true);
-    setStatus('Generating Living Trust document...');
+    setStatus('Generating Living Trust PDF...');
     try {
       const doc = await generateLivingTrust(formData);
       const filename = `${formData.trustName || 'Living_Trust'}_${new Date().toISOString().split('T')[0]}.pdf`;
       downloadDocument(doc, filename);
-      setStatus('Living Trust generated successfully!');
+      setStatus('Living Trust PDF generated successfully!');
       setTimeout(() => setStatus(''), 3000);
     } catch (error) {
       console.error('Error generating trust:', error);
       setStatus('Error generating trust. Please check the console for details.');
+      setTimeout(() => setStatus(''), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerateTrustWord = async () => {
+    setLoading(true);
+    setStatus('Generating Living Trust Word document...');
+    try {
+      const blob = await generateLivingTrustWord(formData);
+      const filename = `${formData.trustName || 'Living_Trust'}_${new Date().toISOString().split('T')[0]}.docx`;
+
+      // Create download link for Blob
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      setStatus('Living Trust Word document generated successfully!');
+      setTimeout(() => setStatus(''), 3000);
+    } catch (error) {
+      console.error('Error generating Word document:', error);
+      setStatus('Error generating Word document. Please check the console for details.');
       setTimeout(() => setStatus(''), 5000);
     } finally {
       setLoading(false);
@@ -164,7 +192,16 @@ const EstatePlanningForm = () => {
               loading={loading}
               disabled={loading}
             >
-              Generate Living Trust
+              Generate PDF
+            </Button>
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={handleGenerateTrustWord}
+              loading={loading}
+              disabled={loading}
+            >
+              Generate Word
             </Button>
             <Button
               variant="primary"

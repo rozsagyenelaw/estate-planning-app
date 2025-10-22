@@ -2,9 +2,6 @@ export const singleTrustTemplate = (formData) => `
 THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} LIVING TRUST
 DATED ${formData.currentDate}
 ${formData.isRestatement ? `Restatement of trust originally dated ${formData.originalTrustDate}` : ''}
-LAW OFFICES OF ROZSA GYENE, PC
-450 N BRAND BLVD. SUITE 623
-GLENDALE, CALIFORNIA 91203
 
 
 ${formData.isRestatement ? `
@@ -214,7 +211,7 @@ ${formData.residuaryBeneficiaries?.map(b => {
   // Convert to fraction
   let shareFraction;
   if (totalBeneficiaries === 1 || sharePercent === 100) {
-    shareFraction = 'all';
+    shareFraction = '100%';
   } else if (Math.abs(sharePercent - (100 / totalBeneficiaries)) < 0.01) {
     shareFraction = `1/${totalBeneficiaries}`;
   } else {

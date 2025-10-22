@@ -1,5 +1,5 @@
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Button, Autocomplete, Input } from '../../common';
+import { Card, Button, Autocomplete, Input, Select } from '../../common';
 import { DEFAULT_NEEDS_TRUST } from '../../../utils/constants';
 import { getNameSuggestions } from '../../../services/autocompleteService';
 
@@ -21,6 +21,26 @@ const GeneralNeedsTrustSection = () => {
 
   const handleNeedsTrustChange = (index, field, value) => {
     updateArrayItem('generalNeedsTrusts', index, { [field]: value });
+  };
+
+  const handleAddAgeMilestone = (trustIndex) => {
+    const trust = generalNeedsTrusts[trustIndex];
+    const newMilestones = [...trust.ageMilestones, { age: '', percentage: '' }];
+    updateArrayItem('generalNeedsTrusts', trustIndex, { ageMilestones: newMilestones });
+  };
+
+  const handleRemoveAgeMilestone = (trustIndex, milestoneIndex) => {
+    const trust = generalNeedsTrusts[trustIndex];
+    const newMilestones = trust.ageMilestones.filter((_, i) => i !== milestoneIndex);
+    updateArrayItem('generalNeedsTrusts', trustIndex, { ageMilestones: newMilestones });
+  };
+
+  const handleAgeMilestoneChange = (trustIndex, milestoneIndex, field, value) => {
+    const trust = generalNeedsTrusts[trustIndex];
+    const newMilestones = trust.ageMilestones.map((milestone, i) =>
+      i === milestoneIndex ? { ...milestone, [field]: value } : milestone
+    );
+    updateArrayItem('generalNeedsTrusts', trustIndex, { ageMilestones: newMilestones });
   };
 
   return (
@@ -73,15 +93,88 @@ const GeneralNeedsTrustSection = () => {
                     required
                   />
 
-                  <Input
-                    label="Age Restrictions (Optional)"
-                    value={trust.ageRestrictions}
+                  <Select
+                    label="Distribution Type"
+                    options={[
+                      { value: 'age', label: 'Age-Based Milestones' },
+                      { value: 'condition', label: 'Condition-Based' },
+                    ]}
+                    value={trust.distributionType || 'age'}
                     onChange={(e) =>
-                      handleNeedsTrustChange(index, 'ageRestrictions', e.target.value)
+                      handleNeedsTrustChange(index, 'distributionType', e.target.value)
                     }
-                    placeholder="e.g., Until age 25"
-                    helperText="Specify any age-related conditions for this trust"
                   />
+
+                  {trust.distributionType === 'age' ? (
+                    <div className="ml-4 p-4 bg-gray-50 rounded-lg space-y-3">
+                      <p className="text-sm font-medium text-gray-700">
+                        Age-Based Distribution Milestones:
+                      </p>
+                      {(trust.ageMilestones || [{ age: '', percentage: '' }]).map((milestone, milestoneIndex) => (
+                        <div
+                          key={milestoneIndex}
+                          className="flex items-end gap-3 p-3 bg-white rounded border border-gray-200"
+                        >
+                          <Input
+                            label="Age"
+                            type="number"
+                            value={milestone.age}
+                            onChange={(e) =>
+                              handleAgeMilestoneChange(
+                                index,
+                                milestoneIndex,
+                                'age',
+                                e.target.value
+                              )
+                            }
+                            placeholder="25"
+                            className="flex-1"
+                          />
+                          <Input
+                            label="Percentage"
+                            type="number"
+                            value={milestone.percentage}
+                            onChange={(e) =>
+                              handleAgeMilestoneChange(
+                                index,
+                                milestoneIndex,
+                                'percentage',
+                                e.target.value
+                              )
+                            }
+                            placeholder="50"
+                            className="flex-1"
+                          />
+                          {trust.ageMilestones?.length > 1 && (
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              onClick={() => handleRemoveAgeMilestone(index, milestoneIndex)}
+                            >
+                              Remove
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAddAgeMilestone(index)}
+                      >
+                        + Add Age Milestone
+                      </Button>
+                    </div>
+                  ) : (
+                    <Input
+                      label="Distribution Condition"
+                      value={trust.condition || ''}
+                      onChange={(e) =>
+                        handleNeedsTrustChange(index, 'condition', e.target.value)
+                      }
+                      placeholder="e.g., upon completion of college degree"
+                      helperText="Specify the condition that must be met for distribution"
+                    />
+                  )}
 
                   <Input
                     label="Distribution Percentage"

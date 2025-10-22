@@ -160,7 +160,9 @@ export const DEFAULT_RESIDUARY_BENEFICIARY = {
 
 export const DEFAULT_NEEDS_TRUST = {
   beneficiary: '',
-  ageRestrictions: '',
+  distributionType: 'age', // 'age' or 'condition'
+  ageMilestones: [{ age: '', percentage: '' }],
+  condition: '', // Used when distributionType is 'condition'
   distributionPercentage: '',
   specialConditions: '',
 };
