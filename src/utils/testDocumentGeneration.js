@@ -13,7 +13,7 @@ export const sampleFormData = {
   // Trust Type
   trustType: 'single', // Must match TRUST_TYPES.SINGLE value
   isJoint: false,
-  isRestatement: true,
+  isRestatement: false, // Changed to false - not a restatement
   originalTrustName: 'John M. Smith Living Trust',
   originalTrustDate: 'January 15, 2020',
   currentDate: 'December 15, 2024', // Required by template

@@ -51,7 +51,7 @@ During any period that the trust is a Grantor Trust, the Taxpayer Identification
 Article Two
 Family Information
 I am ${formData.client.maritalStatus}.
-I have ${formData.children?.length || 'three'} children, ${formData.children?.map((child, i) => `${child.name}, born on ${child.birthDate}${i < formData.children.length - 1 ? ';' : '.'}`).join(' ')}.
+I have ${formData.children?.length || 'three'} children: ${formData.children?.map((child, i) => `${child.name}, born on ${child.birthday}${i < formData.children.length - 1 ? ';' : '.'}`).join(' ')}.
 All references in this document to my children are references to these children, and any children subsequently born to me or adopted by me by legal proceeding.
 References to my descendants are to my children and their descendants, including any deceased child's descendants.
 Article Three
