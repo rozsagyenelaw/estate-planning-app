@@ -40,6 +40,26 @@ const ResiduaryDistributionSection = () => {
     updateArrayItem('residuaryBeneficiaries', index, { [field]: value });
   };
 
+  const handleAddAgeMilestone = (beneficiaryIndex) => {
+    const beneficiary = residuaryBeneficiaries[beneficiaryIndex];
+    const newMilestones = [...(beneficiary.ageMilestones || [{ age: '', percentage: '' }]), { age: '', percentage: '' }];
+    updateArrayItem('residuaryBeneficiaries', beneficiaryIndex, { ageMilestones: newMilestones });
+  };
+
+  const handleRemoveAgeMilestone = (beneficiaryIndex, milestoneIndex) => {
+    const beneficiary = residuaryBeneficiaries[beneficiaryIndex];
+    const newMilestones = beneficiary.ageMilestones.filter((_, i) => i !== milestoneIndex);
+    updateArrayItem('residuaryBeneficiaries', beneficiaryIndex, { ageMilestones: newMilestones });
+  };
+
+  const handleAgeMilestoneChange = (beneficiaryIndex, milestoneIndex, field, value) => {
+    const beneficiary = residuaryBeneficiaries[beneficiaryIndex];
+    const newMilestones = (beneficiary.ageMilestones || [{ age: '', percentage: '' }]).map((milestone, i) =>
+      i === milestoneIndex ? { ...milestone, [field]: value } : milestone
+    );
+    updateArrayItem('residuaryBeneficiaries', beneficiaryIndex, { ageMilestones: newMilestones });
+  };
+
   const calculateTotalPercentage = () => {
     return residuaryBeneficiaries
       .reduce((sum, b) => sum + parseFloat(b.share || 0), 0)
@@ -166,6 +186,68 @@ const ResiduaryDistributionSection = () => {
                         required
                       />
                     </div>
+
+                    {/* Age-Based Milestones */}
+                    {beneficiary.distributionType === 'guardian' && (
+                      <div className="ml-4 p-4 bg-gray-50 rounded-lg space-y-3">
+                        <p className="text-sm font-medium text-gray-700">
+                          Age-Based Distribution Milestones:
+                        </p>
+                        {(beneficiary.ageMilestones || [{ age: '', percentage: '' }]).map((milestone, milestoneIndex) => (
+                          <div
+                            key={milestoneIndex}
+                            className="flex items-end gap-3 p-3 bg-white rounded border border-gray-200"
+                          >
+                            <Input
+                              label="Age"
+                              type="number"
+                              value={milestone.age}
+                              onChange={(e) =>
+                                handleAgeMilestoneChange(
+                                  index,
+                                  milestoneIndex,
+                                  'age',
+                                  e.target.value
+                                )
+                              }
+                              placeholder="25"
+                              className="flex-1"
+                            />
+                            <Input
+                              label="Percentage"
+                              type="number"
+                              value={milestone.percentage}
+                              onChange={(e) =>
+                                handleAgeMilestoneChange(
+                                  index,
+                                  milestoneIndex,
+                                  'percentage',
+                                  e.target.value
+                                )
+                              }
+                              placeholder="50"
+                              className="flex-1"
+                            />
+                            {beneficiary.ageMilestones?.length > 1 && (
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => handleRemoveAgeMilestone(index, milestoneIndex)}
+                              >
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleAddAgeMilestone(index)}
+                        >
+                          + Add Age Milestone
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

@@ -4,6 +4,7 @@ const Autocomplete = forwardRef(({
   label,
   suggestions = [],
   onSelect,
+  onBlur,
   error,
   helperText,
   required = false,
@@ -87,6 +88,12 @@ const Autocomplete = forwardRef(({
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        onBlur={(e) => {
+          setShowSuggestions(false);
+          if (onBlur) {
+            onBlur(e);
+          }
+        }}
         onFocus={() => {
           if (filteredSuggestions.length > 0 || suggestions.length > 0) {
             setShowSuggestions(true);

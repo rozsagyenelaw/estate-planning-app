@@ -111,7 +111,7 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
     const marginTop = 1.0;
     const marginBottom = 1.0;
     const contentWidth = pageWidth - marginLeft - marginRight;
-    const baseLineHeight = 0.21;
+    const baseLineHeight = 0.24;
 
     let currentY = marginTop;
 
@@ -119,9 +119,12 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
     const lines = textContent.split('\n');
     console.log('Processing', lines.length, 'lines with formatting...');
 
-    // Removed page numbers per user request
+    // Add page numbers
     const addPageNumber = () => {
-      // No page numbers
+      const pageCount = doc.internal.getNumberOfPages();
+      doc.setFont('times', 'normal');
+      doc.setFontSize(10);
+      doc.text(`Page ${pageCount}`, pageWidth / 2, pageHeight - 0.5, { align: 'center' });
     };
 
     for (let i = 0; i < lines.length; i++) {

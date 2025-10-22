@@ -4,10 +4,15 @@ import { MARITAL_STATUS, SEX_OPTIONS } from '../../../utils/constants';
 import { formatPhoneNumber, formatSSN, formatZipCode } from '../../../utils/formatters';
 import {
   getNameSuggestions,
+  addNameSuggestion,
   getAddressSuggestions,
+  addAddressSuggestion,
   getPhoneSuggestions,
+  addPhoneSuggestion,
   getCitySuggestions,
+  addCitySuggestion,
   getCountySuggestions,
+  addCountySuggestion,
 } from '../../../services/autocompleteService';
 
 const ClientInfoSection = () => {
@@ -116,10 +121,13 @@ const ClientInfoSection = () => {
         required
       />
 
-      <Input
+      <Autocomplete
         label="Phone Number"
         value={person.phone}
         onChange={(e) => handleChange('phone', e.target.value)}
+        onSelect={(value) => handleChange('phone', value)}
+        onBlur={(e) => addPhoneSuggestion(e.target.value)}
+        suggestions={getPhoneSuggestions()}
         placeholder="(XXX) XXX-XXXX"
         maxLength={14}
         required
@@ -131,6 +139,7 @@ const ClientInfoSection = () => {
         value={person.address}
         onChange={(e) => handleChange('address', e.target.value)}
         onSelect={(value) => handleChange('address', value)}
+        onBlur={(e) => addAddressSuggestion(e.target.value)}
         suggestions={getAddressSuggestions()}
         placeholder="Enter street address"
         required
@@ -142,6 +151,7 @@ const ClientInfoSection = () => {
           value={person.city}
           onChange={(e) => handleChange('city', e.target.value)}
           onSelect={(value) => handleChange('city', value)}
+          onBlur={(e) => addCitySuggestion(e.target.value)}
           suggestions={getCitySuggestions()}
           placeholder="City"
           required
@@ -161,6 +171,7 @@ const ClientInfoSection = () => {
           value={person.county}
           onChange={(e) => handleChange('county', e.target.value)}
           onSelect={(value) => handleChange('county', value)}
+          onBlur={(e) => addCountySuggestion(e.target.value)}
           suggestions={getCountySuggestions()}
           placeholder="County"
           required

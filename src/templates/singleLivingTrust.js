@@ -206,26 +206,13 @@ The Trustee shall divide my remaining trust property into shares as follows:
 
                                     Name                                    Relationship                                    Share
 ${formData.residuaryBeneficiaries?.map(b => {
-  const totalBeneficiaries = formData.residuaryBeneficiaries.length;
   const sharePercent = parseFloat(b.share);
-  // Convert to fraction
-  let shareFraction;
-  if (totalBeneficiaries === 1 || sharePercent === 100) {
-    shareFraction = '100%';
-  } else if (Math.abs(sharePercent - (100 / totalBeneficiaries)) < 0.01) {
-    shareFraction = `1/${totalBeneficiaries}`;
-  } else {
-    // Calculate GCD for fraction
-    const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
-    const numerator = Math.round(sharePercent);
-    const denominator = 100;
-    const divisor = gcd(numerator, denominator);
-    shareFraction = `${numerator / divisor}/${denominator / divisor}`;
-  }
+  // Show as percentage
+  const shareDisplay = `${sharePercent}%`;
   // Center align the columns
   const namePadding = ' '.repeat(Math.max(0, 40 - b.name.length));
   const relationshipPadding = ' '.repeat(Math.max(0, 40 - (b.relationship || 'child').length));
-  return `                                    ${b.name}${namePadding}${b.relationship || 'child'}${relationshipPadding}${shareFraction}`;
+  return `                                    ${b.name}${namePadding}${b.relationship || 'child'}${relationshipPadding}${shareDisplay}`;
 }).join('\n')}
 
 The Trustee shall administer the share of each beneficiary as provided in the Sections that follow.

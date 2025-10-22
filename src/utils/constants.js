@@ -156,6 +156,7 @@ export const DEFAULT_RESIDUARY_BENEFICIARY = {
   relation: '',
   share: '',
   distributionType: 'outright',
+  ageMilestones: [{ age: '', percentage: '' }],
 };
 
 export const DEFAULT_NEEDS_TRUST = {
