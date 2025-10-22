@@ -32,37 +32,42 @@ import { tableOfContentsTemplate } from '../templates/tableOfContents';
  */
 const generatePDFFromHTML = async (htmlContent, documentTitle) => {
   try {
+    console.log('generatePDFFromHTML called');
+    console.log('HTML content length:', htmlContent.length);
+    console.log('First 500 chars of HTML:', htmlContent.substring(0, 500));
+
     const doc = new jsPDF({
       orientation: 'portrait',
       unit: 'in',
       format: 'letter'
     });
 
+    console.log('jsPDF created, calling doc.html()...');
+
     await new Promise((resolve, reject) => {
       doc.html(htmlContent, {
         callback: (doc) => {
+          console.log('PDF callback executed successfully');
+          console.log('PDF page count:', doc.internal.getNumberOfPages());
           resolve(doc);
         },
-        x: 0,
-        y: 0,
-        width: 8.5,
-        windowWidth: 816, // 8.5 inches * 96 DPI
-        margin: [0.5, 0.5, 0.5, 0.5],
+        x: 0.5,
+        y: 0.5,
+        width: 7.5, // 8.5 - 1 inch margins
+        windowWidth: 720, // 7.5 inches * 96 DPI
         html2canvas: {
-          scale: 0.8,
-          logging: false,
-          letterRendering: true
-        },
-        error: (error) => {
-          console.error('Error converting HTML to PDF:', error);
-          reject(error);
+          scale: 0.264583, // 72 DPI / 272 DPI for proper text rendering
+          logging: true,
+          useCORS: true
         }
       });
     });
 
+    console.log('PDF generation complete');
     return doc;
   } catch (error) {
-    console.error(`Error generating ${documentTitle}:`, error);
+    console.error(`CRITICAL ERROR generating ${documentTitle}:`, error);
+    console.error('Error stack:', error.stack);
 
     // Fallback to simple text document if HTML conversion fails
     const doc = new jsPDF();
