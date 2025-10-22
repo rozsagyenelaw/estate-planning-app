@@ -174,10 +174,10 @@ The Trustee may elect to allocate or not allocate any portion of the Available G
 The Trustee may create a qualified conservation easement, as defined in Internal Revenue Code Section 2031(c)(8)(A), in any land held by the trust and may make the necessary election provided by Section 2031(c)(6).
 Article Six
 Specific Distributions and Disposition of Tangible Personal Property
-${formData.specificBequests?.map((bequest, index) => `
-Section 6.0${index + 1}      Specific Distribution to ${bequest.beneficiary}
-As soon as practicable after my death${bequest.condition ? `, ${bequest.condition},` : ''} the Trustee shall distribute ${bequest.description} to ${bequest.beneficiary}.
-If ${bequest.beneficiary} is deceased, then this distribution will lapse, and this property instead will be distributed under the other provisions of this trust.
+${formData.specificDistributions?.map((dist, index) => `
+Section 6.0${index + 1}      Specific Distribution to ${dist.beneficiaryName}
+As soon as practicable after my death, the Trustee shall distribute ${dist.description} to ${dist.beneficiaryName}.
+If ${dist.beneficiaryName} is deceased, then this distribution will lapse${dist.lapseTo ? ` to ${dist.lapseTo}` : ', and this property instead will be distributed under the other provisions of this trust'}.
 Property passing under this Section passes free of any administrative expenses or death taxes.
 `).join('\n') || ''}
 
@@ -200,10 +200,10 @@ The Trustee shall administer and distribute my remaining trust property (not dis
 Section 7.01      Division of Remaining Trust Property
 The Trustee shall divide my remaining trust property into shares as follows:
 Name    Relationship    Share
-${formData.beneficiaries?.map(b => `${b.name}    ${b.relationship}    ${b.share}`).join('\n')}
+${formData.residuaryBeneficiaries?.map(b => `${b.name}    Child    ${b.share}%`).join('\n')}
 The Trustee shall administer the share of each beneficiary as provided in the Sections that follow.
 
-${formData.beneficiaries?.map((beneficiary, index) => `
+${formData.residuaryBeneficiaries?.map((beneficiary, index) => `
 Section 7.0${index + 2}      Distribution of the Share for ${beneficiary.name}
 The Trustee shall distribute the share set aside for ${beneficiary.name} in trust as provided in this Section.
            (a)      Distributions of Income and Principal
