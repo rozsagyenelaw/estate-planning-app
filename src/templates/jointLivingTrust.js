@@ -685,61 +685,213 @@ Trust Administration
 
 Section 14.01      Distributions to Beneficiaries
 
-The Trustee may make cash distributions, in-kind distributions, or distributions partly in each, in proportions and at values determined by the Trustee without the consent of any beneficiary.
+Whenever this trust authorizes or directs the Trustee to make a net income or principal distribution to a beneficiary, the Trustee may apply any property that otherwise could be distributed directly to the beneficiary for his or her benefit. The Trustee is not required to inquire into the beneficiary's ultimate disposition of the distributed property unless specifically directed otherwise by this trust.
 
-An in-kind distribution may be made on a non-pro rata basis. The Trustee's selection and valuation of property for in-kind distribution is conclusive and binding on all persons.
+The Trustee may make cash distributions, in-kind distributions, or distributions partly in each, in proportions and at values determined by the Trustee. The Trustee may allocate undivided interests in specific assets to a beneficiary or trust in any proportion or manner that the Trustee determines, even though the property allocated to one beneficiary may be different from that allocated to another beneficiary.
 
-Section 14.02      No Bond Required
+The Trustee may make these determinations without regard to the income tax attributes of the property and without the consent of any beneficiary.
 
-The Trustee is not required to furnish any bond for the faithful performance of the Trustee's duties unless required by a court of competent jurisdiction.
+Section 14.02      Beneficiary's Status
 
-Even if California law would require a bond, we waive that requirement. But if a bond is required by law despite our waiver, the bond will be furnished without sureties and at nominal cost.
+Until the Trustee receives notice of the incapacity, birth, marriage, death, or other event upon which a beneficiary's right to receive payments may depend, the Trustee will not be held liable for acting or not acting with respect to the event, or for disbursements made in good faith to persons whose interest may have been affected by the event. Unless otherwise provided in this trust, a parent or Legal Representative may act on behalf of a minor or incapacitated beneficiary.
 
-Section 14.03      Trustee Compensation
+The Trustee may rely on any information provided by a beneficiary with respect to the beneficiary's assets and income. The Trustee will have no independent duty to investigate the status of any beneficiary and will not incur any liability for not doing so.
 
-During any period we or each of us are serving as Trustee, we will receive no fee in connection with our service as Trustee. Any other individual serving as Trustee is entitled to fair and reasonable compensation for services provided as a fiduciary.
+Section 14.03      Mandatory Payments of a Pecuniary Amount
 
-A corporate Trustee is entitled to compensation in accordance with its published fee schedule in effect at the time the services are rendered, or as otherwise agreed in writing.
+If any person holds the right to receive a pecuniary amount from the trust upon our death, the Trustee must either:
 
-Section 14.04      Trust Accounting
+satisfy the entire pecuniary amount or irrevocably set aside property to satisfy the entire pecuniary amount within 15 months of our death; or
 
-During our lifetimes, as long as at least one of us is serving as Trustee, the Trustee is not required to provide an accounting to any person.
+pay appropriate interest, as defined in Treasury Regulations Section 26.2642-2(b)(4)(ii)(B), to the person.
 
-After the death of the first of us to die, the Trustee must provide an annual accounting to the Qualified Beneficiaries as defined by California Probate Code Section 15804, unless the right to an accounting is waived in a writing delivered to the Trustee.
+If the Trustee satisfies the pecuniary amount with an in-kind distribution, the Trustee will allocate assets to satisfy the pecuniary amount in a manner that fairly reflects net appreciation or depreciation in the value of the available assets, as measured from the valuation date to the payment date.
 
-The Trustee's accounting will include the information described in California Probate Code Section 16062 or any successor statute.
+Section 14.04      No Court Proceedings
 
-Section 14.05      Independent Trustee
+The Trustee shall administer this trust with efficiency, with attention to the provisions of this trust, and with freedom from judicial intervention. If the Trustee or another interested party institutes a legal proceeding, the court will acquire jurisdiction only to the extent necessary for that proceeding. Any proceeding to seek instructions or a court determination may only be initiated in the court with original jurisdiction over matters relating to the construction and administration of trusts. Seeking instructions or a court determination is not to be construed as subjecting this trust to the court's continuing jurisdiction.
 
-For purposes of this trust, an Independent Trustee is a Trustee who is not:
+I request that any questions or disputes that arise during the administration of this trust be resolved by mediation and, if necessary, arbitration in accordance with the Uniform Arbitration Act. Each interested party involved in the dispute, including any Trustee involved, may select an arbiter and, if necessary to establish a majority decision, these arbiters may select an additional arbiter. The decision of a majority of the arbiters selected will control with respect to the matter.
 
-     (a) The Grantor or either of the Grantors;
+Section 14.05      No Bond
 
-     (b) The Grantor's spouse or either Grantor's spouse;
+The Trustee is not required to furnish any bond for the faithful performance of the Trustee's duties unless required by a court of competent jurisdiction, and only if the court finds that a bond is needed to protect the beneficiaries' interests. No surety will be required on any bond required by any law or court rule, unless the court specifies its necessity.
 
-     (c) The Grantor's parent, sibling, or descendant; or
+Section 14.06      Exoneration of the Trustee
 
-     (d) An employee of the Grantor or either of the Grantors.
+No successor Trustee is obligated to examine the accounts, records, or actions of any previous Trustee or the Personal Representative of a deceased Grantor. No successor Trustee may be held responsible for any act, omission, or forbearance by any previous Trustee or of the Personal Representative of a deceased Grantor.
 
-Section 14.06      Court Proceedings
+Any Trustee may obtain written agreements from the beneficiaries or their Legal Representatives releasing and indemnifying the Trustee from any liability that may have arisen from the Trustee's acts, omissions, or forbearances. If acquired from all the trust's living beneficiaries or their Legal Representatives, any agreement is conclusive and binding on all parties, born or unborn, who may have or who may later acquire an interest in the trust.
 
-The Trustee or any trust beneficiary may petition a court of competent jurisdiction for a ruling on any matter concerning the trust, including but not limited to:
+The Trustee may require a refunding agreement before making any distribution or allocation of trust income or principal, and may withhold distribution or allocation pending determination or release of a tax or other lien. This refunding agreement provision will not apply to any distribution that qualifies for the federal estate tax charitable deduction.
 
-     (a) Determining the validity of any trust provision;
+Section 14.07      Limitations on Trustee Liability
 
-     (b) Determining the Trustee's powers or responsibilities;
+We recognize that some individuals and institutions may be reluctant to serve as Trustee because of a concern about potential liability. Therefore, we direct that any individual or corporate fiduciary that serves as the Trustee will not incur any liability by reason of any error of judgment, mistake of law, or action or inaction of any kind in connection with the administration of any trust created under this trust, unless the Trustee's decision is shown by clear and convincing evidence to have been made in bad faith.
 
-     (c) Ascertaining beneficiaries;
+Any individual or corporate fiduciary currently serving as the Trustee may expend any portion of the trust assets to defend any claim brought against the Trustee, even if the Trustee's defense costs would exhaust the trust's value, unless the Trustee is shown to have acted in bad faith by clear and convincing evidence.
 
-     (d) Settling the Trustee's accounts;
+Any individual or corporate fiduciary that formerly served as the Trustee is entitled to reimbursement from the trust estate for any expenses, including attorney's fees and litigation costs reasonably incurred to defend any claim brought against the Trustee even if the Trustee's defense costs would exhaust the trust's value, unless the Trustee is shown to have acted in bad faith by clear and convincing evidence.
 
-     (e) Instructing the Trustee;
+Section 14.08      Trustee Compensation
 
-     (f) Granting powers to the Trustee;
+During any period we or each of us are serving as Trustee under this agreement, we will receive no fee in connection with our service as Trustee.
 
-     (g) Fixing or allowing payment of the Trustee's compensation; or
+Any other individual serving as Trustee is entitled to fair and reasonable compensation for the services provided as a fiduciary. A corporate fiduciary serving as Trustee will be compensated by agreement between an individual serving as Trustee and the corporate fiduciary. In the absence of an individual Trustee or an agreement, a corporate fiduciary will be compensated in accordance with the corporate fiduciary's current published fee schedule.
 
-     (h) Appointing or removing a Trustee.
+A Trustee entitled to compensation may charge additional fees for services provided that are beyond the ordinary scope of duties, such as fees for legal services, tax return preparation, and corporate finance or investment banking services.
+
+In addition to receiving compensation, a Trustee may be reimbursed for reasonable costs and expenses incurred in carrying out the Trustee's duties under this trust.
+
+Section 14.09      Employment of Professionals
+
+The Trustee may appoint, employ, and remove investment advisors, accountants, auditors, depositories, custodians, brokers, consultants, attorneys, advisors, agents, and employees to advise or assist in the performance of the Trustee's duties. The Trustee may act on the recommendations of the persons or entities employed, with or without independent investigation.
+
+The Trustee may reasonably compensate an individual or entity employed to assist or advise the Trustee, regardless of any other relationship existing between the individual or entity and the Trustee.
+
+The Trustee may compensate providers of contracted services at the usual rate out of the trust's income or principal, as the Trustee deems advisable. The Trustee may compensate an individual or entity employed to assist or advise the Trustee without diminishing the compensation the Trustee is entitled to under this trust. A Trustee who is a partner, stockholder, officer, director, or corporate affiliate in any entity employed to assist or advise the Trustee may still receive the Trustee's share of the compensation paid to the entity.
+
+Section 14.10      Exercise of Testamentary Power of Appointment
+
+A testamentary power of appointment granted under this trust may be exercised by a will, living trust or other written instrument specifically referring to the power of appointment. The holder of a testamentary power of appointment may exercise the power to appoint property among the permissible appointees in equal or unequal proportions, and may designate the terms and conditions, whether outright or in trust. The holder of a testamentary power of appointment may grant further powers of appointment to any person to whom principal may be appointed, including a presently exercisable limited or general power of appointment.
+
+The Trustee may conclusively presume that any power of appointment granted to any beneficiary of a trust created under this trust has not been exercised by the beneficiary if the Trustee has no knowledge of the existence of a will, living trust or other written instrument exercising the power within three months after the beneficiary's death.
+
+Section 14.11      Determination of Principal and Income
+
+The rights among beneficiaries in matters concerning principal and income are to be determined in accordance with California Uniform Principal and Income Act, Probate Code §§ 16320 et seq. If California Uniform Principal and Income Act, Probate Code §§ 16320 et seq does not contain a provision concerning a particular item, the Trustee shall determine what will be credited, charged, and apportioned between principal and income in a fair, equitable, and practical manner with respect to that item.
+
+Notwithstanding any provision of California Uniform Principal and Income Act, Probate Code §§ 16320 et seq or California law to the contrary, the Trustee shall treat distributions from any qualified retirement account to any trust established under this trust in any given year as income to the extent the distribution represents income generated or treated as generated by any qualified retirement account for that year.
+
+           (a)      Annuity and Other Periodic Payments
+
+Annuity and other periodic payments refers to distributions made to the Trustee over a fixed number of years or during the life of one or more individuals because of services provided or property transferred to the payor in exchange for future payments. This includes payments made in money or property from the payor's general assets or from a separate fund created by the payor, including a private or commercial annuity, individual retirement annuity, pension, profit-sharing plan, stock-bonus plan, stock-ownership plan, or similar arrangement. The Trustee shall treat annuity and other periodic payments to any trust established under this trust in any given year as income to the extent the distribution represents income generated and treated as generated by the annuity or other periodic payment for that year. If income information is not available, then the Trustee shall apportion the annuity and other periodic payments between principal and income in a fair, equitable and practical manner under the guidelines set forth in this Section.
+
+To the extent an annuity or other periodic payment is characterized as interest, dividend, or other item of income, or an annuity or other periodic payment is made instead of interest, dividend, or other item of income, the Trustee shall allocate the payment to income. The Trustee shall allocate to principal the balance of the annuity or other periodic payment as well as any other payment received in the same accounting period that is not characterized as interest, dividend, or other item of income.
+
+To the extent annuity and other periodic payments are made and no part of the payments are characterized as interest, dividend, or other item of income, the Trustee shall use the present value of the annuity and other periodic payments as finally determined for federal estate tax purposes, and the Internal Revenue Code Section 7520 rate used to determine the value for federal estate tax purposes to prepare an annuitization table to allocate the payments between income and principal.
+
+If the amounts of annuity and other periodic payments change because of changes in the investment markets or other changes, the Trustee shall allocate the change in the amount of the payments between income and principal in a fair, equitable, and practical manner.
+
+           (b)      Protection of Estate Tax Marital Deduction
+
+If, to obtain an estate tax marital deduction for a trust established under this trust, the Trustee must allocate more of a payment to income than provided for by this Section, then the Trustee shall allocate to income the additional amount necessary to obtain the marital deduction.
+
+Section 14.12      Trust Accounting
+
+Except to the extent required by law, the Trustee is not required to file accountings in any jurisdiction. During our lifetimes or the lifetime of the survivor of us, and as long as at least one of us is serving as a Trustee, the Trustee is not required to provide an accounting to any person. If neither of us is serving as Trustee, the Trustee must provide an accounting to us at least annually unless waived. If both of us are incapacitated, or if one of us is deceased and the other is incapacitated, then the Trustee must provide the accounting to our Legal Representatives, unless waived by our Legal Representatives. After the death of the first of us to die, the Trustee must provide an annual accounting to the Qualified Beneficiaries of any trust created under this trust unless waived by the Qualified Beneficiaries.
+
+The annual accounting must include the receipts, expenditures, and distributions of income and principal and the assets on hand for the accounting period. A copy of the federal fiduciary tax return filed for a trust during the accounting will satisfy this reporting requirement.
+
+In the absence of fraud or obvious error, assent by all Qualified Beneficiaries to a Trustee's accounting will make the matters disclosed in the accounting binding and conclusive upon all persons, including those living on this date and those born in the future who have or will have a vested or contingent interest in the trust property. In the case of a Qualified Beneficiary who is a minor or incapacitated, the beneficiary's natural guardian or Legal Representative may give the assent required under this Section.
+
+In all events, a beneficiary's Legal Representative may receive any notices and take any action on behalf of the beneficiary as to an accounting. If any beneficiary's Legal Representative fails to object to any accounting in writing within 180 days after the Trustee provides the accounting, the beneficiary's Legal Representative will be considered to assent to the accounting.
+
+Section 14.13      Information to Beneficiaries
+
+Privacy is an important issue to us. This Section defines the Trustee's duties to inform, account, and report to beneficiaries of various trusts created under this trust, and to other individuals during our lifetime and after our death. Except to the extent required by law, the Trustee is not required to comply with a request to furnish a copy of this trust to a Qualified Beneficiary at any time, and the Trustee is not required to send annual reports or reports upon termination of the trust to any Permissible Distributee or Qualified Beneficiary who requests the report. If the Trustee decides, in the Trustee's sole and absolute discretion, to provide any information to a Permissible Distributee or Qualified Beneficiary, the Trustee may exclude any information that the Trustee determines is not directly applicable to the beneficiary receiving the information. Any decision by the Trustee to make information available to any beneficiary does not constitute an obligation to provide any information to any beneficiary in the future.
+
+           (a)      Providing Information while Either of Us Is Alive and Not Incapacitated
+
+We waive all the Trustee's duties to give notice, information, and reports to any Qualified Beneficiaries other than us while either of us is alive and able to manage our financial resources effectively. The Trustee is not required to keep Qualified Beneficiaries of any trust created under this trust other than us informed of the administration of the trust in any manner. Further, the Trustee is not required to respond to any request for information related to the administration of the trust from anyone who is not a Qualified Beneficiary, other than us.
+
+           (b)      Providing Information while Both of Us Are Incapacitated and after Our Deaths
+
+The Trustee shall deliver any notice, information, or reports which would otherwise be required to be delivered to either of us or to a Qualified Beneficiary to a person designated by the Trustee during any period that both of us are alive but incapacitated, during any period when one of us is deceased and the other is incapacitated, and after the death of both us. To preserve our privacy and the privacy of Qualified Beneficiaries under the trust, we request that while either of us is alive, the Trustee not provide any copies of the trust or any other information which may otherwise be required to be distributed to any beneficiary under California law to any beneficiary to whom the information is not directly relevant. The designated person may, in his or her sole and absolute discretion and without waiver, distribute copies of all or any part of the trust or other relevant information about the trust to one or more Qualified Beneficiaries or other interested parties during any period that we are both incapacitated or one of us is deceased and the other is incapacitated.
+
+Section 14.14      Action of Trustees and Delegation of Trustee Authority
+
+When neither of us is serving as a Trustee, if two Trustees are eligible to act with respect to a given matter, they must agree unanimously for action to be taken unless the express terms of the Trustees' appointment provide otherwise. If more than two Trustees are eligible to act with respect to a given matter, the Trustees must agree by majority for action to be taken.
+
+If the Trustees are unable to agree on a matter for which they have joint powers, we request that the matter be settled by mediation and then by arbitration, if necessary, in accordance with the Uniform Arbitration Act. Each of the Trustees may select an arbiter and these arbiters may select an additional arbiter, if necessary to establish a majority decision. The decision of a majority of the arbiters will control with respect to the matter.
+
+A nonconcurring Trustee may dissent or abstain from a decision of the majority. A Trustee will be absolved from personal liability by registering the dissent or abstention in the trust records. After doing so, the dissenting Trustee must then act with the other Trustees in any way necessary or appropriate to effect the majority decision.
+
+Subject to the limitations set forth in Section 15.25, any Trustee may, by written instrument, delegate to any other Trustee the right to exercise any power, including a discretionary power, granted to the Trustee in this trust. During the time a delegation under this Section is in effect, the Trustee to whom the delegation is made may exercise the power to the same extent as if the delegating Trustee has personally joined in the exercise of the power. The delegating Trustee may revoke the delegation at any time by giving written notice to the Trustee to whom the power was delegated.
+
+Section 14.15      Trustee May Disclaim or Release Any Power
+
+Notwithstanding any provision of this trust to the contrary, any Trustee may relinquish any Trustee power in whole or in part, irrevocably or for any specified period of time, by a written instrument. The Trustee may relinquish a power personally or may relinquish the power for all subsequent Trustees.
+
+Section 14.16      Trustee May Execute a Power of Attorney
+
+The Trustee may appoint any individual or entity to serve as the Trustee's agent under a power of attorney to transact any business on behalf of the trust or any other trust created under this trust.
+
+Section 14.17      Additions to Separate Trusts
+
+If upon the death of the survivor of us, or upon the termination of any trust created under this trust, a final distribution is to be made to a person who is the Primary Beneficiary of another trust established under this trust, and there is no specific indication whether the distribution is to be made in trust or outright, the Trustee shall make the distribution to the second trust instead of distributing the property to the beneficiary outright. For purposes of administration, the distribution will be treated as though it had been an original part of the second trust.
+
+Section 14.18      Authority to Merge or Sever Trusts
+
+The Trustee may merge a trust created under this trust with any other trust, if the two trusts contain substantially the same terms for the same beneficiaries and have at least one Trustee in common. The Trustee may administer the merged trust under the provisions of the instrument governing the other trust, and this trust will no longer exist if it merges into another trust. Accordingly, in the event another trust is merged into this trust or a trust created under the provisions of this trust document, the Trustee may shorten the period during which this trust subsists to comply with, if necessary, to effect the merger. But if a merger does not appear feasible, the Trustee may consolidate the trusts' assets for purposes of investment and trust administration while retaining separate records and accounts for each respective trust.
+
+The Trustee may sever any trust on a fractional basis into two or more separate and identical trusts, or may segregate a specific amount or asset from the trust property by allocating it to a separate account or trust. The separate trusts may be funded on a non pro rata basis including a non pro rata division of the community property under California Probate Code Section 100, but the funding must be based on the assets' total fair market value on the funding date. After the segregation, income earned on a segregated amount or specific asset passes with the amount or asset segregated. The Trustee shall hold and administer each severed trust upon terms and conditions identical to those of the original trust.
+
+Subject to the trust's terms, the Trustee may consider differences in federal tax attributes and other pertinent factors in administering the trust property of any separate account or trust, in making applicable tax elections and in making distributions. A separate trust created by severance must be treated as a separate trust for all purposes from the effective severance date; however, the effective severance date may be retroactive to a date before the Trustee exercises the power.
+
+Section 14.19      Authority to Terminate Trusts
+
+The Independent Trustee may terminate any trust created under this trust at any time, if the Independent Trustee, in its sole and absolute discretion, determines that administering a trust created under this trust is no longer economical. Once distributed, the Trustee will have no further responsibility with respect to that trust property. The Trustee will distribute the trust property from a terminated trust in this order:
+
+to us, if we are both then living;
+
+if one of us is deceased, to the surviving Grantor, if the surviving Grantor is then a trust beneficiary;
+
+if we are both deceased or the surviving Grantor is not a trust beneficiary, to the beneficiaries then entitled to mandatory distributions of the trust's net income, in the same proportions; and then
+
+if none of the beneficiaries are entitled to mandatory distributions of net income, to the beneficiaries then eligible to receive discretionary distributions of the trust's net income, in the amounts and shares the Independent Trustee determines.
+
+Section 14.20      Discretionary Distribution to Fully Utilize Basis Increase upon Death of Beneficiary
+
+To the extent we have permitted the Trustee to make distributions of principal to a trust beneficiary, the Independent Trustee may distribute as much of the trust's principal to the beneficiary as the Independent Trustee determines advisable so that, upon the beneficiary's death, his or her estate may utilize the basis increase allowed under Internal Revenue Code Section 1014 without causing an increase in the federal estate tax.
+
+Before making a distribution of property under this Section, we request that the Trustee determine whether or not a good reason exists to retain the property in trust, such as whether the Trustee or the beneficiary might sell the property in the near future, as well as protection of the beneficiary from creditors, protection of the beneficiary from failed marriages, and protection of the asset for future generations. The Trustee has no liability to any beneficiary for any action or inaction by the Trustee under this Section, if made in good faith.
+
+Section 14.21      Merger of Corporate Fiduciary
+
+If any corporate fiduciary acting as the Trustee under this trust is merged with or transfers substantially all of its trust assets to another corporation, or if a corporate fiduciary changes its name, the successor will automatically succeed to the trusteeship as if that successor had been originally named a Trustee. No document of acceptance of trusteeship will be required.
+
+Section 14.22      Funeral and Other Expenses of Beneficiary
+
+Upon the death of an Income Beneficiary, the Trustee may pay the funeral expenses, burial or cremation expenses, enforceable debts, or other expenses incurred due to the death of the beneficiary from trust property. This Section only applies to the extent the Income Beneficiary has not exercised any testamentary power of appointment granted to the beneficiary under this trust.
+
+The Trustee may rely upon any request by the deceased beneficiary's Legal Representative or family members for payment without verifying the validity or the amounts and without being required to see to the application of the payment. The Trustee may make decisions under this Section without regard to any limitation on payment of expenses imposed by statute or court rule and without obtaining the approval of any court having jurisdiction over the administration of the deceased beneficiary's estate.
+
+Section 14.23      Marital Deduction Qualification
+
+The marital gift as described in Article Seven of this trust is intended to qualify for the federal estate tax marital deduction, and the provisions of this trust are to be construed to reflect this intent. To the extent that exercising a provision of this trust would disqualify the marital gift from the federal estate tax unlimited marital deduction, that provision is void.
+
+Section 14.24      Generation-Skipping Transfer Tax Provisions
+
+If any trust created under this trust would be partially exempt from generation-skipping transfer tax after the intended allocation of Available GST Exemption to the trust, then the Trustee may divide the partially exempt trust so that the allocation of Available GST Exemption can be made to a trust that will be entirely exempt from generation-skipping transfer tax. If the Trustee chooses to divide a trust that would otherwise be a partially exempt trust, the Trustee must create and administer the separate trusts as provided in this Section.
+
+           (a)      Division into Exempt and Non-Exempt Trusts
+
+The Trustee shall divide the property of the otherwise partially-exempt trust into two separate trusts, the exempt trust and the nonexempt trust. The exempt trust will consist of the largest fractional share of the otherwise partially exempt trust's total assets that will permit the exempt trust to be entirely exempt from generation-skipping transfer tax. The nonexempt trust will consist of the balance of the otherwise partially exempt trust's total assets.
+
+To compute the fractional share, the Trustee will use asset values as finally determined for transfer tax purposes. The Trustee must then apply the fraction to the assets at their actual value on the effective date or dates of distribution so that the actual value of the fractional share resulting from the application of the fraction will include fluctuations in the trust property's value. We request that the Trustee allocate the value of any Roth IRAs payable to the trust to the exempt trust to the extent possible.
+
+           (b)      Administration of the Trusts
+
+The Trustee shall administer the exempt and nonexempt trusts created under this Section as separate and independent trusts, but under the same terms as the original trust. To the extent possible, the Trustee should make distributions to a non-skip person as defined by Internal Revenue Code Section 2613 from the nonexempt trust and distributions to a skip person as defined by Section 2613 from an exempt trust. The Trustee may designate names for the exempt and nonexempt trusts.
+
+If an exempt trust and a nonexempt trust are further divided under the terms of this trust, the Trustee may allocate property from the exempt trust first to the trust from which a generation-skipping transfer is more likely to occur.
+
+           (c)      Expression of Our Intent
+
+Our intent is to minimize the application of the generation-skipping transfer tax to the trust property, but not to affect the total amount of trust property to which any beneficiary may be entitled under this trust. This trust must be construed and interpreted to give effect to this intent.
+
+           (d)      Additions of Property to Exempt and Non-Exempt Trusts
+
+If at any time any property that has an inclusion ratio greater than zero for generation-skipping transfer tax purposes would be added to a trust with property that has an inclusion ratio of zero, then the Trustee will instead hold the property in a separate trust on the same terms and conditions as the original trust.
+
+           (e)      Re-Allocation
+
+If the Trustee's determination of whether a trust in this trust is partially, entirely, or not exempt from GST taxes is later incorrect (for example, if the Congress by law or the Service by regulation or ruling applies the generation-skipping transfer tax retroactively to the trust), the Trustee may re-allocate the assets as of the initial division date, as provided in this Section.
+
+Section 14.25      Independent Trustee May Confer Testamentary Power of Appointment
+
+During the Primary Beneficiary's lifetime, the Independent Trustee may grant the Primary Beneficiary a testamentary power to appoint all or part of the Primary Beneficiary's trust or trust share to the creditors of the Primary Beneficiary's estate. The Independent Trustee may require that the Primary Beneficiary obtain the consent of the Independent Trustee granting the power, as a condition for the exercise of the power. Any testamentary power of appointment granted by the Independent Trustee may only be exercised personally by the beneficiary, must be exercised in writing and may be revoked at any time during the lifetime of the Primary Beneficiary to whom the power was given. We suggest that the Independent Trustee exercise this authority to subject trust property to estate tax instead of the generation-skipping transfer tax or when it may reduce overall taxes.
 
 Article Fifteen
 The Trustee's Powers
