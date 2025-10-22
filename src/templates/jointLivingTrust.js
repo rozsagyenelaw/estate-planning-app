@@ -896,69 +896,347 @@ During the Primary Beneficiary's lifetime, the Independent Trustee may grant the
 Article Fifteen
 The Trustee's Powers
 
-Section 15.01      General Powers
+Section 15.01      Introduction to Trustee's Powers
 
-The Trustee has all powers necessary to manage and protect the trust property, including but not limited to the powers described in California Probate Code Sections 16200 through 16249, as amended from time to time, and the following additional powers:
+Except as otherwise specifically provided in this trust, the Trustee may exercise the powers granted by this trust without prior approval from any court, including those powers set forth under the laws of the State of California or any other jurisdiction whose law applies to this trust. The powers set forth in the California Probate Code §§ 16200-16249 are specifically incorporated into this trust.
 
-     (a) To invest and reinvest trust property in any type of property or investment, including common or preferred stocks, bonds, notes, debentures, mortgages, limited or general partnership interests, limited liability company interests, options, commodity futures contracts, and real estate located in any state, without regard to whether the investment is authorized by state law for investment by fiduciaries;
+The Trustee shall exercise the Trustee powers in the manner the Trustee determines to be in the beneficiaries' best interests. The Trustee must not exercise any power inconsistent with the beneficiaries' right to the enjoyment of the trust property in accordance with the general principles of trust law.
 
-     (b) To sell, exchange, lease (for any period, including periods in excess of the term of any trust), grant options affecting, or otherwise dispose of trust property, at public or private sale, for cash or on credit;
+The Trustee may have duties and responsibilities in addition to those described in this trust. We encourage any individual or corporate fiduciary serving as Trustee to obtain appropriate legal advice if the Trustee has any questions concerning the duties and responsibilities as Trustee.
 
-     (c) To borrow money for any purpose and encumber trust property by mortgage, deed of trust, pledge, or otherwise;
+Section 15.02      Execution of Documents by the Trustee
 
-     (d) To manage real estate, including the power to lease, mortgage, and improve;
+The Trustee may execute and deliver any written instruments that the Trustee considers necessary to carry out any powers granted in this trust.
 
-     (e) To vote shares of stock in person or by general or limited proxy and exercise stockholder rights;
+Section 15.03      Investment Powers in General
 
-     (f) To conduct or participate in any business;
+The Trustee may invest in any type of investment that the Trustee determines is consistent with the investment goals of the trust, whether inside or outside the geographic borders of the United States of America and its possessions or territories, taking into account the overall investment portfolio of the trust.
 
-     (g) To employ and compensate agents, attorneys, accountants, investment advisors, and other professionals;
+Without limiting the Trustee's investment authority in any way, we request that the Trustee exercise reasonable care and skill in selecting and retaining trust investments. We also request that the Trustee take into account the following factors in choosing investments:
 
-     (h) To make distributions in cash or in kind, or partly in each;
+the potential return from the investment, both in income and appreciation;
 
-     (i) To hold property in nominee name or in any other form;
+the potential income tax consequences of the investment;
 
-     (j) To compromise claims and settle disputes;
+the investment's potential for volatility; and
 
-     (k) To make loans to beneficiaries, with or without security and on terms and conditions the Trustee considers appropriate;
+the role the investment will play in the trust's portfolio.
 
-     (l) To deal with digital assets and online accounts, including social media accounts, email accounts, digital photographs, computer files, and data storage systems;
+We request that the Trustee also consider the possible effects of inflation or deflation, changes in global and US economic conditions, transaction expenses, and the trust's need for liquidity while arranging the trust's investment portfolio.
 
-     (m) To take any action with respect to environmental matters, including inspecting property for hazardous substances, responding to actual or threatened violations of environmental law, and settling or otherwise compromising environmental claims;
+The Trustee may delegate his or her discretion to manage trust investments to any registered investment advisor or corporate fiduciary.
 
-     (n) To allocate receipts and expenditures between income and principal as the Trustee determines appropriate, notwithstanding any contrary provision of California law;
+Section 15.04      Banking Powers
 
-     (o) To make tax elections the Trustee considers appropriate, including but not limited to elections relating to the marital deduction, the charitable deduction, allocation of generation-skipping transfer tax exemption, and income tax matters;
+The Trustee may establish any type of bank account in any banking institutions that the Trustee chooses. If the Trustee makes frequent disbursements from an account, the account does not need to be interest bearing. The Trustee may authorize withdrawals from an account in any manner.
 
-     (p) To merge or consolidate any trust created under this instrument with another trust, or to divide any trust into separate trusts, if the merger or division does not impair the rights of any beneficiary or adversely affect the trust's tax status;
+The Trustee may open accounts in the name of the Trustee, with or without disclosing fiduciary capacity, and may open accounts in the name of the trust. When an account is in the name of the trust, checks on that account and authorized signatures need not disclose the account's fiduciary nature or refer to any trust or Trustee.
 
-     (q) To fund any trust share with cash or in-kind property or a combination of both, as the Trustee determines in the Trustee's sole discretion;
+Section 15.05      Business Powers
 
-     (r) To exercise all further powers appropriate to carry out the purposes of this trust.
+If the trust owns or acquires an interest in a business entity, whether as a shareholder, partner, general partner, sole proprietor, member, participant in a joint venture, or otherwise, the Trustee may exercise the powers and authority provided for in this Section. The powers granted in this Section are in addition to all other powers granted to the Trustee in this trust.
 
-Section 15.02      Investment Powers
+The Trustee may act personally and independently with any business entity in which the trust has an interest, separate from any duties owed to the trust as the Trustee. This includes serving and receiving compensation for services as an officer, director, general partner, manager, or any other capacity for the business entity. The compensation the Trustee receives from this entity will not affect the compensation the Trustee may be entitled to for serving as the Trustee. The Trustee may exercise any voting power for any matter, whether the voting power is held as the Trustee or independently as a stockholder, officer, director, general partner, member, manager, or other capacity of the business entity. The Trustee may independently own, purchase, and sell an interest in a business entity owned by the trust. Any sale of a nonpublicly traded business interest between the Trustee and the trust must be approved and effected by an Independent Special Trustee.
 
-The Trustee may invest in any type of investment that the Trustee determines is consistent with the investment goals of the trust, taking into account the overall investment portfolio, the potential return, tax consequences, and the trust's need for liquidity.
+Section 15.06      Contract Powers
 
-The Trustee may retain any investment received from us or from any other source without regard to diversification and without liability for any loss.
+The Trustee may sell at public or private sale, transfer, exchange for other property, and otherwise dispose of trust property for consideration and upon terms and conditions that the Trustee deems advisable. The Trustee may grant options of any duration for any sales, exchanges, or transfers of trust property.
 
-Section 15.03      Real Estate Powers
+The Trustee may enter into contracts, and may deliver deeds or other instruments, that the Trustee considers appropriate.
 
-The Trustee may sell, convey, purchase, exchange, lease, mortgage, manage, alter, improve, and in general deal in and with real property in the manner and on the terms the Trustee deems appropriate.
+Section 15.07      Common Investments
 
-The Trustee may hold real property without any duty to sell the property for a period of time the Trustee determines to be in the beneficiaries' best interests, even if this results in a lack of diversification or productivity or an increase in risk.
+For purposes of convenience with regard to the trust property's administration and investment, the Trustee may invest part or all of the trust property jointly with property of other trusts for which the Trustee is also serving as a Trustee. A corporate fiduciary acting as the Trustee may use common funds for investment. When trust property is managed and invested in this manner, the Trustee will maintain records that sufficiently identify this trust's portion of the jointly invested assets.
 
-Section 15.04      Business Interests
+Section 15.08      Digital Assets
 
-The Trustee may continue, operate, or participate in any business held in the trust without any duty to sell or liquidate the business interest. The Trustee may incorporate a business or contribute business assets to a partnership, limited partnership, or limited liability company.
+The Trustee has the authority to access, modify, control, archive, transfer, and delete our digital assets.
 
-The Trustee is not liable for any loss resulting from the continuation or operation of any business unless the Trustee acts with gross negligence or willful misconduct.
+Digital assets include our sent and received emails, email accounts, digital music, digital photographs, digital videos, gaming accounts, software licenses, social-network accounts, file-sharing accounts, financial accounts, domain registrations, Domain Name System (DNS) service accounts, blogs, listservs, web-hosting accounts, tax-preparation service accounts, online stores and auction sites, online accounts, and any similar digital asset that currently exists or may be developed as technology advances.
 
-Section 15.05      Discretionary Distributions
+Our digital assets may be stored in the cloud or on our own digital devices. The Trustee may access, use, and control our digital devices in order to access, modify, control, archive, transfer, and delete our digital assets—this power is essential for access to our digital assets that are only accessible through our digital devices. Digital devices include desktops, laptops, tablets, peripherals, storage devices, mobile telephones, smartphones, and any similar hardware that currently exists or may be developed as technology advances.
 
-When the Trustee is authorized to make distributions according to a standard relating to a beneficiary's health, education, maintenance, or support, the Trustee may consider the beneficiary's other income and resources known to the Trustee, but is not required to inquire about resources not actually known to the Trustee.
+Section 15.09      Environmental Powers
 
-The Trustee is not required to equalize distributions among beneficiaries and may make disproportionate or exclusive distributions to one or more beneficiaries when the Trustee considers it appropriate.
+The Trustee may inspect trust property to determine compliance with or to respond to any environmental law affecting the property. For purposes of this trust, environmental law means any federal, state, or local law, rule, regulation, or ordinance protecting the environment or human health.
+
+The Trustee may refuse to accept property if the Trustee determines that the property is or may be contaminated by any hazardous substance or is or was used for any purpose involving hazardous substances that could create liability to the trust or to any Trustee.
+
+The Trustee may use trust property to:
+
+conduct environmental assessments, audits, or site monitoring;
+
+take remedial action to contain, clean up, or remove any hazardous substance including a spill, discharge, or contamination;
+
+institute, contest, or settle legal proceedings brought by a private litigant or any local, state, or federal agency concerned with environmental compliance;
+
+comply with any order issued by any court or by any local, state, or federal agency directing an assessment, abatement, or cleanup of any hazardous substance; and
+
+employ agents, consultants, and legal counsel to assist the Trustee in these actions.
+
+The Trustee is not liable for any loss or reduction in value sustained by the trust as a result of the Trustee's decision to retain property on which hazardous materials or substances requiring remedial action are discovered, unless the Trustee contributed to that loss through willful misconduct or gross negligence.
+
+The Trustee is not liable to any beneficiary or to any other party for any decrease in the value of property as a result of the Trustee's actions to comply with any environmental law, including any reporting requirement.
+
+The Trustee may release, relinquish, or disclaim any power held by the Trustee that the Trustee determines may cause the Trustee to incur individual liability under any environmental law.
+
+Section 15.10      Farming and Ranching Operations
+
+The Trustee may retain, acquire, and sell any farm or ranching operation, whether as a sole proprietorship, partnership, or corporation.
+
+           (a)      Authority to Operate the Farm or Ranch
+
+Notwithstanding any duty to diversify imposed by state law, the Trustee may retain and continue to operate a farm or ranch, even though the interest may constitute all or a substantial portion of the trust property.
+
+The Trustee may take part in farm or ranch management, or hire a farm manager or a professional farm management service. The Trustee may delegate any of the powers authorized by this Section to a hired farm manager or professional farm management service.
+
+The Trustee may purchase, sell, hold, manage, operate, lease, improve, and maintain the farm or ranch and any of its interests, and in general deal with all things necessary for operation as the Trustee deems advisable.
+
+The Trustee may buy, sell, and raise livestock; plant, cultivate, harvest, and sell cash crops; produce timber or forest products for sale; or lease or rent all or part of the farm or ranch for cash or a crop share.
+
+The Trustee may contract with hired labor, tenants, or sharecroppers.
+
+The Trustee may construct, repair, and improve farm buildings, fences, and other farm or ranch structures, including drainage facilities, wells, ponds, and lagoons. The Trustee may participate in cooperative agreements concerning water and ditch rights.
+
+The Trustee may purchase or rent any kind of farm machinery, equipment, feed, and seed necessary to operate the farm or ranch.
+
+The Trustee may use approved soil conservation practices in order to conserve, improve, and maintain the soil's productivity. The Trustee may engage in timber or forest conservation practices.
+
+The Trustee may engage in any farm program sponsored by any federal, state, or local governmental agency.
+
+           (b)      Business Liabilities
+
+If any tort or contract liability arises in connection with the farm or ranch, and if the trust is liable, the Trustee will first satisfy the liability from the assets of the farm or ranch, and only then from other property.
+
+           (c)      Trustee Compensation
+
+In addition to the compensation set forth in Section 14.08, the Trustee may receive additional reasonable compensation for services in connection with the operation of a farm or ranch. The Trustee may receive this compensation directly from the farm or ranch, the trust, or both.
+
+           (d)      Conflicts of Interest
+
+The Trustee may exercise all of the powers granted in this trust, even though the Trustee may be involved with or have a personal interest in the farm or ranch.
+
+Section 15.11      Insurance Powers
+
+The Trustee may purchase, accept, hold, and deal with as owner, insurance policies on either or both of our lives, any beneficiary's life, or any person's life in whom any beneficiary has an insurable interest.
+
+The Trustee may purchase disability, medical, liability, longterm health care and other insurance on behalf of and for the benefit of any beneficiary. The Trustee may purchase annuities and similar investments for any beneficiary.
+
+The Trustee may execute or cancel any automatic premium loan agreement with respect to any policy, and may elect or cancel any automatic premium loan provision in a life insurance policy. The Trustee may borrow money to pay premiums due on any policy, either by borrowing from the company issuing the policy or from another source. The Trustee may assign the policy as security for the loan.
+
+The Trustee may exercise any option contained in a policy with regard to any dividend or share of surplus apportioned to the policy to reduce the amount of a policy, to convert or exchange the policy, or to surrender a policy at any time for its cash value.
+
+The Trustee may elect any paid-up insurance or extended-term insurance nonforfeiture option contained in a policy.
+
+The Trustee may sell any policy at its fair market value to anyone having an insurable interest in the policy, including the insured.
+
+The Trustee may exercise any other right, option, or benefit contained in a policy or permitted by the issuing insurance company.
+
+Upon termination of the trust, the Trustee may transfer and assign the policies held by the trust as a distribution of trust property.
+
+Section 15.12      Loans and Borrowing Powers
+
+The Trustee may make loans to, or guarantee the borrowing of, any person including a beneficiary, as well as an entity, trust, or estate, for any term or payable on demand, and secured or unsecured.
+
+The Trustee may encumber any trust property by mortgages, pledges, or otherwise, and may negotiate, refinance, or enter into any mortgage or other secured or unsecured financial arrangement, whether as a mortgagee or mortgagor. The term may extend beyond the trust's termination and beyond the period required for an interest created under this trust to vest in order to be valid under the rule against perpetuities.
+
+The Trustee may enter into, negotiate, or modify the terms of any mortgage or any other secured or unsecured agreement granted in connection with any loan entered into by either or both of us or by any Trustee, and may release or foreclose on any mortgage or security interest payable to either or both of us or to the trust.
+
+The Trustee may borrow money at interest rates and on other terms that the Trustee deems advisable from any person, institution, or other source including, in the case of a corporate fiduciary, its own banking or commercial lending department.
+
+The Trustee may purchase, sell at public or private sale, trade, renew, modify, and extend mortgages. The Trustee may accept deeds instead of foreclosing.
+
+Section 15.13      Nominee Powers
+
+The Trustee may hold real estate, securities, and any other property in the name of a nominee or in any other form, without disclosing the existence of any trust or fiduciary capacity.
+
+Section 15.14      Oil, Gas and Mineral Interests
+
+The Trustee may acquire, maintain, develop, and exploit, either alone or jointly with others, any oil, gas, coal, mineral, or other natural resource rights or interests.
+
+The Trustee may drill, test, explore, mine, develop, extract, remove, convert, manage, retain, store, sell, and exchange any of those rights and interests on terms and for a price that the Trustee deems advisable.
+
+The Trustee may execute leases, pooling, unitization, and other types of agreements in connection with oil, gas, coal, mineral, and other natural resource rights and interests, even though the terms of those arrangements may extend beyond the trust's termination.
+
+The Trustee may execute division orders, transfer orders, releases, assignments, farm outs, and any other instruments that it considers proper.
+
+The Trustee may employ the services of consultants and outside specialists in connection with the evaluation, management, acquisition, disposition, and development of any mineral interest, and may pay the cost of the services from the trust's principal and income.
+
+Section 15.15      Payment of Property Taxes and Expenses
+
+Except as otherwise provided in this trust, the Trustee may pay any property taxes, assessments, fees, charges, and other expenses incurred in the administration or protection of the trust. All payments will be a charge against the trust property and will be paid by the Trustee out of income. If the income is insufficient, then the Trustee may make any payments of property taxes or expenses out of the trust property's principal. The Trustee's determination with respect to this payment will be conclusive on the beneficiaries.
+
+Section 15.16      Purchase of Assets from and Loans to a Deceased Grantor's Probate Estate
+
+Upon the death of a Grantor, the Trustee may purchase at fair market value and retain in the form received any property that is a part of the deceased Grantor's probate or trust estate as an addition to the trust. In addition, the Trustee may make secured and unsecured loans to the deceased Grantor's probate or trust estate. The Trustee may not be held liable for any loss suffered by the trust because of the exercise of the powers granted in this Section.
+
+The Trustee may not use any trust property for the benefit of the deceased Grantor's estate as defined in Code of Federal Regulations Title 26 Section 20.2042-1(b), unless the property is included in the deceased Grantor's gross estate for federal estate tax purposes.
+
+Section 15.17      Qualified Real Property Valuation
+
+The Independent Trustee has the power to amend the terms of a trust holding qualified real property as defined in Internal Revenue Code Section 2032A, in order to permit the qualified real property to qualify for special use valuation permitted under Section 2032A, even if the amendment changes beneficial interests and that directs the segregation of trust property into more than one trust.
+
+Section 15.18      Qualified Tuition Programs
+
+The Trustee may purchase tuition credits or certificates or make contributions to an account in one or more qualified tuition programs as defined under Internal Revenue Code Section 529 on a beneficiary's behalf for the purpose of meeting the beneficiary's qualified higher education expenses. With respect to an interest in any qualified tuition program, the Trustee may act as contributor, administering the interest by actions including:
+
+designating and changing the designated beneficiary of the interest in the qualified tuition program;
+
+requesting both qualified and nonqualified withdrawals;
+
+selecting among investment options and reallocating funds among different investment options;
+
+making rollovers to another qualified tuition program; and
+
+allocating any tax benefits or penalties to the beneficiaries of the trust.
+
+Notwithstanding anything in this provision to the contrary, the designated beneficiary must always be a beneficiary of the trust from which the funds were distributed to establish the interest in the qualified tuition program. Investment in a qualified tuition program will not be considered a delegation of investment responsibility under any applicable statute or other law.
+
+Section 15.19      Real Estate Powers
+
+The Trustee may sell at public or private sale, convey, purchase, exchange, lease for any period, mortgage, manage, alter, improve, and in general deal in and with real property in the manner and on the terms and conditions as the Trustee deems appropriate.
+
+The Trustee may grant or release easements in or over, subdivide, partition, develop, raze improvements to, and abandon any real property.
+
+The Trustee may manage real estate in any manner considered best, and may exercise all other real estate powers necessary to effect this purpose.
+
+The Trustee may enter into contracts to sell real estate. The Trustee may enter into leases and grant options to lease trust property, even though the term of the agreement extends beyond the termination of any trusts established under this trust and beyond the period that is required for an interest created under this trust to vest in order to be valid under the rule against perpetuities. The Trustee may enter into any contracts, covenants, and warranty agreements that the Trustee deems appropriate.
+
+Section 15.20      Residences and Tangible Personal Property
+
+The Trustee may acquire, maintain, and invest in any residence for the beneficiaries' use and benefit, whether or not the residence is income producing and without regard to the proportion that the residence's value may bear to the trust property's total value, even if retaining the residence involves financial risks that Trustees would not ordinarily incur. The Trustee may pay or make arrangements for others to pay all carrying costs of any residence for the beneficiaries' use and benefit, including taxes, assessments, insurance, maintenance, and other related expenses.
+
+The Trustee may acquire, maintain, and invest in articles of tangible personal property, whether or not the property produces income. The Trustee may pay for the repair and maintenance of the property.
+
+The Trustee is not required to convert the property referred to in this Section to income-producing property, except as required by other provisions of this trust.
+
+The Trustee may permit any Income Beneficiary of the trust to occupy any real property or use any personal property owned by the trust on terms or arrangements that the Trustee determines, including rent free or in consideration for the payment of taxes, insurance, maintenance, repairs, or other charges.
+
+The Trustee is not liable for any depreciation or loss resulting from any decision to retain or acquire any property as authorized by this Section.
+
+Section 15.21      Retention and Abandonment of Trust Property
+
+The Trustee may retain any property constituting the trust at the time of its creation, at the time of the death of a Grantor, or as the result of the exercise of a stock option, without liability for depreciation or loss resulting from retention. The Trustee may retain property, notwithstanding the fact that the property may not be of the character prescribed by law for the investment of assets held by a fiduciary, and notwithstanding the fact that retention may result in inadequate diversification under any applicable Prudent Investor Act or other applicable law.
+
+The Trustee may hold property that is not income producing or is otherwise nonproductive if holding the property is in the best interests of the beneficiaries in the sole and absolute discretion of the Trustee. On the other hand, the Trustee will invest contributions of cash and cash equivalents as soon as reasonably practicable after the assets have been acquired by the trust.
+
+The Trustee may retain a reasonable amount in cash or money market accounts to pay anticipated expenses and other costs, and to provide for anticipated distributions to or for the benefit of a beneficiary.
+
+The Trustee may abandon any property that the Trustee considers of insignificant value.
+
+Section 15.22      Securities, Brokerage and Margin Powers
+
+The Trustee may buy, sell, trade, and otherwise deal in stocks, bonds, investment companies, mutual funds, common trust funds, commodities, and other securities of any kind and in any amount, including short sales. The Trustee may write and purchase call or put options, and other derivative securities. The Trustee may maintain margin accounts with brokerage firms, and may pledge securities to secure loans and advances made to the Trustee or to or for a beneficiary's benefit.
+
+The Trustee may place all or any part of the securities held by the trust in the custody of a bank or trust company. The Trustee may have all securities registered in the name of the bank or trust company or in the name of the bank's nominee or trust company's nominee. The Trustee may appoint the bank or trust company as the agent or attorney in fact to collect, receive, receipt for, and disburse any income, and generally to perform the duties and services incident to a custodian of accounts.
+
+The Trustee may employ a broker-dealer as a custodian for securities held by the trust, and may register the securities in the name of the broker-dealer or in the name of a nominee; words indicating that the securities are held in a fiduciary capacity are optional. The Trustee may hold securities in bearer or uncertificated form, and may use a central depository, clearing agency, or book-entry system, such as The Depository Trust Company, Euroclear, or the Federal Reserve Bank of New York.
+
+The Trustee may participate in any reorganization, recapitalization, merger, or similar transaction. The Trustee may exercise or sell conversion or subscription rights for securities of all kinds and descriptions. The Trustee may give proxies or powers of attorney that may be discretionary and with or without powers of substitution, and may vote or refrain from voting on any matter.
+
+Section 15.23      Settlement Powers
+
+The Trustee may settle any claims and demands in favor of or against the trust by compromise, adjustment, arbitration, or other means. The Trustee may release or abandon any claim in favor of the trust.
+
+Section 15.24      Subchapter S Corporation Stock Provisions
+
+During any period the trust is not treated as a grantor trust for tax purposes under Internal Revenue Code Section 671, this trust or any trust created under this trust may hold any S corporation stock held as a separate Electing Small Business Trust, or as a separate Qualified Subchapter S Trust, as provided in this Section.
+
+For purposes of this Section, S corporation stock means all capital stock issued by a corporation (or other entity taxable as a corporation for federal income tax purposes) that is treated or is intended to be treated under Section 1361(a) as an S corporation for federal income tax purposes.
+
+           (a)      Electing Treatment as an Electing Small Business Trust
+
+If the Trustee elects under Internal Revenue Code Section 1361(e)(3) to qualify any portion of the trust as an Electing Small Business Trust, the Trustee shall:
+
+apportion a reasonable share of the unallocated expenses of all trusts created under this trust to the Electing Small Business Trust under the applicable provisions of the Internal Revenue Code and Treasury Regulations; and
+
+administer the trust as an Electing Small Business Trust, under Internal Revenue Code Section 1361(e).
+
+           (b)      Electing Treatment as a Qualified Subchapter S Trust
+
+If the current Income Beneficiary of the trust makes an election under Section 1361(d)(2) to qualify the trust as a Qualified Subchapter S Trust within the meaning of Section 1361(d)(3), the Trustee shall:
+
+refer to the Qualified Subchapter S Trust using the same name as the trust to which the stock was originally allocated, plus the name of the current Income Beneficiary of the trust, followed by the letters QSST;
+
+administer the Qualified Subchapter S Trust in accordance with the same provisions contained in the trust to which the Trustee allocated the S corporation stock, as long as the provisions of this Subsection control the trust administration to the extent that they are inconsistent with the provisions of the original trust; and
+
+maintain the Qualified Subchapter S Trust as a separate trust held for the benefit of only one beneficiary as required in Section 1361(d)(3).
+
+The Trustee shall recommend that the current Income Beneficiary of the trust make a timely election to cause federal tax treatment of the trust as a Qualified Subchapter S Trust.
+
+                      (1)      Current Income Beneficiary
+
+The current Income Beneficiary of a Qualified Subchapter S Trust is the person who has a present right to receive income distributions from the trust to which the Trustee has allocated the S corporation stock. A Qualified Subchapter S Trust may have only one current Income Beneficiary.
+
+If, under the terms of the trust, more than one person has a present right to receive income distributions from the trust originally holding the S corporation stock, the Trustee shall segregate the S corporation stock into separate Qualified Subchapter S Trusts for each of these people.
+
+                      (2)      Distributions
+
+Until the earlier of the death of the current Income Beneficiary or the date on which the trust no longer holds any S corporation stock (the QSST termination date), the Trustee shall distribute at least annually all of the trust's net income, as defined in Internal Revenue Code Section 643(b) to the current Income Beneficiary.
+
+The terms of the trust to which the S corporation stock was originally allocated govern distributions of principal from the Qualified Subchapter S Trust. But until the QSST termination date, the Trustee may distribute principal only to the current Income Beneficiary of the Qualified Subchapter S Trust and not to any other person or entity.
+
+If the Qualified Subchapter S Trust terminates during the lifetime of the current Income Beneficiary, the Trustee shall distribute all assets of the Qualified Subchapter S Trust to the current Income Beneficiary outright and free of the trust.
+
+                      (3)      Allocation of Income and Expenses
+
+The Trustee shall characterize receipts and expenses of any Qualified Subchapter S Trust in a manner consistent with Internal Revenue Code Section 643(b).
+
+                      (4)      Trust Merger or Consolidation
+
+Notwithstanding any other provision of this trust that may seem to the contrary, the Trustee may not merge any Qualified Subchapter S Trust with another trust's assets if doing so would jeopardize the qualification of either trust as a Qualified Subchapter S Trust.
+
+           (c)      Governance of the Trusts
+
+The following additional provisions apply to any separate trust created under this Section.
+
+                      (1)      Protection of S Corporation Status
+
+The Trustee must not administer a trust holding S corporation stock in a manner that would cause the termination of the S corporation status of the entity whose stock is held as part of the trust. Therefore, during any period that the trust holds S corporation stock, the Trustee must construe the terms and provisions of this trust in a manner that is consistent with the trust qualifying as an Electing Small Business Trust or as a Qualified Subchapter S Trust. The Trustee must disregard any provision of this trust that cannot be so construed or applied.
+
+                      (2)      Methods of Distribution
+
+The Trustee may not make distributions in a manner that would jeopardize the trust's qualification as an Electing Small Business Trust or as a Qualified Subchapter S Trust.
+
+                      (3)      Disposition of S Corporation Stock
+
+If the Trustee believes the continuation of any trust would result in the termination of the S corporation status of any entity whose stock is held as a part of the trust property, the Trustee, other than an Interested Trustee, in addition to the power to sell or otherwise dispose of the stock, has the power to distribute the stock to the person who is then entitled to receive the income from the trust.
+
+Section 15.25      Limitation on the Trustee's Powers
+
+All powers granted to Trustees under this trust or by applicable law are limited as set forth in this Section, unless explicitly excluded by reference to this Section. The limitations set forth in this Section do not apply to either of us while we are both alive, and do not apply if either of us is serving as Trustee of the Survivor's Trust.
+
+           (a)      An Interested Trustee Limited to Ascertainable Standards
+
+An Interested Trustee may only make discretionary decisions when they pertain to a beneficiary's health, education, maintenance, or support as described under Internal Revenue Code Sections 2041 and 2514.
+
+           (b)      Interested Trustee Prohibited from Acting
+
+Whenever this trust specifically prohibits or limits an Interested Trustee from exercising discretion or performing an act, then any Interested Trustee serving as the Trustee is prohibited from participating in the exercise of that discretion or performance of that act. If there is no Trustee serving who is not an Interested Trustee, then an Independent Special Trustee may be appointed under the provisions of to exercise the discretion or perform the act.
+
+           (c)      Exclusive Powers of The Independent Trustee
+
+Whenever a power or discretion is granted exclusively to the Independent Trustee, then any Interested Trustee who is then serving as the Trustee is prohibited from participating in the exercise of the power or discretion. If there is no Independent Trustee then serving, then an Independent Special Trustee may be appointed under the provisions of to exercise the power or discretion that is exercisable only by the Independent Trustee.
+
+           (d)      No Distributions in Discharge of Certain Legal Obligations
+
+The Trustee may not exercise or participate in the exercise of discretion with respect to the distribution of income or principal that would in any manner discharge a legal obligation of the Trustee, including the obligation of support.
+
+If a beneficiary or any other person has the power to remove a Trustee, that Trustee may not exercise or participate in the exercise of discretion with respect to the distribution of income or principal that would in any manner discharge a legal obligation of the person having the power to remove the Trustee, including that person's obligation of support.
+
+           (e)      Insurance Policy on the Life of the Trustee
+
+If the trust holds a policy that insures the life of a Trustee, that Trustee may not exercise any powers or rights with respect to the policy. Instead, a Co-Trustee or an Independent Special Trustee must exercise the powers and rights with respect to the policy.
+
+If any rule of law or court decision construes the ability of the insured Trustee to name an Independent Special Trustee as an incident of ownership of the policy, then a majority of the then current Income Beneficiaries (excluding the insured Trustee if he or she is a beneficiary) will select the Independent Special Trustee.
+
+           (f)      Insurance Policy on a Beneficiary's Life
+
+If the trust holds a policy that insures a beneficiary's life, the beneficiary, individually or as Trustee, may not exercise any power over the policy, its cash value, or its proceeds. This denial of power is intended to prevent an insured beneficiary from holding any power that would constitute an incident of ownership of the policy.
+
+In addition, no distribution of income or principal to the insured beneficiary may be satisfied out of the policy's proceeds, cash value, or other economic benefit of the policy.
+
+The limitations of this Subsection do not apply if, upon the beneficiary's death, the policy's proceeds would otherwise be included in the beneficiary's gross estate for federal estate tax purposes.
 
 Article Sixteen
 General Provisions
