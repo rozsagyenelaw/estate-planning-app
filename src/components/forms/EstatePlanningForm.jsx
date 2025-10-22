@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { useFormContext } from '../../context/FormContext';
 import { Button, Card } from '../common';
 
-// Import form sections (we'll create these next)
+// Import form sections
 import TrustTypeSection from './sections/TrustTypeSection';
 import ClientInfoSection from './sections/ClientInfoSection';
+import TrustNameSection from './sections/TrustNameSection';
+import ChildrenSection from './sections/ChildrenSection';
+import SuccessorTrusteesSection from './sections/SuccessorTrusteesSection';
 
 const EstatePlanningForm = () => {
   const { formData } = useFormContext();
@@ -48,19 +51,13 @@ const EstatePlanningForm = () => {
         <ClientInfoSection />
 
         {/* Living Trust Name */}
-        <Card title="Living Trust Name" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <TrustNameSection />
 
         {/* Children */}
-        <Card title="Children" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <ChildrenSection />
 
         {/* Successor Trustees */}
-        <Card title="Successor Trustees" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <SuccessorTrusteesSection />
 
         {/* Specific Distribution */}
         <Card title="Specific Distribution" collapsible defaultOpen={false}>
