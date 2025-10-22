@@ -33,20 +33,22 @@ import { tableOfContentsTemplate } from '../templates/tableOfContents';
 const addCoverPage = (doc, formData, documentTitle) => {
   // Cover page with centered text
   doc.setFont('times', 'bold');
-  doc.setFontSize(20);
+  doc.setFontSize(18);
 
   const pageWidth = 8.5;
   let yPos = 3.5; // Start 3.5 inches from top
 
-  // Trust name (uppercase)
-  const trustName = `THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} LIVING TRUST`;
-  doc.text(trustName, pageWidth / 2, yPos, { align: 'center' });
+  // Trust name (uppercase) with date
+  const trustName = `THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} LIVING TRUST DATED ${formData.currentDate.toUpperCase()}`;
 
-  yPos += 0.5;
+  // Split into multiple lines if too long
+  const trustLines = doc.splitTextToSize(trustName, 6.5);
+  for (let line of trustLines) {
+    doc.text(line, pageWidth / 2, yPos, { align: 'center' });
+    yPos += 0.3;
+  }
 
-  // Date
-  doc.setFontSize(16);
-  doc.text(`DATED ${formData.currentDate}`, pageWidth / 2, yPos, { align: 'center' });
+  yPos += 0.3;
 
   yPos += 0.8;
 
@@ -88,7 +90,6 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
   try {
     console.log('generatePDFFromText called');
     console.log('Text content length:', textContent.length);
-    console.log('First 200 chars:', textContent.substring(0, 200));
 
     const doc = new jsPDF({
       orientation: 'portrait',
@@ -101,58 +102,108 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
       addCoverPage(doc, formData, documentTitle);
     }
 
-    // Set font and size for document content
-    doc.setFont('times', 'normal');
-    doc.setFontSize(12);
-
-    // Page settings - legal document standard
+    // Page settings
     const pageWidth = 8.5;
     const pageHeight = 11;
-    const marginLeft = 1.0;   // 1 inch left margin
-    const marginRight = 1.0;  // 1 inch right margin
-    const marginTop = 1.0;    // 1 inch top margin
-    const marginBottom = 1.0; // 1 inch bottom margin
-    const contentWidth = pageWidth - marginLeft - marginRight;  // 6.5 inches
-    const lineHeight = 0.167; // inches between lines (~6 lines per inch for 12pt)
-    const maxLinesPerPage = Math.floor((pageHeight - marginTop - marginBottom) / lineHeight);
+    const marginLeft = 1.0;
+    const marginRight = 1.0;
+    const marginTop = 1.0;
+    const marginBottom = 1.0;
+    const contentWidth = pageWidth - marginLeft - marginRight;
+    const baseLineHeight = 0.17;
 
     let currentY = marginTop;
-    let currentPage = 1;
 
     // Split content into lines
     const lines = textContent.split('\n');
-    console.log('Total lines to process:', lines.length);
+    console.log('Processing', lines.length, 'lines with formatting...');
 
-    let lineCount = 0;
+    const addPageNumber = () => {
+      const pageNum = doc.internal.getNumberOfPages();
+      doc.setFont('times', 'normal');
+      doc.setFontSize(10);
+      doc.text(`Page ${pageNum}`, pageWidth / 2, pageHeight - 0.5, { align: 'center' });
+    };
 
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
+      const line = lines[i].trim();
 
-      // Check if we need a new page
-      if (lineCount >= maxLinesPerPage) {
+      // Check for page break (leave room for footer)
+      if (currentY > pageHeight - marginBottom - 0.3) {
+        addPageNumber();
         doc.addPage();
-        currentPage++;
         currentY = marginTop;
-        lineCount = 0;
       }
 
-      // Split long lines to fit page width
-      const wrappedLines = doc.splitTextToSize(line || ' ', contentWidth);
+      // Skip empty lines but add small spacing
+      if (!line) {
+        currentY += baseLineHeight * 0.5;
+        continue;
+      }
 
-      for (let j = 0; j < wrappedLines.length; j++) {
-        // Check again for page break within wrapped lines
-        if (lineCount >= maxLinesPerPage) {
-          doc.addPage();
-          currentPage++;
-          currentY = marginTop;
-          lineCount = 0;
+      // Detect Article headers (e.g., "Article One", "Article Two")
+      if (line.match(/^Article (One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen)$/)) {
+        currentY += baseLineHeight * 1.5; // Extra space before article
+        doc.setFont('times', 'bold');
+        doc.setFontSize(14);
+        doc.text(line, marginLeft, currentY);
+        currentY += baseLineHeight * 1.2;
+        doc.setFont('times', 'normal');
+        doc.setFontSize(12);
+        continue;
+      }
+
+      // Detect Section headers (e.g., "Section 1.01")
+      if (line.match(/^Section \d+\.\d+/)) {
+        currentY += baseLineHeight * 0.8;
+        doc.setFont('times', 'bold');
+        doc.setFontSize(12);
+        const wrappedSection = doc.splitTextToSize(line, contentWidth);
+        for (let w of wrappedSection) {
+          if (currentY > pageHeight - marginBottom - 0.3) {
+            addPageNumber();
+            doc.addPage();
+            currentY = marginTop;
+          }
+          doc.text(w, marginLeft, currentY);
+          currentY += baseLineHeight;
         }
+        doc.setFont('times', 'normal');
+        continue;
+      }
 
-        doc.text(wrappedLines[j], marginLeft, currentY);
-        currentY += lineHeight;
-        lineCount++;
+      // Detect subsections with (a), (b), etc.
+      if (line.match(/^\s*\([a-z]\)\s+/)) {
+        const wrappedSub = doc.splitTextToSize(line, contentWidth - 0.3);
+        for (let w of wrappedSub) {
+          if (currentY > pageHeight - marginBottom - 0.3) {
+            addPageNumber();
+            doc.addPage();
+            currentY = marginTop;
+          }
+          doc.text(w, marginLeft + 0.3, currentY);
+          currentY += baseLineHeight;
+        }
+        continue;
+      }
+
+      // Regular paragraphs
+      doc.setFont('times', 'normal');
+      doc.setFontSize(12);
+      const wrapped = doc.splitTextToSize(line, contentWidth);
+      for (let w of wrapped) {
+        if (currentY > pageHeight - marginBottom - 0.3) {
+          addPageNumber();
+          doc.addPage();
+          currentY = marginTop;
+        }
+        doc.text(w, marginLeft, currentY);
+        currentY += baseLineHeight;
       }
     }
+
+    // Add page number to last page
+    addPageNumber();
 
     console.log('PDF generation complete');
     console.log('Total pages:', doc.internal.getNumberOfPages());
@@ -162,7 +213,6 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
     console.error(`CRITICAL ERROR generating ${documentTitle}:`, error);
     console.error('Error stack:', error.stack);
 
-    // Fallback to simple error document
     const doc = new jsPDF();
     doc.setFontSize(20);
     doc.text(documentTitle.toUpperCase(), 4.25, 1, { align: 'center' });
