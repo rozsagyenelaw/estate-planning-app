@@ -1,24 +1,34 @@
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Checkbox, Input, DatePicker } from '../../common';
+import { Card, Radio, Checkbox, Input, DatePicker } from '../../common';
+import { TRUST_TYPE_OPTIONS } from '../../../utils/constants';
 
 const TrustTypeSection = () => {
-  const { formData, updateFormData, toggleTrustType } = useFormContext();
+  const { formData, updateFormData, setTrustType } = useFormContext();
 
-  const handleJointChange = (e) => {
-    toggleTrustType(e.target.checked);
+  const handleTrustTypeChange = (e) => {
+    setTrustType(e.target.value);
   };
 
   const handleRestatementChange = (e) => {
     updateFormData({ isRestatement: e.target.checked });
   };
 
+  // Get current trust type label for display
+  const getCurrentTypeLabel = () => {
+    const selectedOption = TRUST_TYPE_OPTIONS.find(opt => opt.value === formData.trustType);
+    return selectedOption ? selectedOption.label : 'Single Trust (Revocable)';
+  };
+
   return (
     <Card title="Trust Type Configuration">
-      <div className="space-y-4">
-        <Checkbox
-          label="Joint Documents (Check if creating joint trust with spouse)"
-          checked={formData.isJoint}
-          onChange={handleJointChange}
+      <div className="space-y-6">
+        <Radio
+          label="Select Trust Type"
+          name="trustType"
+          options={TRUST_TYPE_OPTIONS}
+          value={formData.trustType}
+          onChange={handleTrustTypeChange}
+          required
         />
 
         <Checkbox
@@ -48,9 +58,14 @@ const TrustTypeSection = () => {
 
         <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-sm text-blue-800">
-            <strong>Current Selection:</strong> {formData.isJoint ? 'Joint Trust' : 'Single Trust'}
+            <strong>Current Selection:</strong> {getCurrentTypeLabel()}
             {formData.isRestatement && ' (Restatement)'}
           </p>
+          {(formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable') && (
+            <p className="text-sm text-orange-700 mt-2">
+              <strong>Note:</strong> Irrevocable trusts cannot be amended or revoked. The grantor(s) cannot serve as trustee.
+            </p>
+          )}
         </div>
       </div>
     </Card>

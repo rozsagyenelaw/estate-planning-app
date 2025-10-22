@@ -78,7 +78,17 @@ export const DOCUMENT_TYPES = {
 export const TRUST_TYPES = {
   SINGLE: 'single',
   JOINT: 'joint',
+  SINGLE_IRREVOCABLE: 'single_irrevocable',
+  JOINT_IRREVOCABLE: 'joint_irrevocable',
 };
+
+// Trust Type Options for Radio Buttons
+export const TRUST_TYPE_OPTIONS = [
+  { value: 'single', label: 'Single Trust (Revocable)', description: 'Living trust for one grantor' },
+  { value: 'joint', label: 'Joint Trust (Revocable)', description: 'Living trust for married couple or partners' },
+  { value: 'single_irrevocable', label: 'Irrevocable Trust (Single)', description: 'Irrevocable trust for one grantor' },
+  { value: 'joint_irrevocable', label: 'Irrevocable Trust (Joint)', description: 'Irrevocable trust for married couple or partners' },
+];
 
 // Form Section IDs
 export const FORM_SECTIONS = {

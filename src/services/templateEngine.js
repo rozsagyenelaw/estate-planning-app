@@ -187,6 +187,8 @@ export const prepareTemplateData = (formData) => {
     IS_RESTATEMENT: formData.isRestatement,
     NOT_RESTATEMENT: !formData.isRestatement,
     IS_JOINT: formData.isJoint,
+    IS_IRREVOCABLE: formData.isIrrevocable || false,
+    IS_REVOCABLE: !formData.isIrrevocable,
     TRUST_NAME: formData.trustName || '',
     ORIGINAL_TRUST_NAME: formData.originalTrustName || '',
     ORIGINAL_TRUST_DATE: formData.originalTrustDate ? formatDateForDocument(formData.originalTrustDate) : '',
@@ -243,15 +245,20 @@ export const prepareTemplateData = (formData) => {
     // Arrays for loops
     CHILDREN: (formData.children || []).map(child => ({
       NAME: child.name || '',
+      CHILD_FULL_NAME: child.name || '',
       BIRTHDAY: child.birthday ? formatDateForDocument(child.birthday) : '',
-      RELATION: child.relation || ''
+      CHILD_DOB_FORMATTED: child.birthday ? formatDateForDocument(child.birthday) : '',
+      RELATION: child.relation || '',
+      CHILD_RELATIONSHIP: child.relation || ''
     })),
 
     SUCCESSOR_TRUSTEES: (formData.successorTrustees || []).map(trustee => ({
       NAME: trustee.name || '',
+      SUCCESSOR_TRUSTEE_NAME: trustee.name || '',
       ADDRESS: trustee.address || '',
       PHONE: trustee.phone || '',
-      JOINTLY: trustee.jointly ? 'jointly with the next successor trustee' : ''
+      JOINTLY: trustee.jointly ? 'jointly with the next successor trustee' : '',
+      NEEDS_AGE_18: false // TODO: Calculate if trustee needs to reach age 18
     })),
 
     SPECIFIC_DISTRIBUTIONS: (formData.specificDistributions || []).map(dist => ({
@@ -311,6 +318,7 @@ export const prepareTemplateData = (formData) => {
     // Healthcare POA
     HCPOA_CLIENT_REPS: (formData.healthcarePOA?.client || []).map(rep => ({
       NAME: rep.name || '',
+      HIPAA_AGENT_NAME: rep.name || '',
       ADDRESS: rep.address || '',
       PHONE: rep.phone || '',
       JOINTLY: rep.jointly ? 'jointly with the next representative' : ''
@@ -318,6 +326,7 @@ export const prepareTemplateData = (formData) => {
 
     HCPOA_SPOUSE_REPS: (formData.healthcarePOA?.spouse || []).map(rep => ({
       NAME: rep.name || '',
+      HIPAA_AGENT_NAME: rep.name || '',
       ADDRESS: rep.address || '',
       PHONE: rep.phone || '',
       JOINTLY: rep.jointly ? 'jointly with the next representative' : ''
@@ -327,6 +336,89 @@ export const prepareTemplateData = (formData) => {
     CLIENT_ANATOMICAL_GIFT: formData.anatomicalGifts?.client || '',
     SPOUSE_ANATOMICAL_GIFT: formData.anatomicalGifts?.spouse || '',
   };
+
+  // Add aliases for common placeholders
+  data.CLIENT_FULL_NAME = data.CLIENT_NAME;
+  data.SPOUSE_FULL_NAME = data.SPOUSE_NAME;
+  data.TRUST_DATE = data.CURRENT_DATE;
+  data.TRUST_DATE_FORMATTED = data.CURRENT_DATE;
+
+  // Extract first items from arrays for single-value placeholders
+  if (data.SUCCESSOR_TRUSTEES && data.SUCCESSOR_TRUSTEES.length > 0) {
+    data.SUCCESSOR_TRUSTEE_NAME = data.SUCCESSOR_TRUSTEES[0].NAME;
+    data.SUCCESSOR_TRUSTEE_ADDRESS = data.SUCCESSOR_TRUSTEES[0].ADDRESS;
+    data.SUCCESSOR_TRUSTEE_PHONE = data.SUCCESSOR_TRUSTEES[0].PHONE;
+
+    // For irrevocable trusts, the first successor trustee IS the trustee
+    // (since grantor cannot be trustee for irrevocable trusts)
+    if (data.IS_IRREVOCABLE) {
+      data.TRUSTEE_NAME = data.SUCCESSOR_TRUSTEES[0].NAME;
+      data.TRUSTEE_ADDRESS = data.SUCCESSOR_TRUSTEES[0].ADDRESS;
+      data.TRUSTEE_PHONE = data.SUCCESSOR_TRUSTEES[0].PHONE;
+    }
+  }
+
+  if (data.DPOA_CLIENT_REPS && data.DPOA_CLIENT_REPS.length > 0) {
+    data.DPOA_AGENT_NAME = data.DPOA_CLIENT_REPS[0].NAME;
+    data.DPOA_SUCCESSOR_NAME = data.DPOA_CLIENT_REPS.length > 1
+      ? data.DPOA_CLIENT_REPS[1].NAME
+      : '';
+  }
+
+  if (data.HCPOA_CLIENT_REPS && data.HCPOA_CLIENT_REPS.length > 0) {
+    data.HEALTHCARE_AGENT_NAME = data.HCPOA_CLIENT_REPS[0].NAME;
+    data.HEALTHCARE_SUCCESSOR_NAME = data.HCPOA_CLIENT_REPS.length > 1
+      ? data.HCPOA_CLIENT_REPS[1].NAME
+      : '';
+  }
+
+  if (data.POUROVER_CLIENT_REPS && data.POUROVER_CLIENT_REPS.length > 0) {
+    data.POUROVER_REP_NAME = data.POUROVER_CLIENT_REPS[0].NAME;
+    data.POUROVER_SUCCESSOR_REP = data.POUROVER_CLIENT_REPS.length > 1
+      ? data.POUROVER_CLIENT_REPS[1].NAME
+      : '';
+  }
+
+  if (data.GUARDIANS && data.GUARDIANS.length > 0) {
+    data.GUARDIAN_NAME = data.GUARDIANS[0].NAME;
+    data.GUARDIAN_ADDRESS = data.GUARDIANS[0].ADDRESS;
+    data.GUARDIAN_PHONE = data.GUARDIANS[0].PHONE;
+  }
+
+  // HIPAA agents (copy from healthcare POA)
+  data.HIPAA_AGENTS = data.HCPOA_CLIENT_REPS || [];
+  data.EACH_HIPAA_AGENTS = data.HIPAA_AGENTS.map(agent => ({
+    HIPAA_AGENT_NAME: agent.NAME
+  }));
+
+  // Loop helpers for confirmation template
+  data.EACH_CHILDREN = data.CHILDREN.map(child => ({
+    CHILD_FULL_NAME: child.NAME,
+    CHILD_RELATIONSHIP: child.RELATION,
+    CHILD_DOB_FORMATTED: child.BIRTHDAY
+  }));
+
+  data.EACH_SUCCESSOR_TRUSTEES = data.SUCCESSOR_TRUSTEES.map((trustee, index) => ({
+    SUCCESSOR_TRUSTEE_NAME: trustee.NAME,
+    NEEDS_AGE_18: false // TODO: Calculate based on trustee's age
+  }));
+
+  // Add conditional flags
+  data.HAS_CHILDREN = data.CHILDREN && data.CHILDREN.length > 0;
+  data.HAS_MINOR_CHILDREN = false; // TODO: Calculate based on children's ages
+  data.IF_JOINT = data.IS_JOINT;
+  data.IF_SINGLE = !data.IS_JOINT;
+  data.IF_IRREVOCABLE = data.IS_IRREVOCABLE;
+  data.IF_REVOCABLE = data.IS_REVOCABLE;
+  data.IF_HAS_CHILDREN = data.HAS_CHILDREN;
+  data.IF_HAS_MINOR_CHILDREN = data.HAS_MINOR_CHILDREN;
+
+  // Anatomical gift conditionals
+  data.IF_ANATOMICAL_GIFTS_NONE = data.CLIENT_ANATOMICAL_GIFT === 'none';
+  data.IF_ANATOMICAL_GIFTS_TRANSPLANT_ONLY = data.CLIENT_ANATOMICAL_GIFT === 'transplant_only';
+  data.IF_ANATOMICAL_GIFTS_RESEARCH_ONLY = data.CLIENT_ANATOMICAL_GIFT === 'research_only';
+  data.IF_ANATOMICAL_GIFTS_TRANSPLANT_OR_RESEARCH = data.CLIENT_ANATOMICAL_GIFT === 'transplant_or_research';
+  data.IF_ANATOMICAL_GIFTS_ANY_PURPOSE = data.CLIENT_ANATOMICAL_GIFT === 'any_purpose';
 
   return data;
 };

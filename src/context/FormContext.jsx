@@ -29,6 +29,7 @@ export const FormProvider = ({ children }) => {
     // Trust type configuration
     trustType: TRUST_TYPES.SINGLE,
     isJoint: false,
+    isIrrevocable: false,
     isRestatement: false,
     originalTrustName: '',
     originalTrustDate: '',
@@ -153,12 +154,26 @@ export const FormProvider = ({ children }) => {
     if (field === 'county' && value) addCountySuggestion(value);
   };
 
-  // Toggle trust type between single and joint
+  // Toggle trust type between single and joint (legacy function)
   const toggleTrustType = (isJoint) => {
     setFormData((prev) => ({
       ...prev,
       isJoint,
       trustType: isJoint ? TRUST_TYPES.JOINT : TRUST_TYPES.SINGLE,
+      spouse: isJoint ? (prev.spouse || { ...DEFAULT_CLIENT }) : null,
+    }));
+  };
+
+  // Set trust type (handles all trust types including irrevocable)
+  const setTrustType = (trustType) => {
+    const isJoint = trustType === TRUST_TYPES.JOINT || trustType === TRUST_TYPES.JOINT_IRREVOCABLE;
+    const isIrrevocable = trustType === TRUST_TYPES.SINGLE_IRREVOCABLE || trustType === TRUST_TYPES.JOINT_IRREVOCABLE;
+
+    setFormData((prev) => ({
+      ...prev,
+      trustType,
+      isJoint,
+      isIrrevocable,
       spouse: isJoint ? (prev.spouse || { ...DEFAULT_CLIENT }) : null,
     }));
   };
@@ -194,6 +209,7 @@ export const FormProvider = ({ children }) => {
     setFormData({
       trustType: TRUST_TYPES.SINGLE,
       isJoint: false,
+      isIrrevocable: false,
       isRestatement: false,
       originalTrustName: '',
       originalTrustDate: '',
@@ -225,6 +241,7 @@ export const FormProvider = ({ children }) => {
     updateClientData,
     updateSpouseData,
     toggleTrustType,
+    setTrustType,
     addArrayItem,
     updateArrayItem,
     removeArrayItem,
