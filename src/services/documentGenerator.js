@@ -87,6 +87,14 @@ export const generateLivingTrust = async (formData) => {
   console.log('formData.trustType:', formData.trustType);
   console.log('formData:', formData);
 
+  // Add currentDate if not present
+  if (!formData.currentDate) {
+    const today = new Date();
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                   'July', 'August', 'September', 'October', 'November', 'December'];
+    formData.currentDate = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+  }
+
   // For single living trust, use the old system (function-based template)
   let content;
   if (formData.trustType === 'single' || !formData.trustType) {

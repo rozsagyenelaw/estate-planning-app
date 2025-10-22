@@ -15,7 +15,8 @@ export const sampleFormData = {
   isJoint: false,
   isRestatement: true,
   originalTrustName: 'John M. Smith Living Trust',
-  originalTrustDate: '2020-01-15',
+  originalTrustDate: 'January 15, 2020',
+  currentDate: 'December 15, 2024', // Required by template
 
   // Trust Name
   trustName: 'John M. Smith Living Trust',
