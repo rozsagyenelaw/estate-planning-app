@@ -10,6 +10,7 @@ import { formatPhoneNumber } from '../../../utils/formatters';
 
 const GuardiansSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
+  const guardians = formData.guardians || [];
 
   const handleAddGuardian = () => {
     addArrayItem('guardians', { ...DEFAULT_GUARDIAN });
@@ -36,7 +37,7 @@ const GuardiansSection = () => {
           of minor children if both parents are deceased. List them in order of preference.
         </p>
 
-        {formData.guardians.length === 0 ? (
+        {guardians.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
             <p className="text-gray-500 mb-4">No guardians added yet</p>
             <Button onClick={handleAddGuardian} variant="primary">
@@ -45,7 +46,7 @@ const GuardiansSection = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {formData.guardians.map((guardian, index) => (
+            {guardians.map((guardian, index) => (
               <div
                 key={index}
                 className="p-4 bg-white border-2 border-orange-300 rounded-lg shadow-sm"
@@ -118,7 +119,7 @@ const GuardiansSection = () => {
           </div>
         )}
 
-        {formData.guardians.length > 0 && (
+        {guardians.length > 0 && (
           <div className="flex justify-center mt-4">
             <Button onClick={handleAddGuardian} variant="outline">
               + Add Another Guardian
@@ -126,10 +127,10 @@ const GuardiansSection = () => {
           </div>
         )}
 
-        {formData.guardians.length > 0 && (
+        {guardians.length > 0 && (
           <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
             <p className="text-sm text-orange-800">
-              <strong>Total Guardians:</strong> {formData.guardians.length}
+              <strong>Total Guardians:</strong> {guardians.length}
             </p>
           </div>
         )}

@@ -6,6 +6,9 @@ import { getNameSuggestions } from '../../../services/autocompleteService';
 const GeneralNeedsTrustSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
 
+  // Safety check: ensure generalNeedsTrusts exists
+  const generalNeedsTrusts = formData.generalNeedsTrusts || [];
+
   const handleAddNeedsTrust = () => {
     addArrayItem('generalNeedsTrusts', { ...DEFAULT_NEEDS_TRUST });
   };
@@ -28,7 +31,7 @@ const GeneralNeedsTrustSection = () => {
           support with specific conditions or restrictions.
         </p>
 
-        {formData.generalNeedsTrusts.length === 0 ? (
+        {generalNeedsTrusts.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
             <p className="text-gray-500 mb-4">No general needs trusts added yet</p>
             <Button onClick={handleAddNeedsTrust} variant="primary">
@@ -37,7 +40,7 @@ const GeneralNeedsTrustSection = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {formData.generalNeedsTrusts.map((trust, index) => (
+            {generalNeedsTrusts.map((trust, index) => (
               <div
                 key={index}
                 className="p-4 bg-white border-2 border-purple-300 rounded-lg shadow-sm"
@@ -123,7 +126,7 @@ const GeneralNeedsTrustSection = () => {
           </div>
         )}
 
-        {formData.generalNeedsTrusts.length > 0 && (
+        {generalNeedsTrusts.length > 0 && (
           <div className="flex justify-center mt-4">
             <Button onClick={handleAddNeedsTrust} variant="outline">
               + Add Another General Needs Trust
@@ -131,11 +134,11 @@ const GeneralNeedsTrustSection = () => {
           </div>
         )}
 
-        {formData.generalNeedsTrusts.length > 0 && (
+        {generalNeedsTrusts.length > 0 && (
           <div className="mt-4 p-3 bg-purple-50 border border-purple-200 rounded-lg">
             <p className="text-sm text-purple-800">
               <strong>Total General Needs Trusts:</strong>{' '}
-              {formData.generalNeedsTrusts.length}
+              {generalNeedsTrusts.length}
             </p>
           </div>
         )}

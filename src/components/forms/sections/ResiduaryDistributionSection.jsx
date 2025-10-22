@@ -11,19 +11,20 @@ import { getNameSuggestions } from '../../../services/autocompleteService';
 const ResiduaryDistributionSection = () => {
   const { formData, updateFormData, addArrayItem, updateArrayItem, removeArrayItem } =
     useFormContext();
+  const residuaryBeneficiaries = formData.residuaryBeneficiaries || [];
 
   // Auto-calculate equal shares when even split is enabled
   useEffect(() => {
     if (
       formData.residuaryEvenSplit &&
-      formData.residuaryBeneficiaries.length > 0
+      residuaryBeneficiaries.length > 0
     ) {
-      const share = (100 / formData.residuaryBeneficiaries.length).toFixed(2);
-      formData.residuaryBeneficiaries.forEach((_, index) => {
+      const share = (100 / residuaryBeneficiaries.length).toFixed(2);
+      residuaryBeneficiaries.forEach((_, index) => {
         updateArrayItem('residuaryBeneficiaries', index, { share });
       });
     }
-  }, [formData.residuaryEvenSplit, formData.residuaryBeneficiaries.length]);
+  }, [formData.residuaryEvenSplit, residuaryBeneficiaries.length]);
 
   const handleAddBeneficiary = () => {
     addArrayItem('residuaryBeneficiaries', { ...DEFAULT_RESIDUARY_BENEFICIARY });
@@ -40,7 +41,7 @@ const ResiduaryDistributionSection = () => {
   };
 
   const calculateTotalPercentage = () => {
-    return formData.residuaryBeneficiaries
+    return residuaryBeneficiaries
       .reduce((sum, b) => sum + parseFloat(b.share || 0), 0)
       .toFixed(2);
   };
@@ -78,7 +79,7 @@ const ResiduaryDistributionSection = () => {
 
         {formData.residuaryDistributionType === 'individuals' && (
           <>
-            {formData.residuaryBeneficiaries.length === 0 ? (
+            {residuaryBeneficiaries.length === 0 ? (
               <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
                 <p className="text-gray-500 mb-4">No residuary beneficiaries added yet</p>
                 <Button onClick={handleAddBeneficiary} variant="primary">
@@ -87,7 +88,7 @@ const ResiduaryDistributionSection = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {formData.residuaryBeneficiaries.map((beneficiary, index) => (
+                {residuaryBeneficiaries.map((beneficiary, index) => (
                   <div
                     key={index}
                     className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm"
@@ -170,7 +171,7 @@ const ResiduaryDistributionSection = () => {
               </div>
             )}
 
-            {formData.residuaryBeneficiaries.length > 0 && (
+            {residuaryBeneficiaries.length > 0 && (
               <div className="flex justify-center mt-4">
                 <Button onClick={handleAddBeneficiary} variant="outline">
                   + Add Another Beneficiary
@@ -178,7 +179,7 @@ const ResiduaryDistributionSection = () => {
               </div>
             )}
 
-            {formData.residuaryBeneficiaries.length > 0 && (
+            {residuaryBeneficiaries.length > 0 && (
               <div
                 className={`mt-4 p-3 border rounded-lg ${
                   isValidTotal

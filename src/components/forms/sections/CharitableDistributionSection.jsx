@@ -4,6 +4,7 @@ import { DEFAULT_CHARITY } from '../../../utils/constants';
 
 const CharitableDistributionSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
+  const charitableDistributions = formData.charitableDistributions || [];
 
   const handleAddCharity = () => {
     addArrayItem('charitableDistributions', { ...DEFAULT_CHARITY });
@@ -27,7 +28,7 @@ const CharitableDistributionSection = () => {
           organization details and distribution amounts.
         </p>
 
-        {formData.charitableDistributions.length === 0 ? (
+        {charitableDistributions.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
             <p className="text-gray-500 mb-4">
               No charitable distributions added yet
@@ -38,7 +39,7 @@ const CharitableDistributionSection = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {formData.charitableDistributions.map((charity, index) => (
+            {charitableDistributions.map((charity, index) => (
               <div
                 key={index}
                 className="p-4 bg-white border-2 border-green-300 rounded-lg shadow-sm"
@@ -123,7 +124,7 @@ const CharitableDistributionSection = () => {
           </div>
         )}
 
-        {formData.charitableDistributions.length > 0 && (
+        {charitableDistributions.length > 0 && (
           <div className="flex justify-center mt-4">
             <Button onClick={handleAddCharity} variant="outline">
               + Add Another Charitable Distribution
@@ -131,11 +132,11 @@ const CharitableDistributionSection = () => {
           </div>
         )}
 
-        {formData.charitableDistributions.length > 0 && (
+        {charitableDistributions.length > 0 && (
           <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-sm text-green-800">
               <strong>Total Charitable Organizations:</strong>{' '}
-              {formData.charitableDistributions.length}
+              {charitableDistributions.length}
             </p>
           </div>
         )}

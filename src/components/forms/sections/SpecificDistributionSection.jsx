@@ -5,6 +5,7 @@ import { getNameSuggestions } from '../../../services/autocompleteService';
 
 const SpecificDistributionSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
+  const specificDistributions = formData.specificDistributions || [];
 
   const handleAddDistribution = () => {
     addArrayItem('specificDistributions', { ...DEFAULT_SPECIFIC_DISTRIBUTION });
@@ -21,7 +22,7 @@ const SpecificDistributionSection = () => {
   };
 
   const handleAddAgeDistribution = (distIndex) => {
-    const distribution = formData.specificDistributions[distIndex];
+    const distribution = specificDistributions[distIndex];
     const newAgeDistributions = [
       ...distribution.ageDistributions,
       { age: '', percentage: '' },
@@ -32,7 +33,7 @@ const SpecificDistributionSection = () => {
   };
 
   const handleRemoveAgeDistribution = (distIndex, ageIndex) => {
-    const distribution = formData.specificDistributions[distIndex];
+    const distribution = specificDistributions[distIndex];
     const newAgeDistributions = distribution.ageDistributions.filter(
       (_, i) => i !== ageIndex
     );
@@ -42,7 +43,7 @@ const SpecificDistributionSection = () => {
   };
 
   const handleAgeDistributionChange = (distIndex, ageIndex, field, value) => {
-    const distribution = formData.specificDistributions[distIndex];
+    const distribution = specificDistributions[distIndex];
     const newAgeDistributions = distribution.ageDistributions.map((ad, i) =>
       i === ageIndex ? { ...ad, [field]: value } : ad
     );
@@ -59,7 +60,7 @@ const SpecificDistributionSection = () => {
           You can set age-based or event-based distribution conditions.
         </p>
 
-        {formData.specificDistributions.length === 0 ? (
+        {specificDistributions.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
             <p className="text-gray-500 mb-4">No specific distributions added yet</p>
             <Button onClick={handleAddDistribution} variant="primary">
@@ -68,7 +69,7 @@ const SpecificDistributionSection = () => {
           </div>
         ) : (
           <div className="space-y-6">
-            {formData.specificDistributions.map((distribution, distIndex) => (
+            {specificDistributions.map((distribution, distIndex) => (
               <div
                 key={distIndex}
                 className="p-4 bg-white border-2 border-gray-300 rounded-lg shadow-sm"
@@ -221,7 +222,7 @@ const SpecificDistributionSection = () => {
           </div>
         )}
 
-        {formData.specificDistributions.length > 0 && (
+        {specificDistributions.length > 0 && (
           <div className="flex justify-center mt-4">
             <Button onClick={handleAddDistribution} variant="outline">
               + Add Another Specific Distribution
@@ -229,11 +230,11 @@ const SpecificDistributionSection = () => {
           </div>
         )}
 
-        {formData.specificDistributions.length > 0 && (
+        {specificDistributions.length > 0 && (
           <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
             <p className="text-sm text-blue-800">
               <strong>Total Specific Distributions:</strong>{' '}
-              {formData.specificDistributions.length}
+              {specificDistributions.length}
             </p>
           </div>
         )}

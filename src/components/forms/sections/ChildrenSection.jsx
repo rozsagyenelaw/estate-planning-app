@@ -5,6 +5,7 @@ import { getNameSuggestions } from '../../../services/autocompleteService';
 
 const ChildrenSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
+  const children = formData.children || [];
 
   const handleAddChild = () => {
     addArrayItem('children', { ...DEFAULT_CHILD });
@@ -27,7 +28,7 @@ const ChildrenSection = () => {
           Add all children and their information. This will be used for distribution and guardianship purposes.
         </p>
 
-        {formData.children.length === 0 ? (
+        {children.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
             <p className="text-gray-500 mb-4">No children added yet</p>
             <Button onClick={handleAddChild} variant="primary">
@@ -36,7 +37,7 @@ const ChildrenSection = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {formData.children.map((child, index) => (
+            {children.map((child, index) => (
               <div
                 key={index}
                 className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm"
@@ -87,7 +88,7 @@ const ChildrenSection = () => {
           </div>
         )}
 
-        {formData.children.length > 0 && (
+        {children.length > 0 && (
           <div className="flex justify-center mt-4">
             <Button onClick={handleAddChild} variant="outline">
               + Add Another Child
@@ -95,10 +96,10 @@ const ChildrenSection = () => {
           </div>
         )}
 
-        {formData.children.length > 0 && (
+        {children.length > 0 && (
           <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
             <p className="text-sm text-blue-800">
-              <strong>Total Children:</strong> {formData.children.length}
+              <strong>Total Children:</strong> {children.length}
             </p>
           </div>
         )}

@@ -10,6 +10,7 @@ import { formatPhoneNumber } from '../../../utils/formatters';
 
 const SuccessorTrusteesSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
+  const successorTrustees = formData.successorTrustees || [];
 
   const handleAddTrustee = () => {
     addArrayItem('successorTrustees', { ...DEFAULT_TRUSTEE });
@@ -36,7 +37,7 @@ const SuccessorTrusteesSection = () => {
           List them in order of preference.
         </p>
 
-        {formData.successorTrustees.length === 0 ? (
+        {successorTrustees.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
             <p className="text-gray-500 mb-4">No successor trustees added yet</p>
             <Button onClick={handleAddTrustee} variant="primary">
@@ -45,7 +46,7 @@ const SuccessorTrusteesSection = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {formData.successorTrustees.map((trustee, index) => (
+            {successorTrustees.map((trustee, index) => (
               <div
                 key={index}
                 className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm"
@@ -112,7 +113,7 @@ const SuccessorTrusteesSection = () => {
           </div>
         )}
 
-        {formData.successorTrustees.length > 0 && (
+        {successorTrustees.length > 0 && (
           <div className="flex justify-center mt-4">
             <Button onClick={handleAddTrustee} variant="outline">
               + Add Another Successor Trustee
@@ -120,10 +121,10 @@ const SuccessorTrusteesSection = () => {
           </div>
         )}
 
-        {formData.successorTrustees.length > 0 && (
+        {successorTrustees.length > 0 && (
           <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
             <p className="text-sm text-blue-800">
-              <strong>Total Successor Trustees:</strong> {formData.successorTrustees.length}
+              <strong>Total Successor Trustees:</strong> {successorTrustees.length}
             </p>
           </div>
         )}
