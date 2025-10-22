@@ -15,6 +15,14 @@
  * @returns {string} - Processed template
  */
 export const processTemplate = (template, data) => {
+  console.log('=== DEBUG: processTemplate ===');
+  console.log('template type:', typeof template);
+  console.log('template defined?', template !== undefined);
+  if (!template) {
+    console.error('ERROR: Template is undefined in processTemplate!');
+    return '<html><body><h1>Error: Template is undefined</h1></body></html>';
+  }
+
   let processed = template;
 
   // Process loops first (they may contain conditionals)

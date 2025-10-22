@@ -86,6 +86,15 @@ export const generateLivingTrust = async (formData) => {
   // Prepare data for template
   const templateData = prepareTemplateData(formData);
 
+  // DEBUG: Log what we're working with
+  console.log('=== DEBUG: generateLivingTrust ===');
+  console.log('formData.trustType:', formData.trustType);
+  console.log('singleLivingTrustTemplate type:', typeof singleLivingTrustTemplate);
+  console.log('singleLivingTrustTemplate defined?', singleLivingTrustTemplate !== undefined);
+  if (singleLivingTrustTemplate) {
+    console.log('singleLivingTrustTemplate length:', singleLivingTrustTemplate.length);
+  }
+
   // Select template based on trust type
   let template;
   switch (formData.trustType) {
@@ -104,6 +113,14 @@ export const generateLivingTrust = async (formData) => {
     default:
       // Fallback to single trust for backward compatibility
       template = formData.isJoint ? jointLivingTrustTemplate : singleLivingTrustTemplate;
+  }
+
+  console.log('Selected template type:', typeof template);
+  console.log('Selected template defined?', template !== undefined);
+  if (template) {
+    console.log('Selected template length:', template.length);
+  } else {
+    console.error('ERROR: Template is undefined!');
   }
 
   // Process template with data

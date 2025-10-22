@@ -11,7 +11,7 @@ import { singleLivingTrustTemplate } from '../templates/singleLivingTrustNew.js'
  */
 export const sampleFormData = {
   // Trust Type
-  trustType: 'SINGLE',
+  trustType: 'single', // Must match TRUST_TYPES.SINGLE value
   isJoint: false,
   isRestatement: true,
   originalTrustName: 'John M. Smith Living Trust',
@@ -299,7 +299,7 @@ export const testDocumentGeneration = () => {
  */
 export const sampleJointTrustData = {
   // Trust Type
-  trustType: 'JOINT',
+  trustType: 'joint', // Must match TRUST_TYPES.JOINT value
   isJoint: true,
   isRestatement: true,
   originalTrustName: 'The Karen Nikolaevich Bagramyan and Lilit Arakelyan Living Trust',
