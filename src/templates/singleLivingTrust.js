@@ -1,130 +1,19 @@
 export const singleTrustTemplate = (formData) => `
 THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} LIVING TRUST
-Restatement dated ${formData.currentDate}
+DATED ${formData.currentDate}
+${formData.isRestatement ? `Restatement of trust originally dated ${formData.originalTrustDate}` : ''}
 LAW OFFICES OF ROZSA GYENE, PC
 450 N BRAND BLVD. SUITE 623
 GLENDALE, CALIFORNIA 91203
 
-Table of Contents
-Article One Establishing the Trust    1
-Section 1.01      Identifying the Trust    1
-Section 1.02      Reliance by Third Parties    1
-Section 1.03      Transferring Property to the Trust    2
-Section 1.04      Powers Reserved by Me as Grantor    2
-Section 1.05      Grantor Trust Status    3
-Article Two Family Information    3
-Article Three Trustee Succession Provisions    4
-Section 3.01      Resignation of a Trustee    4
-Section 3.02      Trustee Succession during My Lifetime    4
-Section 3.03      Trustee Succession after My Death    5
-Section 3.04      Notice of Removal and Appointment    5
-Section 3.05      Appointment of a Co-Trustee    6
-Section 3.06      Corporate Fiduciaries    6
-Section 3.07      Incapacity of a Trustee    6
-Section 3.08      Appointment of Independent Special Trustee    6
-Section 3.09      Rights and Obligations of Successor Trustees    6
-Article Four Administration of the Trust During My Incapacity    7
-Section 4.01      Trust Distributions during My Incapacity    7
-Article Five Administration of the Trust Upon My Death    8
-Section 5.01      The Trust Becomes Irrevocable    8
-Section 5.02      Administrative Trust    8
-Section 5.03     Payment of Expenses and Taxes    8
-Section 5.04     Restrictions on Certain Payments from Retirement Plans    9
-Section 5.05     Excluding Life Insurance Proceeds from Creditors    9
-Section 5.06     Payment of Death Taxes    9
-Section 5.07     Coordination with The Personal Representative    10
-Section 5.08     Authority to Make Tax Elections    11
-Article Six Specific Distributions and Disposition of Tangible Personal Property    12
-Section 6.01      Specific Distribution to ${formData.children?.[0]?.name || 'Child 1'}    12
-Section 6.02      Specific Distribution to ${formData.children?.[1]?.name || 'Child 2'}    12
-Section 6.03      Specific Distribution to ${formData.children?.[2]?.name || 'Child 3'}    12
-Section 6.04      Specific Distribution to ${formData.specificBequests?.[0]?.beneficiary || 'Beneficiary'}    12
-Section 6.05      Distribution of Tangible Personal Property by Memorandum    12
-Section 6.06      Distribution of Remaining Tangible Personal Property    13
-Section 6.07      Definition of Tangible Personal Property    13
-Section 6.08      Incidental Expenses and Encumbrances    13
-Section 6.09      Residuary Distribution    13
-Article Seven Distribution to My Beneficiaries    14
-Section 7.01      Division of Remaining Trust Property    14
-Section 7.02      Distribution of the Share for ${formData.children?.[0]?.name || 'Child 1'}    14
-Section 7.03      Distribution of the Share for ${formData.children?.[1]?.name || 'Child 2'}    15
-Section 7.04      Distribution of the Share for ${formData.children?.[2]?.name || 'Child 3'}    17
-Article Eight Remote Contingent Distribution    18
-Article Nine Distributions to Underage and Incapacitated Beneficiaries    18
-Section 9.01      Methods of Distribution    18
-Section 9.02      Retention in Trust    19
-Section 9.03      Application of Article    20
-Article Ten Retirement Plans and Life Insurance Policies    20
-Section 10.01      Retirement Plans    20
-Section 10.02      Life Insurance Policies    21
-Section 10.03      Limitation on Liability of Payor    21
-Section 10.04      Collection Efforts    21
-Section 10.05      No Obligation to Purchase or Maintain Benefits    22
-Article Eleven Trust Administration    22
-Section 11.01      Distributions to Beneficiaries    22
-Section 11.02      Beneficiary's Status    22
-Section 11.03      Mandatory Payments of a Pecuniary Amount    22
-Section 11.04      No Court Proceedings    23
-Section 11.05      No Bond    23
-Section 11.06      Exoneration of the Trustee    23
-Section 11.07      Limitations on Trustee Liability    24
-Section 11.08      Trustee Compensation    24
-Section 11.09      Employment of Professionals    24
-Section 11.10      Exercise of Testamentary Power of Appointment    25
-Section 11.11      Determination of Principal and Income    25
-Section 11.12      Trust Accounting    25
-Section 11.13      Information to Beneficiaries    26
-Section 11.14      Action of Trustees and Delegation of Trustee Authority    27
-Section 11.15      Trustee May Disclaim or Release Any Power    27
-Section 11.16      Trustee May Execute a Power of Attorney    27
-Section 11.17      Additions to Separate Trusts    27
-Section 11.18      Authority to Merge or Sever Trusts    28
-Section 11.19      Authority to Terminate Trusts    28
-Section 11.20      Discretionary Distribution to Fully Utilize Basis Increase upon Death of Beneficiary    29
-Section 11.21     Merger of Corporate Fiduciary    29
-Section 11.22      Funeral and Other Expenses of Beneficiary    29
-Article Twelve The Trustee's Powers    29
-Section 12.01      Introduction to Trustee's Powers    29
-Section 12.02      Execution of Documents by the Trustee    30
-Section 12.03      Investment Powers in General    30
-Section 12.04      Banking Powers    30
-Section 12.05      Business Powers    31
-Section 12.06      Contract Powers    31
-Section 12.07      Common Investments    31
-Section 12.08      Environmental Powers    31
-Section 12.09      Farm, Ranch, and Other Agricultural Powers    32
-Section 12.10      Insurance Powers    33
-Section 12.11      Loans and Borrowing Powers    33
-Section 12.12      Nominee Powers    34
-Section 12.13      Oil, Gas and Mineral Interests    34
-Section 12.14      Payment of Property Taxes and Expenses    34
-Section 12.15      Purchase of Assets from and Loans to My Probate Estate    34
-Section 12.16      Qualified Real Property Valuation    35
-Section 12.17      Qualified Tuition Programs    35
-Section 12.18      Real Estate Powers    35
-Section 12.19      Residences and Tangible Personal Property    36
-Section 12.20      Retention and Abandonment of Trust Property    36
-Section 12.21      Securities, Brokerage and Margin Powers    37
-Section 12.22      Settlement Powers    37
-Section 12.23      Subchapter S Corporation Stock Provisions    37
-Section 12.24      Limitation on the Trustee's Powers    40
-Article Thirteen General Provisions    41
-Section 13.01      Maximum Term for Trusts    41
-Section 13.02      Spendthrift Provision    41
-Section 13.03      Contest Provision    42
-Section 13.04      Survivorship Presumption    42
-Section 13.05      Changing the Governing Law and Situs of Administration    42
-Section 13.06      Definitions    42
-Section 13.07      General Provisions and Rules of Construction    47
-Schedule of Assets    50
 
-
-The ${formData.client.firstName} ${formData.client.lastName} Living Trust
+${formData.isRestatement ? `
+On ${formData.originalTrustDate}, I, ${formData.client.firstName} ${formData.client.lastName}, established The ${formData.client.firstName} ${formData.client.lastName} Living Trust, and reserved the right to amend the trust, in whole or in part. On this day, ${formData.currentDate}, I revoke all prior restatements and amendments to that instrument and now exercise my power to amend that instrument in its entirety, so that after amendment The ${formData.client.firstName} ${formData.client.lastName} Living Trust now states:
+` : ''}
 
 Article One
 Establishing the Trust
-On ${formData.originalTrustDate}, I established the The ${formData.client.firstName} ${formData.client.lastName} Living. Trust, and reserved the right to amend the trust, in whole or in part.  On this day, ${formData.currentDate}, I revoke all restatements and amendments to that instrument and now exercise my power to amend that instrument in its entirety, so that after amendment the The ${formData.client.firstName} ${formData.client.lastName} Living. Trust now states:
-The parties to this restated trust are ${formData.client.firstName} ${formData.client.lastName} (the Grantor) and ${formData.client.firstName} ${formData.client.lastName} (the Trustee).
+The parties to this ${formData.isRestatement ? 'restated ' : ''}trust are ${formData.client.firstName} ${formData.client.lastName} (the Grantor) and ${formData.client.firstName} ${formData.client.lastName} (the Trustee).
 I intend to create a valid trust under the laws of ${formData.client.state} and under the laws of any state in which any trust created under this trust document is administered.  The terms of this trust prevail over any provision of ${formData.client.state} law, except those provisions that are mandatory and may not be waived.
 Section 1.01      Identifying the Trust
 For convenience, the trust may be referred to as:
