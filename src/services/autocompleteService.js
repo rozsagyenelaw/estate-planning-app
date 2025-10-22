@@ -27,12 +27,21 @@ const saveAutocompleteData = (key, data) => {
 
 // Add a new item to autocomplete suggestions
 const addToAutocomplete = (key, value) => {
-  if (!value || typeof value !== 'string') return;
+  console.log('💾 addToAutocomplete called', { key, value });
+
+  if (!value || typeof value !== 'string') {
+    console.log('  → Skipped: invalid value');
+    return;
+  }
 
   const trimmedValue = value.trim();
-  if (trimmedValue.length === 0) return;
+  if (trimmedValue.length === 0) {
+    console.log('  → Skipped: empty value');
+    return;
+  }
 
   const existing = getAutocompleteData(key);
+  console.log('  → Existing data:', existing);
 
   // Check if value already exists (case-insensitive)
   const exists = existing.some(
@@ -41,17 +50,23 @@ const addToAutocomplete = (key, value) => {
 
   if (!exists) {
     const updated = [...existing, trimmedValue];
+    console.log('  → Saving new value. Updated array:', updated);
     saveAutocompleteData(key, updated);
+  } else {
+    console.log('  → Skipped: value already exists');
   }
 };
 
 // Get name suggestions
 export const getNameSuggestions = () => {
-  return getAutocompleteData(STORAGE_KEYS.AUTOCOMPLETE_NAMES);
+  const data = getAutocompleteData(STORAGE_KEYS.AUTOCOMPLETE_NAMES);
+  console.log('📖 getNameSuggestions called, returning:', data);
+  return data;
 };
 
 // Add name to suggestions
 export const addNameSuggestion = (name) => {
+  console.log('📝 addNameSuggestion called with:', name);
   addToAutocomplete(STORAGE_KEYS.AUTOCOMPLETE_NAMES, name);
 };
 

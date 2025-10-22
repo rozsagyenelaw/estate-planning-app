@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocomplete Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .storage-display {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Autocomplete Service Test</h1>
+
+    <div class="test-section">
+        <h2>Test 1: Save and Retrieve Names</h2>
+        <button onclick="testSaveName()">Save "John Doe" to Names</button>
+        <button onclick="testSaveName2()">Save "Jane Smith" to Names</button>
+        <button onclick="testGetNames()">Get All Names</button>
+        <div id="namesResult" class="storage-display"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Save and Retrieve Addresses</h2>
+        <button onclick="testSaveAddress()">Save "123 Main St" to Addresses</button>
+        <button onclick="testSaveAddress2()">Save "456 Oak Ave" to Addresses</button>
+        <button onclick="testGetAddresses()">Get All Addresses</button>
+        <div id="addressesResult" class="storage-display"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Save and Retrieve Phones</h2>
+        <button onclick="testSavePhone()">Save "(555) 123-4567" to Phones</button>
+        <button onclick="testSavePhone2()">Save "(555) 987-6543" to Phones</button>
+        <button onclick="testGetPhones()">Get All Phones</button>
+        <div id="phonesResult" class="storage-display"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Duplicate Prevention</h2>
+        <button onclick="testDuplicates()">Try to Save "John Doe" Again</button>
+        <button onclick="testGetNames()">Get All Names (should still be 2)</button>
+        <div id="duplicatesResult" class="storage-display"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 5: Clear All Data</h2>
+        <button onclick="clearAllData()">Clear All Autocomplete Data</button>
+        <button onclick="showAllData()">Show All Data</button>
+        <div id="clearResult" class="storage-display"></div>
+    </div>
+
+    <script>
+        // Storage keys (matching the app)
+        const STORAGE_KEYS = {
+            AUTOCOMPLETE_NAMES: 'autocomplete_names',
+            AUTOCOMPLETE_ADDRESSES: 'autocomplete_addresses',
+            AUTOCOMPLETE_PHONES: 'autocomplete_phones',
+        };
+
+        // Autocomplete service functions (matching the app)
+        const getAutocompleteData = (key) => {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : [];
+            } catch (error) {
+                console.error('Error reading autocomplete data:', error);
+                return [];
+            }
+        };
+
+        const saveAutocompleteData = (key, data) => {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (error) {
+                console.error('Error saving autocomplete data:', error);
+            }
+        };
+
+        const addToAutocomplete = (key, value) => {
+            if (!value || typeof value !== 'string') return;
+
+            const trimmedValue = value.trim();
+            if (trimmedValue.length === 0) return;
+
+            const existing = getAutocompleteData(key);
+
+            // Check if value already exists (case-insensitive)
+            const exists = existing.some(
+                (item) => item.toLowerCase() === trimmedValue.toLowerCase()
+            );
+
+            if (!exists) {
+                const updated = [...existing, trimmedValue];
+                saveAutocompleteData(key, updated);
+            }
+        };
+
+        // Test functions
+        function testSaveName() {
+            addToAutocomplete(STORAGE_KEYS.AUTOCOMPLETE_NAMES, 'John Doe');
+            document.getElementById('namesResult').innerHTML = '<span class="success">✓ Saved "John Doe"</span>';
+        }
+
+        function testSaveName2() {
+            addToAutocomplete(STORAGE_KEYS.AUTOCOMPLETE_NAMES, 'Jane Smith');
+            document.getElementById('namesResult').innerHTML = '<span class="success">✓ Saved "Jane Smith"</span>';
+        }
+
+        function testGetNames() {
+            const names = getAutocompleteData(STORAGE_KEYS.AUTOCOMPLETE_NAMES);
+            document.getElementById('namesResult').innerHTML =
+                `<span class="success">Retrieved ${names.length} names:</span><br>` +
+                JSON.stringify(names, null, 2);
+        }
+
+        function testSaveAddress() {
+            addToAutocomplete(STORAGE_KEYS.AUTOCOMPLETE_ADDRESSES, '123 Main St');
+            document.getElementById('addressesResult').innerHTML = '<span class="success">✓ Saved "123 Main St"</span>';
+        }
+
+        function testSaveAddress2() {
+            addToAutocomplete(STORAGE_KEYS.AUTOCOMPLETE_ADDRESSES, '456 Oak Ave');
+            document.getElementById('addressesResult').innerHTML = '<span class="success">✓ Saved "456 Oak Ave"</span>';
+        }
+
+        function testGetAddresses() {
+            const addresses = getAutocompleteData(STORAGE_KEYS.AUTOCOMPLETE_ADDRESSES);
+            document.getElementById('addressesResult').innerHTML =
+                `<span class="success">Retrieved ${addresses.length} addresses:</span><br>` +
+                JSON.stringify(addresses, null, 2);
+        }
+
+        function testSavePhone() {
+            addToAutocomplete(STORAGE_KEYS.AUTOCOMPLETE_PHONES, '(555) 123-4567');
+            document.getElementById('phonesResult').innerHTML = '<span class="success">✓ Saved "(555) 123-4567"</span>';
+        }
+
+        function testSavePhone2() {
+            addToAutocomplete(STORAGE_KEYS.AUTOCOMPLETE_PHONES, '(555) 987-6543');
+            document.getElementById('phonesResult').innerHTML = '<span class="success">✓ Saved "(555) 987-6543"</span>';
+        }
+
+        function testGetPhones() {
+            const phones = getAutocompleteData(STORAGE_KEYS.AUTOCOMPLETE_PHONES);
+            document.getElementById('phonesResult').innerHTML =
+                `<span class="success">Retrieved ${phones.length} phones:</span><br>` +
+                JSON.stringify(phones, null, 2);
+        }
+
+        function testDuplicates() {
+            const beforeCount = getAutocompleteData(STORAGE_KEYS.AUTOCOMPLETE_NAMES).length;
+            addToAutocomplete(STORAGE_KEYS.AUTOCOMPLETE_NAMES, 'John Doe');
+            const afterCount = getAutocompleteData(STORAGE_KEYS.AUTOCOMPLETE_NAMES).length;
+
+            if (beforeCount === afterCount) {
+                document.getElementById('duplicatesResult').innerHTML =
+                    `<span class="success">✓ Duplicate prevented! Count stayed at ${afterCount}</span>`;
+            } else {
+                document.getElementById('duplicatesResult').innerHTML =
+                    `<span class="error">✗ Duplicate was added! Count changed from ${beforeCount} to ${afterCount}</span>`;
+            }
+        }
+
+        function clearAllData() {
+            localStorage.removeItem(STORAGE_KEYS.AUTOCOMPLETE_NAMES);
+            localStorage.removeItem(STORAGE_KEYS.AUTOCOMPLETE_ADDRESSES);
+            localStorage.removeItem(STORAGE_KEYS.AUTOCOMPLETE_PHONES);
+            document.getElementById('clearResult').innerHTML = '<span class="success">✓ All autocomplete data cleared</span>';
+        }
+
+        function showAllData() {
+            const names = getAutocompleteData(STORAGE_KEYS.AUTOCOMPLETE_NAMES);
+            const addresses = getAutocompleteData(STORAGE_KEYS.AUTOCOMPLETE_ADDRESSES);
+            const phones = getAutocompleteData(STORAGE_KEYS.AUTOCOMPLETE_PHONES);
+
+            document.getElementById('clearResult').innerHTML =
+                `<strong>Names (${names.length}):</strong> ${JSON.stringify(names)}<br>` +
+                `<strong>Addresses (${addresses.length}):</strong> ${JSON.stringify(addresses)}<br>` +
+                `<strong>Phones (${phones.length}):</strong> ${JSON.stringify(phones)}`;
+        }
+    </script>
+</body>
+</html>
