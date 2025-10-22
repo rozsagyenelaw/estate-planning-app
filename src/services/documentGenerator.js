@@ -176,6 +176,64 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
 };
 
 /**
+ * Generate PDF from HTML with cover page
+ * @param {string} htmlContent - HTML content
+ * @param {string} documentTitle - Document title
+ * @param {Object} formData - Form data for cover page
+ * @returns {jsPDF} PDF document
+ */
+const generatePDFFromHTMLWithCover = async (htmlContent, documentTitle, formData) => {
+  try {
+    console.log('generatePDFFromHTMLWithCover called');
+
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'in',
+      format: 'letter'
+    });
+
+    // Add cover page
+    addCoverPage(doc, formData, documentTitle);
+
+    // Now add the HTML content
+    console.log('Adding HTML content to PDF...');
+    console.log('HTML length:', htmlContent.length);
+
+    await new Promise((resolve, reject) => {
+      doc.html(htmlContent, {
+        callback: (doc) => {
+          console.log('PDF HTML rendering complete');
+          console.log('Total pages:', doc.internal.getNumberOfPages());
+          resolve(doc);
+        },
+        x: 0,
+        y: 0,
+        width: 6.5, // 8.5 - 2 inches for margins
+        windowWidth: 650,
+        html2canvas: {
+          scale: 0.75,
+          logging: false,
+          useCORS: true
+        }
+      });
+    });
+
+    return doc;
+  } catch (error) {
+    console.error(`Error generating PDF: ${error}`);
+    console.error('Error stack:', error.stack);
+
+    // Return simple error doc
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('Error generating document', 4.25, 2, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text(error.message, 1, 3);
+    return doc;
+  }
+};
+
+/**
  * Helper function to generate PDF from HTML template
  * @param {string} htmlContent - HTML content from template
  * @param {string} documentTitle - Title for fallback PDF
@@ -291,10 +349,69 @@ export const generateLivingTrust = async (formData) => {
   const isIrrevocable = formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable';
   const docTitle = isIrrevocable ? 'Irrevocable Trust' : 'Living Trust';
 
-  // For old system (plain text), use direct text-to-PDF conversion
+  // For old system (plain text), convert to formatted HTML first
   if (formData.trustType === 'single' || !formData.trustType) {
-    console.log('Using text-based PDF generation (no HTML)...');
-    return generatePDFFromText(content, docTitle, formData);
+    console.log('Converting plain text to formatted HTML...');
+
+    // Convert plain text to HTML with proper formatting
+    let htmlContent = content
+      // Escape HTML special chars first
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+
+      // Article headers: make them bold, larger, with spacing
+      .replace(/^(Article (?:One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|Thirteen))$/gm,
+        '<p style="margin-top:24pt; margin-bottom:6pt; page-break-after:avoid;"><strong style="font-size:14pt;">$1</strong></p>')
+
+      // Article subtitles (line after "Article X")
+      .replace(/<\/strong><\/p>\n(.+?)$/gm, '</strong></p>\n<p style="margin-bottom:12pt; font-weight:bold;">$1</p>')
+
+      // Section headers
+      .replace(/^(Section \d+\.\d+\s+.+?)$/gm, '<p style="margin-top:12pt; margin-bottom:6pt; text-indent:0;"><strong>$1</strong></p>')
+
+      // Sub-sections with letters
+      .replace(/^(\s+)\(([a-z])\)\s+(.+?)$/gm, '<p style="margin-left:0.5in; margin-top:6pt; text-indent:-0.25in;">($2) $3</p>')
+
+      // Regular paragraphs (non-empty lines that aren't headers)
+      .replace(/^(?!<p|<strong)(.+?)$/gm, '<p style="margin-bottom:0pt; text-indent:0;">$1</p>')
+
+      // Empty lines create spacing
+      .replace(/^\s*$/gm, '<p style="margin-bottom:6pt;">&nbsp;</p>');
+
+    // Wrap in full HTML document
+    htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @page {
+      margin: 1in;
+    }
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.5;
+      margin: 0;
+      padding: 0;
+    }
+    p {
+      margin: 0;
+      padding: 0;
+    }
+    strong {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+${htmlContent}
+</body>
+</html>`;
+
+    console.log('HTML generated, creating PDF with cover page...');
+    return generatePDFFromHTMLWithCover(htmlContent, docTitle, formData);
   }
 
   // For new system, use HTML-based PDF generation
