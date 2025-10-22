@@ -406,27 +406,49 @@ In determining whether or not a DSUE election should be made, the Trustee, actin
 The Trustee, acting as executor or administrator for purposes of Internal Revenue Code Section 2203, will not be liable to the beneficiaries of our Trust or the beneficiaries of the surviving Grantor's estate for the failure to make a DSUE election under Internal Revenue Code Section 2010(c)(5)(A).
 
 Article Six
-Specific Distributions and Tangible Personal Property
+Specific Distributions and Disposition of Tangible Personal Property
 
 ${formData.specificDistributions && formData.specificDistributions.length > 0 ? formData.specificDistributions.map((dist, i) => {
   return `Section 6.${(i + 1).toString().padStart(2, '0')}      Specific Distribution to ${dist.beneficiary}
 
-As soon as practicable after the death of the surviving Grantor, the Trustee shall distribute the following to ${dist.beneficiary}: ${dist.description}.
+As soon as practicable after the death of the surviving Grantor, the Trustee shall distribute ${dist.description} to ${dist.beneficiary}.${dist.noSale ? ' The Trustee is not allowed to sell this property.' : ''}
 
-${dist.distributionType === 'age' && dist.ageDistributions && dist.ageDistributions.length > 0 ? `This distribution shall be made in the following installments based on age:
+If ${dist.beneficiary} is deceased, then this distribution will lapse, and this property instead will be distributed under the other provisions of this trust.
 
-${dist.ageDistributions.map(age => `     When ${dist.beneficiary} reaches age ${age.age}: ${age.percentage}% of the distribution`).join('\n')}
-
-Until the final distribution is made, the Trustee shall hold the undistributed portion in trust and may distribute income and principal for ${dist.beneficiary}'s health, education, maintenance, and support.` : 'This distribution shall be made outright and free of trust.'}
-
-${dist.lapse === 'descendants' ? `If ${dist.beneficiary} does not survive the surviving Grantor, this bequest shall lapse and pass to ${dist.beneficiary}'s descendants, per stirpes.` : dist.lapse === 'residuary' ? `If ${dist.beneficiary} does not survive the surviving Grantor, this bequest shall lapse and become part of the residuary estate.` : `If ${dist.beneficiary} does not survive the surviving Grantor, this bequest shall lapse and pass to the other beneficiaries named in this trust.`}
+Property passing under this Section passes free of any administrative expenses or death taxes.
 `;
 }).join('\n') : ''}
-Section 6.${formData.specificDistributions && formData.specificDistributions.length > 0 ? (formData.specificDistributions.length + 1).toString().padStart(2, '0') : '01'}      Distribution of Tangible Personal Property
+Section 6.${formData.specificDistributions && formData.specificDistributions.length > 0 ? (formData.specificDistributions.length + 1).toString().padStart(2, '0') : '01'}      Specific Gift of Residence
 
-Each of us may dispose of items of tangible personal property by a signed written memorandum executed after we sign this instrument. The Trustee shall distribute the items of tangible personal property listed in any such memorandum according to its terms.
+When the first Grantor dies, the Trustee shall distribute any real property, including buildings and improvements, used by the surviving Grantor as his or her principal residence, to the Survivor's Trust. This gift includes insurance policies on the property and claims under those policies. The Trustee shall distribute the property subject to all liens and encumbrances against the property that exist at the death of the first Grantor to die.
 
-Any remaining tangible personal property not disposed of by written memorandum shall be distributed to the Survivor's Trust. If we are both deceased, the Trustee shall distribute the property to our children in shares of substantially equal value, to be divided among our children as they agree. If our children cannot agree on a division within six (6) months after the death of the survivor of us, the Trustee shall make the division and distribution in the Trustee's sole discretion.
+If the surviving Grantor disclaims any interest in the property distributed under this provision, the interest will be distributed as provided in the Articles that follow.
+
+Section 6.${formData.specificDistributions && formData.specificDistributions.length > 0 ? (formData.specificDistributions.length + 2).toString().padStart(2, '0') : '02'}      Distribution of Tangible Personal Property by Memorandum
+
+Each of us may dispose of items of tangible personal property by a signed written memorandum executed after we sign this instrument. The memorandum must refer to the trust and must reasonably identify the items and the beneficiary designated to receive each item. If either or both of us executes a memorandum, the Trustee shall incorporate the memorandum by reference into this instrument to the extent permitted by law.
+
+The Trustee shall distribute the items of tangible personal property listed in the memorandum as promptly as practicable after the death of a Grantor who completed the memorandum, together with any insurance policies covering the property and any claims under those policies, as provided in the memorandum. If either or both of us leave multiple written memoranda that conflict as to the disposition of any item of tangible personal property, the memorandum with the most recent date will control as to that item.
+
+If the law does not permit incorporation of the memorandum by reference, the memorandum will then serve as an amendment to the trust, but only to the extent this amendment solely disposes of tangible personal property. We request that the Trustee follow our wishes and distribute the items of tangible personal property listed in the memorandum according to its terms.
+
+Section 6.${formData.specificDistributions && formData.specificDistributions.length > 0 ? (formData.specificDistributions.length + 3).toString().padStart(2, '0') : '03'}      Distribution of Remaining Tangible Personal Property
+
+The Trustee shall distribute any of the deceased Grantor's remaining tangible personal property not disposed of by a written memorandum to the Survivor's Trust to be administered as provided in Article Eight. If we are both deceased, the Trustee shall distribute the property to our children but not to their descendants, in shares of substantially equal value, to be divided among our children as they agree. If the Trustee determines that a child is incapable of acting in his or her own best interest, the Trustee shall appoint a person to represent the child in the division of the property. If our children are unable to agree upon the division of the property within six months after the death of the surviving Grantor, the Trustee shall make the division according to the Trustee's discretion. The Trustee may use a lottery, rotation system, or any other method of allocation to determine the order of selection and distribution of the property. As an alternative, the Trustee may sell all or any portion of the property and distribute the net proceeds equally among our then-living children. The Trustee will not incur any liability to any party for decisions made by the Trustee with respect to the division or sale of tangible personal property. Any decision made by the Trustee will be final and binding on all beneficiaries.
+
+Section 6.${formData.specificDistributions && formData.specificDistributions.length > 0 ? (formData.specificDistributions.length + 4).toString().padStart(2, '0') : '04'}      Definition of Tangible Personal Property
+
+For purposes of this Article, the term tangible personal property includes household furnishings, appliances and fixtures, works of art, motor vehicles, pictures, collectibles, apparel and jewelry, books, sporting goods, and hobby paraphernalia. The term does not include any property that the Trustee, in its sole and absolute discretion, determines to be part of any business or business interest owned by the deceased Grantor or the trust.
+
+After the death of a Grantor, if the Trustee receives property to be distributed under this Article from the deceased Grantor's probate estate or in any other manner, the Trustee shall distribute the property in accordance with this Article's terms. The fact that an item of tangible personal property was not received by the trust until after the death of a Grantor does not diminish the validity of the gift. If property to be distributed under this Article is not part of the trust property upon the death of a Grantor and is not subsequently transferred to the Trustee from the deceased Grantor's probate estate or in any other manner, then the specific distribution of property made in this Article is null and void, without any legal or binding effect.
+
+Section 6.${formData.specificDistributions && formData.specificDistributions.length > 0 ? (formData.specificDistributions.length + 5).toString().padStart(2, '0') : '05'}      Incidental Expenses and Encumbrances
+
+Until property distributed in accordance with this Article is delivered to the appropriate beneficiary or his or her Legal Representative, the Trustee shall pay the reasonable expenses of securing, storing, insuring, packing, transporting, and otherwise caring for the property as an administration expense. Except as otherwise provided in the trust, the Trustee shall distribute property under this Article subject to all liens, security interests, and other encumbrances on the property.
+
+Section 6.${formData.specificDistributions && formData.specificDistributions.length > 0 ? (formData.specificDistributions.length + 6).toString().padStart(2, '0') : '06'}      Residuary Distribution
+
+Any property not distributed under this or prior Articles of this instrument will be distributed as provided in the following Articles.
 
 Article Seven
 Creating Trust Shares Upon Death of First Grantor
