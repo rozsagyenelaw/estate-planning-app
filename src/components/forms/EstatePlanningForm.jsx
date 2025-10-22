@@ -10,6 +10,9 @@ import ChildrenSection from './sections/ChildrenSection';
 import SuccessorTrusteesSection from './sections/SuccessorTrusteesSection';
 import SpecificDistributionSection from './sections/SpecificDistributionSection';
 import ResiduaryDistributionSection from './sections/ResiduaryDistributionSection';
+import GeneralNeedsTrustSection from './sections/GeneralNeedsTrustSection';
+import CharitableDistributionSection from './sections/CharitableDistributionSection';
+import PourOverWillSection from './sections/PourOverWillSection';
 
 const EstatePlanningForm = () => {
   const { formData } = useFormContext();
@@ -68,19 +71,13 @@ const EstatePlanningForm = () => {
         <ResiduaryDistributionSection />
 
         {/* General Needs Trust */}
-        <Card title="General Needs Trust" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <GeneralNeedsTrustSection />
 
         {/* Charitable Distribution */}
-        <Card title="Charitable Distribution" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <CharitableDistributionSection />
 
         {/* Pour Over Will Representatives */}
-        <Card title="Pour Over Will Representatives" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <PourOverWillSection />
 
         {/* Guardians */}
         <Card title="Guardians" collapsible defaultOpen={false}>
