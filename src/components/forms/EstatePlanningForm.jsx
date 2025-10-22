@@ -13,6 +13,10 @@ import ResiduaryDistributionSection from './sections/ResiduaryDistributionSectio
 import GeneralNeedsTrustSection from './sections/GeneralNeedsTrustSection';
 import CharitableDistributionSection from './sections/CharitableDistributionSection';
 import PourOverWillSection from './sections/PourOverWillSection';
+import GuardiansSection from './sections/GuardiansSection';
+import DurablePOASection from './sections/DurablePOASection';
+import HealthcarePOASection from './sections/HealthcarePOASection';
+import AnatomicalGiftsSection from './sections/AnatomicalGiftsSection';
 
 const EstatePlanningForm = () => {
   const { formData } = useFormContext();
@@ -80,24 +84,16 @@ const EstatePlanningForm = () => {
         <PourOverWillSection />
 
         {/* Guardians */}
-        <Card title="Guardians" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <GuardiansSection />
 
         {/* Durable Power of Attorney */}
-        <Card title="Durable Power of Attorney" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <DurablePOASection />
 
         {/* Healthcare Power of Attorney */}
-        <Card title="Healthcare Power of Attorney" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <HealthcarePOASection />
 
         {/* Anatomical Gifts */}
-        <Card title="Anatomical Gifts" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <AnatomicalGiftsSection />
 
         {/* Generate Buttons */}
         <Card>
