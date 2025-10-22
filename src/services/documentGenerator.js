@@ -8,6 +8,7 @@ import { formatDate, formatPhoneNumber } from '../utils/formatters';
 import { DOCUMENT_TYPES } from '../utils/constants';
 import { processTemplate, prepareTemplateData } from './templateEngine';
 import { singleLivingTrustTemplate } from '../templates/singleLivingTrust';
+import { jointLivingTrustTemplate } from '../templates/jointLivingTrust';
 
 /**
  * Generate Living Trust document
@@ -19,8 +20,11 @@ export const generateLivingTrust = async (formData) => {
     // Prepare data for template
     const templateData = prepareTemplateData(formData);
 
+    // Select template based on trust type
+    const template = formData.isJoint ? jointLivingTrustTemplate : singleLivingTrustTemplate;
+
     // Process template with data
-    const processedHtml = processTemplate(singleLivingTrustTemplate, templateData);
+    const processedHtml = processTemplate(template, templateData);
 
     // Create PDF from HTML
     const doc = new jsPDF({

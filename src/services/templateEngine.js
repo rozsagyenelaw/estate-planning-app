@@ -225,12 +225,16 @@ export const prepareTemplateData = (formData) => {
     SPOUSE_CITY: formData.spouse?.city || '',
     SPOUSE_STATE: formData.spouse?.state || '',
     SPOUSE_ZIP: formData.spouse?.zip || '',
-    SPOUSE_COUNTY: formData.spouse?.county || '',
+    SPOUSE_COUNTY: formData.spouse?.county || formData.client?.county || '',
     SPOUSE_PHONE: formData.spouse?.phone || '',
     SPOUSE_EMAIL: formData.spouse?.email || '',
     SPOUSE_SSN: formData.spouse?.ssn || '',
     SPOUSE_DOB: formData.spouse?.dateOfBirth ? formatDateForDocument(formData.spouse.dateOfBirth) : '',
     SPOUSE_SEX: formData.spouse?.sex || '',
+
+    // Sex/Gender references for document language
+    CLIENT_SEX_REF: formData.client?.sex === 'Male' ? 'husband' : formData.client?.sex === 'Female' ? 'wife' : 'spouse',
+    SPOUSE_SEX_REF: formData.spouse?.sex === 'Male' ? 'husband' : formData.spouse?.sex === 'Female' ? 'wife' : 'spouse',
 
     // Current Date
     CURRENT_DATE: formatDateForDocument(new Date().toISOString()),

@@ -7,7 +7,7 @@ import { processTemplate, prepareTemplateData } from '../services/templateEngine
 import { singleLivingTrustTemplate } from '../templates/singleLivingTrust';
 
 /**
- * Sample form data for testing
+ * Sample form data for testing - SINGLE TRUST
  */
 export const sampleFormData = {
   // Trust Type
@@ -291,6 +291,186 @@ export const testDocumentGeneration = () => {
       success: false,
       error: error.message
     };
+  }
+};
+
+/**
+ * Sample form data for testing - JOINT TRUST
+ */
+export const sampleJointTrustData = {
+  // Trust Type
+  trustType: 'JOINT',
+  isJoint: true,
+  isRestatement: true,
+  originalTrustName: 'The Karen Nikolaevich Bagramyan and Lilit Arakelyan Living Trust',
+  originalTrustDate: '2020-01-10',
+
+  // Trust Name
+  trustName: 'The Karen Nikolaevich Bagramyan and Lilit Arakelyan Living Trust',
+  customTrustName: false,
+
+  // Client Information
+  client: {
+    firstName: 'Karen',
+    middleName: 'Nikolaevich',
+    lastName: 'Bagramyan',
+    address: '450 N Brand Blvd, Suite 623',
+    city: 'Glendale',
+    state: 'CA',
+    zip: '91203',
+    county: 'Los Angeles',
+    phone: '(818) 555-0100',
+    email: 'karen.b@example.com',
+    ssn: '123-45-6789',
+    dateOfBirth: '1975-03-20',
+    sex: 'Male',
+    maritalStatus: 'Married'
+  },
+
+  // Spouse Information
+  spouse: {
+    firstName: 'Lilit',
+    middleName: '',
+    lastName: 'Arakelyan',
+    address: '450 N Brand Blvd, Suite 623',
+    city: 'Glendale',
+    state: 'CA',
+    zip: '91203',
+    county: 'Los Angeles',
+    phone: '(818) 555-0101',
+    email: 'lilit.a@example.com',
+    ssn: '987-65-4321',
+    dateOfBirth: '1978-08-15',
+    sex: 'Female',
+    maritalStatus: 'Married'
+  },
+
+  // Children
+  children: [
+    {
+      name: 'Rita Bagramyan',
+      birthday: '2005-12-15',
+      relation: 'Daughter'
+    },
+    {
+      name: 'Artur Bagramian',
+      birthday: '2011-04-11',
+      relation: 'Son'
+    }
+  ],
+
+  // Successor Trustees
+  successorTrustees: [
+    {
+      name: 'Rita Bagramyan and Artur Bagramian',
+      address: '450 N Brand Blvd, Suite 623, Glendale, CA 91203',
+      phone: '(818) 555-0102',
+      jointly: true
+    }
+  ],
+
+  // Specific Distributions
+  specificDistributions: [
+    {
+      beneficiaryName: 'Rita Bagramyan',
+      description: '112 S. Everett St. Glendale, CA 91205',
+      distributionType: 'outright',
+      ageDistributions: [],
+      lapseTo: 'the residuary estate'
+    },
+    {
+      beneficiaryName: 'Artur Bagramian',
+      description: '1351 Carlton Dr. Glendale, CA 91205',
+      distributionType: 'outright',
+      ageDistributions: [],
+      lapseTo: 'the residuary estate'
+    }
+  ],
+
+  // Residuary Distribution
+  residuaryBeneficiaries: [
+    {
+      name: 'Artur Bagramian',
+      share: '100',
+      distributionType: 'guardian',
+      birthday: '2011-04-11'
+    }
+  ],
+
+  // General Needs Trust
+  generalNeedsTrust: {
+    enabled: false,
+    beneficiaryName: '',
+    specialProvisions: ''
+  },
+
+  // Charitable Distribution
+  charitableDistribution: {
+    organizationName: '',
+    address: '',
+    taxId: '',
+    amount: '',
+    percentage: ''
+  },
+
+  // Pour Over Will
+  pourOverWill: {
+    client: [
+      { name: 'Rita Bagramyan' },
+      { name: 'Artur Bagramian' }
+    ],
+    spouse: [
+      { name: 'Rita Bagramyan' },
+      { name: 'Artur Bagramian' }
+    ]
+  },
+
+  // Guardians
+  guardians: [
+    {
+      name: 'Family Member (To Be Named)',
+      address: 'TBD',
+      phone: '(818) 555-0000',
+      jointly: false
+    }
+  ],
+
+  // Durable Power of Attorney
+  durablePOA: {
+    client: [
+      { name: 'Rita Bagramyan', jointly: false },
+      { name: 'Artur Bagramian', jointly: false }
+    ],
+    spouse: [
+      { name: 'Rita Bagramyan', jointly: false },
+      { name: 'Artur Bagramian', jointly: false }
+    ]
+  },
+
+  // Healthcare Power of Attorney
+  healthcarePOA: {
+    client: [
+      {
+        name: 'Rita Bagramyan',
+        address: '450 N Brand Blvd, Glendale, CA 91203',
+        phone: '(818) 555-0103',
+        jointly: false
+      }
+    ],
+    spouse: [
+      {
+        name: 'Rita Bagramyan',
+        address: '450 N Brand Blvd, Glendale, CA 91203',
+        phone: '(818) 555-0103',
+        jointly: false
+      }
+    ]
+  },
+
+  // Anatomical Gifts
+  anatomicalGifts: {
+    client: 'any_purpose',
+    spouse: 'any_purpose'
   }
 };
 
