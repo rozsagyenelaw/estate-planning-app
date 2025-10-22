@@ -25,12 +25,66 @@ import { estatePlanningCoverPageTemplate } from '../templates/estatePlanningCove
 import { tableOfContentsTemplate } from '../templates/tableOfContents';
 
 /**
+ * Add a professional cover page to the PDF
+ * @param {jsPDF} doc - jsPDF document instance
+ * @param {Object} formData - Form data with client information
+ * @param {string} documentTitle - Title of the document
+ */
+const addCoverPage = (doc, formData, documentTitle) => {
+  // Cover page with centered text
+  doc.setFont('times', 'bold');
+  doc.setFontSize(20);
+
+  const pageWidth = 8.5;
+  let yPos = 3.5; // Start 3.5 inches from top
+
+  // Trust name (uppercase)
+  const trustName = `THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} LIVING TRUST`;
+  doc.text(trustName, pageWidth / 2, yPos, { align: 'center' });
+
+  yPos += 0.5;
+
+  // Date
+  doc.setFontSize(16);
+  doc.text(`DATED ${formData.currentDate}`, pageWidth / 2, yPos, { align: 'center' });
+
+  yPos += 0.8;
+
+  // Client name
+  doc.setFont('times', 'normal');
+  doc.setFontSize(14);
+  doc.text(`${formData.client.firstName} ${formData.client.lastName}`, pageWidth / 2, yPos, { align: 'center' });
+
+  // Footer - Prepared by
+  doc.setFont('times', 'normal');
+  doc.setFontSize(12);
+  yPos = 9.5; // Near bottom of page
+  doc.text('Prepared by:', pageWidth / 2, yPos, { align: 'center' });
+
+  yPos += 0.25;
+  doc.setFont('times', 'bold');
+  doc.text('LAW OFFICES OF ROZSA GYENE, PC', pageWidth / 2, yPos, { align: 'center' });
+
+  yPos += 0.2;
+  doc.setFont('times', 'normal');
+  doc.setFontSize(11);
+  doc.text('450 N Brand Blvd, Suite 623', pageWidth / 2, yPos, { align: 'center' });
+
+  yPos += 0.2;
+  doc.text('Glendale, California 91203', pageWidth / 2, yPos, { align: 'center' });
+
+  // Add a new page for the document content
+  doc.addPage();
+};
+
+/**
  * Helper function to generate PDF from plain text (for old template system)
  * @param {string} textContent - Plain text content from template
  * @param {string} documentTitle - Title for the document
+ * @param {Object} formData - Form data (for cover page)
  * @returns {jsPDF} PDF document
  */
-const generatePDFFromText = (textContent, documentTitle) => {
+const generatePDFFromText = (textContent, documentTitle, formData = null) => {
   try {
     console.log('generatePDFFromText called');
     console.log('Text content length:', textContent.length);
@@ -42,19 +96,24 @@ const generatePDFFromText = (textContent, documentTitle) => {
       format: 'letter'
     });
 
-    // Set font and size
+    // Add cover page if formData is provided
+    if (formData) {
+      addCoverPage(doc, formData, documentTitle);
+    }
+
+    // Set font and size for document content
     doc.setFont('times', 'normal');
     doc.setFontSize(12);
 
-    // Page settings
+    // Page settings - legal document standard
     const pageWidth = 8.5;
     const pageHeight = 11;
-    const marginLeft = 0.75;
-    const marginRight = 0.75;
-    const marginTop = 0.75;
-    const marginBottom = 0.75;
-    const contentWidth = pageWidth - marginLeft - marginRight;
-    const lineHeight = 0.2; // inches between lines
+    const marginLeft = 1.0;   // 1 inch left margin
+    const marginRight = 1.0;  // 1 inch right margin
+    const marginTop = 1.0;    // 1 inch top margin
+    const marginBottom = 1.0; // 1 inch bottom margin
+    const contentWidth = pageWidth - marginLeft - marginRight;  // 6.5 inches
+    const lineHeight = 0.167; // inches between lines (~6 lines per inch for 12pt)
     const maxLinesPerPage = Math.floor((pageHeight - marginTop - marginBottom) / lineHeight);
 
     let currentY = marginTop;
@@ -235,7 +294,7 @@ export const generateLivingTrust = async (formData) => {
   // For old system (plain text), use direct text-to-PDF conversion
   if (formData.trustType === 'single' || !formData.trustType) {
     console.log('Using text-based PDF generation (no HTML)...');
-    return generatePDFFromText(content, docTitle);
+    return generatePDFFromText(content, docTitle, formData);
   }
 
   // For new system, use HTML-based PDF generation
