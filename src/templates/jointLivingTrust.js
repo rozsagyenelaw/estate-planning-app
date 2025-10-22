@@ -283,35 +283,127 @@ The Trustee may perform any other act the Trustee considers necessary or desirab
 We desire that in making gifts on the incapacitated Grantor's behalf, the Trustee consider the history of the incapacitated Grantor's gift making and our estate plan. To the extent reasonably possible, we direct the Trustee to avoid disrupting the dispositive provisions of our estate plan as established by us prior to the Grantor's incapacity.
 
 Article Five
-Administration Upon Death of a Grantor
+Administration of the Trust Upon the Death of a Grantor
 
 Section 5.01      Surviving Grantor's Trust Property and Deceased Grantor's Trust Property
 
-After the first of us dies, the surviving Grantor's interest in any community property of the trust and the surviving Grantor's separate trust property will be referred to as the surviving Grantor's trust property or the Survivor's Trust.
+After the first of us dies, the surviving Grantor's interest in any community property of the trust and the surviving Grantor's separate trust property will be referred to as the surviving Grantor's trust property. The surviving Grantor's trust property will be referred to as the Survivor's Trust, and the Trustees shall administer the Survivor's Trust as provided in Article Eight.
 
 The deceased Grantor's interest in any community property of the trust and the deceased Grantor's separate trust property will be referred to as the deceased Grantor's trust property.
 
-Section 5.02      Payment of Expenses and Taxes
+Section 5.02      Administrative Trust
+
+Upon a Grantor's death, the trust will become irrevocable as it pertains to the administration and distribution of the deceased Grantor's trust property. The Trustee may need to apply for a separate Taxpayer Identification Number for the deceased Grantor's trust property.
+
+Before the distribution of the deceased Grantor's trust property as provided in this trust, the deceased Grantor's trust property will be referred to as the administrative trust, but may continue to be known as The ${formData.client.firstName} ${formData.client.lastName} and ${formData.spouse.firstName} ${formData.spouse.lastName} Living Trust during the administration period. The administrative trust will exist for the period reasonably necessary to complete the administrative tasks set forth in this Article.
+
+Section 5.03      Payment of Expenses and Taxes
 
 The Trustee may pay from the deceased Grantor's trust property:
 
-     (a) Expenses of the deceased Grantor's last illness, funeral, and burial or cremation, including expenses of memorials and memorial services;
+expenses of the deceased Grantor's last illness, funeral, and burial or cremation, including expenses of memorials and memorial services;
 
-     (b) Legally enforceable claims against the deceased Grantor or the deceased Grantor's estate;
+legally enforceable claims against the deceased Grantor or the deceased Grantor's estate;
 
-     (c) Expenses of administering the trust and the deceased Grantor's estate; and
+expenses of administering the trust and the deceased Grantor's estate; and
 
-     (d) Court-ordered allowances for those dependent upon the deceased Grantor.
+court-ordered allowances for those dependent upon the deceased Grantor.
 
-Section 5.03      Payment of Death Taxes
+These payments are discretionary with the Trustee. The Trustee may make decisions on these payments without regard to any limitation on payment of the expenses and may make payments without any court's approval. No third party may enforce any claim or right to payment against the trust by virtue of this discretionary authority.
 
-The Trustee shall provide for payment of all death taxes from the trust estate without apportionment. Death taxes may not be allocated to or paid from any assets that are exempt for generation-skipping transfer tax purposes or that qualify for the federal estate tax marital deduction or charitable deduction.
+If payment would decrease the federal estate tax charitable deduction available to the deceased Grantor's estate, the Trustee may not pay any administrative expenses from assets passing to an organization that qualifies for the federal estate tax charitable deduction.
 
-For purposes of this Section, death taxes include all estate, inheritance, succession, and other death taxes, including any interest and penalties, imposed by any jurisdiction by reason of a Grantor's death, except for generation-skipping transfer taxes.
+If payment would decrease the federal estate tax marital deduction available to the deceased Grantor's estate or violate the provisions of Treasury Regulation Section 20.2056(b)-4(d), the Trustee may not pay any administrative expenses from the net income of property qualifying for the federal estate tax marital deduction.
 
-Section 5.04      Notice to Beneficiaries
+The Trustee shall pay death taxes out of the trust property's principal, as provided in Section 5.05. But if a probate estate is opened within six months after the date of the deceased Grantor's death, the deceased Grantor's Personal Representative shall pay any outstanding claims and expenses as authorized by the Personal Representative, as well as any death taxes from the deceased Grantor's probate estate to the extent that the cash and readily marketable assets in the deceased Grantor's probate estate are sufficient.
 
-Upon the death of a Grantor, the Trustee must serve written notice to the trust's beneficiaries as required by California Probate Code Section 16061.7. The notice must include the information specified by statute and must be served not later than 60 days from the date the Trustee acquired knowledge of the trust's existence and the Grantor's death.
+Section 5.04      Excluding Life Insurance Proceeds from Creditors
+
+Despite anything to the contrary in this instrument, any life insurance proceeds payable to the Trustee under this instrument must never be or become part of our probate or testamentary estate. Nothing in this instrument directs that these life insurance proceeds be used to pay our debts or expenses.
+
+Section 5.05      Payment of Death Taxes
+
+For the purposes of this Article, the term death taxes refers to any taxes imposed by reason of the deceased Grantor's death by federal, state, or local authorities, including estate, inheritance, gift, and direct-skip generation-skipping transfer taxes. For purposes of this Section, death taxes does not include any additional estate tax imposed by Internal Revenue Code Section 2031(c)(5)(C) or Section 2032A(c), or any other comparable recapture tax imposed by any taxing authority. Nor does the term include any generation-skipping transfer tax, other than a direct-skip generation-skipping transfer tax.
+
+Except as otherwise provided in this Article or elsewhere in this trust, the Trustee shall provide for payment of all death taxes from the administrative trust without apportionment. The Trustee may not seek contribution toward or recovery of any payments of death taxes from any individual.
+
+        (a)      Protection of Exempt Property
+
+Death taxes may not be allocated to or paid from any assets that are not included in the deceased Grantor's gross estate for federal estate tax purposes. To the extent practicable, the Trustee may not pay any death taxes from assets that are exempt from generation-skipping transfer tax purposes.
+
+        (b)      Protection of the Marital Deduction
+
+Death taxes may not be paid from or allocated to any property that qualifies for the federal estate tax marital deduction.
+
+        (c)      Protection of the Charitable Deduction
+
+Death taxes may not be paid from or allocated to any assets passing to an organization that qualifies for the federal estate tax charitable deduction, or from any assets passing to a split-interest charitable trust, unless the Trustee has first used all other assets available to pay the taxes.
+
+        (d)      Property Passing outside of the Trust
+
+Death taxes imposed with respect to property included in the deceased Grantor's gross estate for death tax purposes but passing outside of the trust are to be apportioned among the persons and entities benefited. The proportion attributed to each person or entity is the taxable value of each person or entity's beneficial interest over the total taxable value of all property and interests included in the deceased Grantor's gross estate for death tax purposes. The values used for the apportionment are to be the values as finally determined under federal, state, or local law.
+
+        (e)      QTIP Property
+
+If the Trustee or the surviving Grantor's Personal Representative waives any right of recovery granted by Section 2207A and corresponding provisions of applicable state law, no death taxes paid as a result of including property held in a qualified terminable interest property (QTIP) trust created by the first Grantor to die and included in the taxable estate of the second Grantor to die will be apportioned to or collected from the assets of the QTIP as provided in Internal Revenue Code Section 2207A.
+
+Section 5.06      Coordination with the Personal Representative
+
+The following provisions are intended to help facilitate the coordination between the deceased Grantor's Personal Representative and the Trustee. These provisions apply even if the Personal Representative and the Trustee are the same person or entity.
+
+        (a)      Reliance on Information from The Personal Representative
+
+The Trustee may rely upon the written request of the deceased Grantor's Personal Representative for payments authorized under this Article and the amounts included in those payments without computing the sums involved. If a payment is made under this Article to the deceased Grantor's Personal Representative, the Trustee will have no duty to inquire into the application of the payment.
+
+        (b)      Receipt of Probate Property
+
+The Trustee may accept or decline any distributions of property tendered to the Trustee by the deceased Grantor's Personal Representative. If the Trustee accepts the property, the Trustee may do so without audit, and will not be required to review the Personal Representative's records.
+
+        (c)      Discretionary Distributions to the Deceased Grantor's Personal Representative
+
+The Trustee may distribute cash, accrued income, or other trust property to the deceased Grantor's probate estate as a beneficiary of this trust, to the extent the Trustee determines that doing so is in the best interests of the trust beneficiaries.
+
+Section 5.07      Authority to Make Tax Elections
+
+After a Grantor's death, the Trustee may make tax elections as provided in this Section. But if a Personal Representative is appointed for the deceased Grantor's probate estate, the discretionary authority granted to the Trustee as to any tax election will be subordinate to the Personal Representative's statutorily delegated authority.
+
+        (a)      Tax Elections
+
+The Trustee may make any tax elections necessary for the efficient administration of the deceased Grantor's estate, including:
+
+valuing assets according to an alternate valuation date;
+
+electing whether to take administration expenses as estate tax deductions or income tax deductions;
+
+allocating a Grantor's unused generation-skipping exemption to any portion of the trust property;
+
+electing special-use valuation;
+
+deferring payment of all or any portion of any taxes; and
+
+treating any portion of the deceased Grantor's administrative trust as part of the deceased Grantor's estate for federal or state income tax purposes, or both.
+
+In addition, the Trustee, in its sole and absolute discretion, may elect to waive, in whole or in part, the surviving Grantor's right to have the surviving Grantor's estate reimbursed for any tax paid as a result of the inclusion in the surviving Grantor's taxable estate of property held in a qualified terminable interest property (QTIP) trust created for the surviving Grantor by the deceased Grantor.
+
+The Trustee may make equitable adjustments between income and principal because of any tax elections made by the Trustee.
+
+        (b)      Allocation of GST Exemption
+
+The Trustee may elect to allocate or not allocate any portion of the Available GST Exemption under Internal Revenue Code Section 2631, or a counterpart exemption under any applicable state law to any property of which the deceased Grantor is considered the transferor for generation-skipping transfer tax purposes. This includes any property transferred by the deceased Grantor during the deceased Grantor's life for which the deceased Grantor did not make an allocation prior to death. The exercise of the Trustee's discretion should be based on the transfers, gift tax returns, and other information known to the Trustee, with no requirement that allocations benefit the various transferees or beneficiaries in any particular manner.
+
+        (c)      Qualified Conservation Easements
+
+The Trustee may create a qualified conservation easement, as defined in Internal Revenue Code Section 2031(c)(8)(A), in any land held by the trust and may make the necessary election provided by Section 2031(c)(6).
+
+Section 5.08      Authority to Elect Portability
+
+The applicable exclusion amount is defined in Internal Revenue Code Section 2010(c)(2). After the death of one of us, if the deceased Grantor's applicable exclusion amount cannot be fully used, and the deceased Grantor does not have a duly appointed Personal Representative for the deceased Grantor's estate, then we nominate the Trustee to serve as the deceased Grantor's executor or administrator for purposes of Internal Revenue Code Section 2203.
+
+We authorize the Trustee, in its sole and absolute discretion, when acting as the deceased Grantor's executor or administrator for purposes of Internal Revenue Code Section 2203, to make a timely election under Internal Revenue Code Section 2010(c)(5)(A) so that the surviving Grantor may take the deceased Grantor's deceased spousal unused exclusion amount (DSUE) as defined in Internal Revenue Code Section 2010(c)(4), if any, into account in calculating the surviving Grantor's applicable exclusion amount.
+
+In determining whether or not a DSUE election should be made, the Trustee, acting as the deceased Grantor's executor or administrator for purposes of Internal Revenue Code Section 2203, may take into account the overall size of the surviving Grantor's estate, the projected inclusion of the deceased Grantor's trust estate due to the use of QTIP elections, and general powers of appointment granted by the deceased Grantor to the surviving Grantor.
+
+The Trustee, acting as executor or administrator for purposes of Internal Revenue Code Section 2203, will not be liable to the beneficiaries of our Trust or the beneficiaries of the surviving Grantor's estate for the failure to make a DSUE election under Internal Revenue Code Section 2010(c)(5)(A).
 
 Article Six
 Specific Distributions and Tangible Personal Property
