@@ -19,7 +19,7 @@ Section 1.01      Identifying the Trust
 For convenience, the trust may be referred to as:
 "The ${formData.client.firstName} ${formData.client.lastName} Living Trust"
 To the extent practicable, for the purpose of transferring property to the trust or identifying the trust in any beneficiary or pay-on-death designation, the trust should be identified as:
-"${formData.client.firstName} ${formData.client.lastName}, Trustee, or his successors in interest, of The ${formData.client.firstName} ${formData.client.lastName} Living Trust, and any amendments thereto."
+"${formData.client.firstName} ${formData.client.lastName}, Trustee, or his successors in interest, of The ${formData.client.firstName} ${formData.client.lastName} Living Trust, dated ${formData.currentDate}, and any amendments thereto."
 For all purposes concerning the identity of the trust or any property titled in or payable to the trust, any description referring to the trust will be effective if it reasonably identifies the trust and indicates that the trust property is held in a fiduciary capacity.
 Section 1.02      Reliance by Third Parties
 Third parties may require documentation to verify the existence of this trust, or particular provisions of it, including the name of the Trustee or the powers held by the Trustee.  To protect the confidentiality of the trust, California Probate Code Section 18100.5, Chapter 530, Statutes of 1993 provides that the Trustee may use a certification of trust that identifies the Trustee and sets forth the authority of the Trustee to transact business on behalf of the trust instead of providing a copy of this instrument to protect the confidentiality of the trust.  The certification may include pertinent pages from this instrument, including title or signature pages.
@@ -176,8 +176,8 @@ Article Six
 Specific Distributions and Disposition of Tangible Personal Property
 ${formData.specificDistributions?.map((dist, index) => `
 Section 6.0${index + 1}      Specific Distribution to ${dist.beneficiaryName}
-As soon as practicable after my death, the Trustee shall distribute ${dist.description} to ${dist.beneficiaryName}.
-If ${dist.beneficiaryName} is deceased, then this distribution will lapse${dist.lapseTo ? ` to ${dist.lapseTo}` : ', and this property instead will be distributed under the other provisions of this trust'}.
+As soon as practicable after my death${dist.ageCondition ? `, provided that ${dist.conditionPerson || dist.beneficiaryName} has attained the age of ${dist.ageCondition}` : ''}, the Trustee shall distribute ${dist.description} to ${dist.beneficiaryName}.
+If ${dist.beneficiaryName} is deceased, then this distribution will lapse, and this property instead will be distributed under the other provisions of this trust.
 Property passing under this Section passes free of any administrative expenses or death taxes.
 `).join('\n') || ''}
 
@@ -200,7 +200,23 @@ The Trustee shall administer and distribute my remaining trust property (not dis
 Section 7.01      Division of Remaining Trust Property
 The Trustee shall divide my remaining trust property into shares as follows:
 Name    Relationship    Share
-${formData.residuaryBeneficiaries?.map(b => `${b.name}    Child    ${b.share}%`).join('\n')}
+${formData.residuaryBeneficiaries?.map(b => {
+  const totalBeneficiaries = formData.residuaryBeneficiaries.length;
+  const sharePercent = parseFloat(b.share);
+  // Convert to fraction if equal shares
+  let shareFraction;
+  if (Math.abs(sharePercent - (100 / totalBeneficiaries)) < 0.01) {
+    shareFraction = `1/${totalBeneficiaries}`;
+  } else {
+    // Calculate GCD for fraction
+    const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+    const numerator = Math.round(sharePercent);
+    const denominator = 100;
+    const divisor = gcd(numerator, denominator);
+    shareFraction = `${numerator / divisor}/${denominator / divisor}`;
+  }
+  return `${b.name}    ${b.relationship || 'Child'}    ${shareFraction}`;
+}).join('\n')}
 The Trustee shall administer the share of each beneficiary as provided in the Sections that follow.
 
 ${formData.residuaryBeneficiaries?.map((beneficiary, index) => `

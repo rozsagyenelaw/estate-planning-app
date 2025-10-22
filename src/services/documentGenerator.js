@@ -172,18 +172,34 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
         continue;
       }
 
-      // Detect subsections with (a), (b), etc.
+      // Detect subsections with (a), (b), etc. - make them bold and indented
       if (line.match(/^\s*\([a-z]\)\s+/)) {
-        const wrappedSub = doc.splitTextToSize(line, contentWidth - 0.3);
-        for (let w of wrappedSub) {
-          if (currentY > pageHeight - marginBottom - 0.3) {
-            addPageNumber();
-            doc.addPage();
-            currentY = marginTop;
+        currentY += baseLineHeight * 0.3; // Small space before subsection
+        doc.setFont('times', 'bold');
+        doc.setFontSize(12);
+
+        // Extract the letter and text separately
+        const match = line.match(/^\s*\(([a-z])\)\s+(.+)/);
+        if (match) {
+          const letter = `(${match[1]})`;
+          const text = match[2];
+
+          // Print the letter in bold
+          doc.text(letter, marginLeft + 0.5, currentY);
+
+          // Wrap and print the text
+          const wrappedText = doc.splitTextToSize(text, contentWidth - 1.0);
+          for (let w of wrappedText) {
+            if (currentY > pageHeight - marginBottom - 0.3) {
+              addPageNumber();
+              doc.addPage();
+              currentY = marginTop;
+            }
+            doc.text(w, marginLeft + 0.9, currentY);
+            currentY += baseLineHeight;
           }
-          doc.text(w, marginLeft + 0.3, currentY);
-          currentY += baseLineHeight;
         }
+        doc.setFont('times', 'normal');
         continue;
       }
 
@@ -191,15 +207,18 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
       doc.setFont('times', 'normal');
       doc.setFontSize(12);
       const wrapped = doc.splitTextToSize(line, contentWidth);
-      for (let w of wrapped) {
+      for (let j = 0; j < wrapped.length; j++) {
         if (currentY > pageHeight - marginBottom - 0.3) {
           addPageNumber();
           doc.addPage();
           currentY = marginTop;
         }
-        doc.text(w, marginLeft, currentY);
+        doc.text(wrapped[j], marginLeft, currentY);
         currentY += baseLineHeight;
       }
+
+      // Add small space after paragraphs (not after the last line of a wrapped paragraph)
+      currentY += baseLineHeight * 0.3;
     }
 
     // Add page number to last page
