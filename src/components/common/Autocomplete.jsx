@@ -29,6 +29,20 @@ const Autocomplete = forwardRef(({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Update filtered suggestions when suggestions prop changes
+  useEffect(() => {
+    if (value) {
+      // If there's a value, filter based on it
+      const filtered = suggestions.filter((suggestion) =>
+        suggestion.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredSuggestions(filtered);
+    } else {
+      // If no value, show all suggestions
+      setFilteredSuggestions(suggestions);
+    }
+  }, [suggestions, value]);
+
   const handleChange = (e) => {
     const userInput = e.target.value;
 
@@ -95,7 +109,7 @@ const Autocomplete = forwardRef(({
           }
         }}
         onFocus={() => {
-          if (filteredSuggestions.length > 0 || suggestions.length > 0) {
+          if (suggestions.length > 0) {
             setShowSuggestions(true);
           }
         }}
