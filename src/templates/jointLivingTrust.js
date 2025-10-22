@@ -560,38 +560,46 @@ The Family Trust will terminate upon the death of the surviving Grantor and the 
 Article Ten
 Distribution for Our Beneficiaries
 
+Upon the death of the survivor of us, the Trustee shall administer and distribute our remaining trust property (not distributed under prior Articles of this instrument), or other property allocated to this Article under the terms of this Article${formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 0 ? ` to ${formData.residuaryBeneficiaries.map(b => b.name).join(', ')}` : ' to our beneficiaries'}.
+
 Section 10.01      Division of Remaining Trust Property
 
-Upon the death of the survivor of us, after payment of expenses, taxes, and specific distributions provided in Articles Five and Six, the Trustee shall distribute the remaining trust property as follows:
+The Trustee shall distribute the remaining trust property in trust as provided in this Section.
 
-${formData.residuaryDistributionType === 'individuals' && formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 0 ? formData.residuaryBeneficiaries.map((ben, i) => {
+${formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 0 ? formData.residuaryBeneficiaries.map((ben, i) => {
   const letter = String.fromCharCode(97 + i); // a, b, c, etc.
-  return `        (${letter})      ${ben.name}
+  const pronoun = ben.sex === 'male' ? 'his' : ben.sex === 'female' ? 'her' : 'their';
+  const pronounCap = ben.sex === 'male' ? 'His' : ben.sex === 'female' ? 'Her' : 'Their';
+  const himHer = ben.sex === 'male' ? 'him' : ben.sex === 'female' ? 'her' : 'them';
+  return `        (${letter})      Distributions of Income and Principal for ${ben.name}
 
-The Trustee shall distribute ${ben.share}% of the remaining trust property to ${ben.name}${ben.relation ? `, our ${ben.relation}` : ''}.
+The Independent Trustee may distribute to ${ben.relation ? `our ${ben.relation}, ` : ''}${ben.name}, ${pronoun} descendants, or both as much of the income and principal of ${pronoun} trust as the Independent Trustee may determine advisable for any purpose. If no Independent Trustee is then serving, the Trustee shall distribute to ${ben.name}, ${pronoun} descendants, or both as much of the income and principal of ${pronoun} trust as the Trustee determines necessary or advisable for ${pronoun} health, education, maintenance, or support.
 
-${ben.distributionType === 'outright' ? 'This share shall be distributed outright and free of trust.' : ben.distributionType === 'guardian' && ben.ageMilestones && ben.ageMilestones.length > 0 ? `This share shall be held in trust and distributed in installments:
+The Trustee shall add any undistributed net income to principal.
 
-${ben.ageMilestones.map(milestone => `     When ${ben.name} reaches age ${milestone.age}: ${milestone.percentage}% of the share`).join('\n')}
+        (${letter})      Guidelines for Discretionary Distributions
 
-Until the age-based distributions are complete, the Trustee may distribute income and principal for ${ben.name}'s health, education, maintenance, and support.` : ben.distributionType === 'needsTrust' ? `This share shall be held in a separate trust (the "${ben.name} Special Needs Trust") to be administered for ${ben.name}'s health, education, maintenance, and support.` : 'This share shall be distributed outright and free of trust.'}
+In making discretionary distributions to ${ben.name}, we desire to provide for ${pronoun} well-being and happiness. Although we request that the Trustee consider the other known resources available to ${ben.name} before making distributions, we also request that the Trustee be liberal in making any distributions to, or for ${pronoun} benefit. We acknowledge that the principal of the trust established for ${ben.name} may be exhausted in making these distributions.
 
-${ben.name} has the testamentary general power to appoint all or any portion of the principal and undistributed income remaining in ${ben.sex === 'male' ? 'his' : ben.sex === 'female' ? 'her' : 'their'} trust at death. If ${ben.name} does not effectively exercise this power of appointment, the Trustee shall distribute the remaining balance per stirpes to ${ben.name}'s descendants. If ${ben.name} has no descendants, the Trustee shall distribute per stirpes to our descendants.`;
-}).join('\n\n') : formData.residuaryDistributionType === 'descendants' ? `The entire remaining trust property shall be distributed to our descendants, per stirpes.
+${ben.ageMilestones && ben.ageMilestones.length > 0 ? `        (${letter})      Right to Withdraw Principal
 
-If any descendant who is entitled to receive a distribution has not reached 25 years of age, the Trustee shall hold that descendant's share in trust and may distribute income and principal for that descendant's health, education, maintenance, and support until the descendant reaches 25 years of age.` : `The remaining trust property shall be distributed equally among our named beneficiaries.`}
+At the intervals set forth below, ${ben.name} may withdraw from ${pronoun} trust, at any time, amounts not to exceed in the aggregate:
 
-Section 10.02      Per Stirpes Distribution
+${ben.ageMilestones.map(milestone => `${milestone.percentage}% of the accumulated trust income and principal, after reaching ${milestone.age} years of age;`).join('\n')}
+` : ''}
+        (${letter})      Distribution upon the Death of ${ben.name}
 
-If any beneficiary named in this Article does not survive the surviving Grantor, that beneficiary's share shall pass to that beneficiary's living descendants, per stirpes. If a beneficiary has no living descendants, that share shall be divided among the other named beneficiaries in proportion to their shares.
+Subject to the terms of the next paragraph, ${ben.name} has the unlimited testamentary general power to appoint all or any portion of the principal and undistributed income remaining in ${pronoun} trust at ${pronoun} death among one or more persons or entities and ${ben.name}'s estate's creditors. ${ben.name} has the exclusive right to exercise this general power of appointment.
 
-For purposes of this Section, a person survives the surviving Grantor if the person is living on the date that is 120 hours after the surviving Grantor's death.
+${ben.name} may not exercise this power of appointment to appoint to ${himHer}self, ${pronoun} estate, ${pronoun} creditors, or the creditors of ${pronoun} estate from the limited share of ${pronoun} trust. For purposes of this power of appointment, the limited share of ${ben.name}'s trust is that portion of ${pronoun} trust that has an inclusion ratio of zero for generation-skipping transfer tax purposes, or that would not constitute a taxable generation-skipping transfer at ${pronoun} death in the absence of the power of appointment's exercise. If the generation-skipping tax does not then apply, the limited share is ${ben.name}'s entire trust.
 
-Section 10.03      Testamentary General Power of Appointment
+If any part of ${ben.name}'s trust is not effectively appointed, the Trustee shall distribute the remaining unappointed balance per stirpes to ${ben.name}'s descendants. If ${ben.name} has no descendants, the Trustee shall distribute the remaining unappointed balance per stirpes to our descendants. If we have no then-living descendants, the Trustee shall distribute the remaining unappointed balance under the terms of Article Eleven.
 
-Each beneficiary who receives property in a continuing trust under this Article has a testamentary general power to appoint all or any portion of the principal and undistributed income remaining in that beneficiary's trust at the beneficiary's death.
+        (${letter})      Distribution if ${ben.name} Is Deceased
 
-This power may be exercised in favor of the beneficiary's estate, the beneficiary's creditors, the creditors of the beneficiary's estate, or any other person or entity. The power must be exercised by specific reference to this power in the beneficiary's last will.
+If ${ben.name} dies before the establishment of ${pronoun} trust, the Trustee shall distribute the remaining trust property per stirpes to ${pronoun} descendants. If ${ben.name} has no descendants, the Trustee shall distribute the remaining trust property per stirpes to our descendants. If we have no then-living descendants, the Trustee shall distribute the remaining trust property under the terms of Article Eleven.
+`;
+}).join('\n') : `The Trustee shall distribute the remaining trust property to our descendants, per stirpes.`}
 
 Article Eleven
 Remote Contingent Distribution
