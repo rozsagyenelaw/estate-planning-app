@@ -31,24 +31,14 @@ const Autocomplete = forwardRef(({
 
   // Update filtered suggestions when suggestions prop changes
   useEffect(() => {
-    console.log('🔍 Autocomplete useEffect triggered', {
-      label,
-      suggestionsCount: suggestions.length,
-      suggestions,
-      value,
-      hasValue: !!value
-    });
-
     if (value) {
       // If there's a value, filter based on it
       const filtered = suggestions.filter((suggestion) =>
         suggestion.toLowerCase().includes(value.toLowerCase())
       );
-      console.log('  → Filtered suggestions (with value):', filtered);
       setFilteredSuggestions(filtered);
     } else {
       // If no value, show all suggestions
-      console.log('  → Setting all suggestions (no value):', suggestions);
       setFilteredSuggestions(suggestions);
     }
   }, [suggestions, value, label]);
@@ -71,11 +61,8 @@ const Autocomplete = forwardRef(({
   };
 
   const handleClick = (suggestion) => {
-    console.log('✅ handleClick called with suggestion:', suggestion);
-    console.log('  → onSelect function exists?', !!onSelect);
     setShowSuggestions(false);
     if (onSelect) {
-      console.log('  → Calling onSelect with:', suggestion);
       onSelect(suggestion);
     }
   };
@@ -116,20 +103,14 @@ const Autocomplete = forwardRef(({
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         onBlur={(e) => {
-          console.log('👋 Blur event on', label, '- value:', e.target.value);
           setShowSuggestions(false);
           if (onBlur) {
-            console.log('  → Calling onBlur handler with value:', e.target.value);
             onBlur(e);
           }
         }}
         onFocus={() => {
-          console.log('👁️ Focus event on', label, '- suggestions:', suggestions.length, 'filteredSuggestions:', filteredSuggestions.length);
           if (suggestions.length > 0) {
-            console.log('  → Showing suggestions');
             setShowSuggestions(true);
-          } else {
-            console.log('  → No suggestions to show');
           }
         }}
         className={`input-field ${error ? 'border-red-500 focus:ring-red-500' : ''} ${className}`}
@@ -143,7 +124,6 @@ const Autocomplete = forwardRef(({
               key={index}
               onMouseDown={(e) => {
                 e.preventDefault(); // Prevent input blur
-                console.log('🖱️ Suggestion clicked:', suggestion);
                 handleClick(suggestion);
               }}
               className={`px-4 py-2 cursor-pointer hover:bg-primary-50 ${

@@ -59,12 +59,7 @@ const ClientInfoSection = () => {
         label="First Name"
         value={person.firstName}
         onChange={(e) => handleChange('firstName', e.target.value)}
-        onSelect={(value) => {
-          console.log('🎯 ClientInfoSection onSelect called with:', value);
-          console.log('  → Current person.firstName:', person.firstName);
-          handleChange('firstName', value);
-          console.log('  → Called handleChange, new value should be:', value);
-        }}
+        onSelect={(value) => handleChange('firstName', value)}
         onBlur={(e) => addNameSuggestion(e.target.value)}
         suggestions={getNameSuggestions()}
         placeholder="Enter first name"
