@@ -3,8 +3,8 @@
  * Creates sample form data and tests the document generation system
  */
 
-import { processTemplate, prepareTemplateData } from '../services/templateEngine';
-import { singleLivingTrustTemplate } from '../templates/singleLivingTrust';
+import { processTemplate, prepareTemplateData } from '../services/templateEngine.js';
+import { singleLivingTrustTemplate } from '../templates/singleLivingTrust.js';
 
 /**
  * Sample form data for testing - SINGLE TRUST
