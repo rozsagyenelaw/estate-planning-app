@@ -478,29 +478,57 @@ If any of the beneficiaries is a minor, the minor's parent or guardian may waive
 Article Eight
 The Survivor's Trust
 
+The Trustee shall administer the Survivor's Trust as provided in this Article.
+
 Section 8.01      Trustee of the Survivor's Trust
 
-The surviving Grantor may serve as sole Trustee of the Survivor's Trust. The surviving Grantor may remove and replace the Trustee of the Survivor's Trust at any time, with or without cause.
+The surviving Grantor may serve as sole Trustee of the Survivor's Trust. The surviving Grantor may remove and replace the Trustee of the Survivor's Trust at any time, with or without cause. Notwithstanding any other provision in this instrument, the surviving Grantor may appoint any individual or corporate fiduciary to serve as Trustee of the Survivor's Trust.
 
 Section 8.02      The Surviving Grantor's Right to Amend
 
-The surviving Grantor has the absolute right to amend the Survivor's Trust's terms by restating them in full. The restated Survivor's Trust must be in writing and signed by the surviving Grantor and the Trustee.
+The surviving Grantor also has the absolute right to amend the Survivor's Trust's terms by restating them in full. The restated Survivor's Trust must be in writing and signed by the surviving Grantor and the Trustee of the restated Survivor's Trust.
 
-The surviving Grantor may not amend the terms of the Family Trust, if any, or any other trust created for the benefit of any person other than the surviving Grantor.
+The right to amend by restatement may be exercised only by the surviving Grantor.
 
-Section 8.03      Distribution of Income and Principal
+Section 8.03      Survivor's Trust As Only Trust
 
-The Trustee shall distribute all of the net income of the Survivor's Trust to the surviving Grantor at least monthly. The Trustee shall distribute as much of the principal of the Survivor's Trust to the surviving Grantor as he or she directs for any reason.
+If the Survivor's Trust is the only trust established on the death of the deceased Grantor, a transfer to that trust need not be evidenced by a change of title.
 
-Section 8.04      General Power of Appointment
+Section 8.04      Separate Share for Deceased Grantor's Trust Property
 
-The surviving Grantor may appoint all or any portion of the principal and undistributed income remaining in the Survivor's Trust at the surviving Grantor's death among one or more persons or entities, including the creditors of the surviving Grantor's estate.
+If the Survivor's Trust becomes the beneficiary of death benefits under any qualified retirement plan, the Trustee shall hold this property in a separate share of the Survivor's Trust during the surviving Grantor's lifetime. The Trustee shall administer the separate share in accordance with all of this Article's provisions. But the surviving Grantor may not amend the terms of the separate share.
 
-This power of appointment may be exercised by the surviving Grantor's last will or by a written instrument other than a will, signed by the surviving Grantor and delivered to the Trustee during the surviving Grantor's lifetime. Any exercise of this power must specifically refer to this power of appointment.
+The purpose of the separate share is to keep the deceased Grantor's trust property and its accumulated income separate from the main share during the lifetime of the surviving Grantor, in order to qualify the separate share as a designated beneficiary under qualified retirement plans.
 
-Section 8.05      Administration Following Surviving Grantor's Death
+The Trustee shall distribute as much of the principal and accumulated income of the separate share to the main share of the Survivor's Trust as the surviving Grantor directs. This right to direct distribution from the separate share to the main account may be exercised only by the surviving Grantor.
 
-The Survivor's Trust becomes irrevocable upon the death of the surviving Grantor. Upon completion of the tasks described in Article Five and Article Six, the Trustee shall administer the unappointed balance or remainder of the Survivor's Trust as provided in Article Ten.
+Section 8.05      Distribution of Income
+
+The Trustee shall distribute all of the net income of the Survivor's Trust to the surviving Grantor at least monthly. Nothing contained in this instrument may limit the right of the surviving Grantor to receive the Survivor's Trust's entire net income.
+
+Section 8.06      Distributions of Principal
+
+The Trustee shall distribute as much of the principal of the Survivor's Trust to the surviving Grantor as he or she directs for any reason.
+
+The Trustee may also distribute as much of the principal of the Survivor's Trust to the surviving Grantor as the Trustee determines necessary or advisable for any purpose.
+
+Section 8.07      Unproductive Property
+
+At the direction of the surviving Grantor, the Trustee shall convert any nonproductive property held in the Survivor's Trust to productive property.
+
+Section 8.08      Trust Distributions during the Incapacity of the Surviving Grantor
+
+During any time the surviving Grantor is incapacitated, the Trustee shall administer the Survivor's Trust according to the provisions of Section 4.01.
+
+Section 8.09      General Power of Appointment
+
+The surviving Grantor may appoint all or any portion of the principal and undistributed income remaining in the Survivor's Trust at the surviving Grantor's death among one or more persons or entities, including the creditors of the surviving Grantor's estate. The surviving Grantor has the exclusive right to exercise this general power of appointment.
+
+Section 8.10      Administration following the Surviving Grantor's Death
+
+The Survivor's Trust becomes irrevocable upon the death of the surviving Grantor, and the Trustee shall administer the Survivor's Trust consistent with the provisions of Article Five for administration following the death of the first of us to die.
+
+Upon completion of the administrative tasks, the Trustee shall administer the unappointed balance or remainder of the Survivor's Trust as provided in Article Ten.
 
 Article Nine
 The Family Trust
