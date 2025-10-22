@@ -533,19 +533,27 @@ Upon completion of the administrative tasks, the Trustee shall administer the un
 Article Nine
 The Family Trust
 
+The Trustee shall hold and administer the Non-Marital Share in a separate trust as provided in this Article. This document refers to the trust as the Family Trust.
+
 Section 9.01      Family Trust Beneficiary
 
 The surviving Grantor is the only beneficiary of the Family Trust during the surviving Grantor's lifetime.
 
-Section 9.02      Distribution of Income and Principal
+Section 9.02      Distribution of Income
 
 The Trustee shall distribute all of the net income of the Family Trust to the surviving Grantor at least monthly during the surviving Grantor's lifetime.
 
-The Independent Trustee may distribute as much of the principal of the Family Trust to the surviving Grantor as the Independent Trustee may determine advisable for any purpose. If no Independent Trustee is serving, the Trustee shall distribute principal as necessary for the surviving Grantor's health, education, maintenance and support in reasonable comfort.
+Section 9.03      Distribution of Principal
 
-The surviving Grantor shall not be required to exhaust the Survivor's Trust before receiving distributions from the Family Trust.
+The Independent Trustee may distribute as much of the principal of the Family Trust to the surviving Grantor as the Independent Trustee may determine advisable for any purpose. If no Independent Trustee is then serving, the Trustee shall distribute as much principal to the surviving Grantor as the Trustee determines necessary or advisable for the surviving Grantor's health, education, maintenance and support in reasonable comfort.
 
-Section 9.03      Termination of the Family Trust
+Section 9.04      Guidelines to the Trustee
+
+The surviving Grantor is the only beneficiary of the Family Trust. In making discretionary distributions under this Article, the Trustee should bear in mind that our primary concern and objective is to provide for the well-being of the surviving Grantor, and the preservation of principal is not as important as this objective.
+
+Without limiting the Trustee's discretion, we recommend that the Trustee not distribute principal from the Family Trust to the surviving Grantor until the principal of the Survivor's Trust is substantially exhausted.
+
+Section 9.05      Termination of the Family Trust
 
 The Family Trust will terminate upon the death of the surviving Grantor and the Trustee shall administer the balance or remainder of the Family Trust as provided in Article Ten.
 
