@@ -8,6 +8,8 @@ import ClientInfoSection from './sections/ClientInfoSection';
 import TrustNameSection from './sections/TrustNameSection';
 import ChildrenSection from './sections/ChildrenSection';
 import SuccessorTrusteesSection from './sections/SuccessorTrusteesSection';
+import SpecificDistributionSection from './sections/SpecificDistributionSection';
+import ResiduaryDistributionSection from './sections/ResiduaryDistributionSection';
 
 const EstatePlanningForm = () => {
   const { formData } = useFormContext();
@@ -60,14 +62,10 @@ const EstatePlanningForm = () => {
         <SuccessorTrusteesSection />
 
         {/* Specific Distribution */}
-        <Card title="Specific Distribution" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <SpecificDistributionSection />
 
         {/* Residuary Distribution */}
-        <Card title="Residuary Distribution" collapsible defaultOpen={false}>
-          <p className="text-gray-600">Coming soon...</p>
-        </Card>
+        <ResiduaryDistributionSection />
 
         {/* General Needs Trust */}
         <Card title="General Needs Trust" collapsible defaultOpen={false}>
