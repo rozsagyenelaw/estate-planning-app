@@ -1241,55 +1241,237 @@ The limitations of this Subsection do not apply if, upon the beneficiary's death
 Article Sixteen
 General Provisions
 
-Section 16.01      Spendthrift Provision
+Section 16.01      Maximum Term for Trusts
 
-No beneficiary may assign, anticipate, encumber, alienate, or otherwise voluntarily transfer the income or principal of any trust created under this trust. Neither the income nor the principal is subject to attachment, bankruptcy proceedings, creditors' claims, or any involuntary transfer.
+Notwithstanding any contrary provisions or unless terminated earlier under other provisions of this trust, each trust created under this trust document will terminate 21 years after the death of the last to die of the descendants of our paternal and maternal grandparents who are living at the time of the first of us to die.
 
-This provision does not apply to claims or expenses for the trust's administration or to governmental claims for taxes.
+Section 16.02      Spendthrift Provision
 
-Section 16.02      Contest Provision
+No beneficiary may assign, anticipate, encumber, alienate, or otherwise voluntarily transfer the income or principal of any trust created under this trust. In addition, neither the income nor the principal of any trust created under this trust is subject to attachment, bankruptcy proceedings or any other legal process, the interference or control of creditors or others, or any involuntary transfer.
 
-If any person attempts to contest or oppose the validity of this trust or any of its provisions, or commences any legal proceeding to set this trust aside or to challenge any distribution made or action taken under this trust, then that person will forfeit his or her interest in this trust and will be considered to have predeceased the last of us to die for purposes of this instrument.
+This Section does not restrict a beneficiary's right to disclaim any interest or exercise of any power of appointment granted in this trust.
 
-This provision does not apply to any proceeding to determine the validity of this trust or to construe any trust provision if the proceeding is brought in good faith and with probable cause.
+Section 16.03      Contest Provision
 
-Section 16.03      Survivorship Presumption
+If any person attempts to contest or oppose the validity of this trust or any amendment to this trust, or commences, continues, or prosecutes any legal proceedings to set this trust aside, then that person will forfeit his or her share, cease to have any right or interest in the trust property, and will be considered to have predeceased the last of us to die for purposes of this instrument.
+
+But during any period in which the laws of the State of California govern the applicability or validity of this provision, California Probate Code Section 21311 will apply, and the Trustee may only enforce this provision against any of these types of contests:
+
+a direct contest brought by any beneficiary without probable cause;
+
+a pleading by any beneficiary to challenge a property transfer on the grounds that the transferor did not own the property at the transfer time; and
+
+any filing of a creditor's claim or prosecution of any action based on the filing of a claim of this kind.
+
+The terms direct contest, and pleading have the same meanings as set forth in California Probate Code Section 21310. This trust and any trusts created in this instrument are protected instruments as provided in California Probate Code Section 21310(e).
+
+Section 16.04      Survivorship Presumption
 
 If we die under circumstances in which the order of our deaths cannot be established, ${formData.spouse.firstName} ${formData.spouse.lastName} will be considered to have survived ${formData.client.firstName} ${formData.client.lastName}.
 
-If any other beneficiary is living at the death of a Grantor but dies within 120 hours after the Grantor's death, the beneficiary will be considered to have predeceased the Grantor for purposes of this trust.
+If any other beneficiary is living at the death of a Grantor, but dies within 45 days after the Grantor's death, then the beneficiary will be considered to have predeceased the Grantor for purposes of this trust.
 
-Section 16.04      Governing Law
+Section 16.05      Effect of Legal Separation or Dissolution of Marriage
 
-This trust is governed, construed, and administered according to the laws of California.
+If either of us files a petition for legal separation or dissolution of marriage and unless and until the petition is dismissed, each of us, each of our respective parents as to the other of us, all of our descendants who are not the descendants of the other of us, and all spouses of such persons who are not descendants of our respective parents will be deemed to have died intestate on the date of the filing for all purposes of this instrument (except Section 16.01, above). Any exercise or exercises of any power of appointment by any person identified in this paragraph that has not become effective prior to the filing date will be null and void. If, however, a court issues any order dismissing a petition described above, and we accept the dismissal of the petition by a written acknowledgement, then the persons identified in this paragraph will no longer be deemed to have died intestate for purposes of this instrument.
 
-If any provision of this trust is determined to be invalid or unenforceable, the remaining provisions will continue in effect.
+Section 16.06      Changing the Governing Law and Situs of Administration
 
-Section 16.05      Definitions
+At any time, the Trustee may change the governing law of the trust; change the situs of the administration of the trust; and remove all or any part of the property from one jurisdiction to another. The Trustee may elect, by filing an instrument with the trust records, that the trust will then be construed, regulated, and governed by the new jurisdiction's laws. The Trustee may take action under this Section for any purpose the Trustee considers appropriate, including the minimization of any taxes in respect of the trust or any trust beneficiary.
 
-Children and Descendants: Include persons legally adopted before reaching 18 years of age. Children and descendants do not include stepchildren or foster children unless legally adopted.
+If considered necessary or advisable by the Trustee, the Trustee may appoint an Independent Trustee to serve as Trustee in the new situs.
 
-Incapacitated: A person is considered incapacitated when two licensed physicians give the opinion in writing that the individual is unable to effectively manage his or her property or financial affairs. A person is also considered incapacitated if a court determines that he or she is unable to manage his or her property and affairs.
+If necessary and if the Trustee does not appoint an Independent Trustee within 30 days of the Trustee's action to change the governing law or situs of the trust, the beneficiaries entitled to receive distributions of the trust's net income may appoint a corporate fiduciary in the new situs by majority consent. If a beneficiary is a minor or is incapacitated, the beneficiary's parent or Legal Representative may act on the beneficiary's behalf.
 
-Per Stirpes: Whenever a distribution is to be made to a person's descendants per stirpes, the distribution will be divided into as many equal shares as there are:
+Section 16.07      Definitions
 
-     (a) Living children of the designated ancestor; and
+For purposes of this trust, the following terms have these meanings:
 
-     (b) Deceased children of the designated ancestor who left descendants then living.
+           (a)      Adopted and Afterborn Persons
 
-Each living child receives one share and each share of a deceased child's descendants is divided among them in the same manner.
+A person in any generation who is legally adopted before reaching 18 years of age and his or her descendants, including adopted descendants, have the same rights and will be treated in the same manner under this trust as natural children of the adopting parent. A person is considered legally adopted if the adoption was legal at the time when and in the jurisdiction in which it occurred.
 
-Section 16.06      Use of Words
+A fetus in utero later born alive will be considered a person in being during the period of gestation.
 
-As used in this trust, the singular includes the plural, the plural includes the singular, and words of one gender include all genders, as the context requires.
+           (b)      Available GST Exemption
 
-Section 16.07      Titles and Headings
+The deceased Grantor's Available GST Exemption means the GST exemption provided in Internal Revenue Code Section 2631 in effect at the deceased Grantor's death; reduced by the aggregate of:
 
-The titles and headings in this instrument are for convenience only and do not limit or expand the substantive provisions.
+any amount of GST exemption allocated to the deceased Grantor's lifetime transfers, including those allocations made at the time of the deceased Grantor's death by the deceased Grantor's Personal Representative, by the deceased Grantor's Trustee, or by operation of law; and
 
-Section 16.08      Severability
+any amount allocated to direct-skip persons as defined in Internal Revenue Code Section 2612(c)(1) that does not qualify for an exclusion from the generation-skipping transfer tax occurring at the deceased Grantor's death to or for the benefit of the deceased Grantor's descendants.
 
-If any provision of this trust is determined to be invalid, illegal, or unenforceable, the remaining provisions will continue in full force and effect, and the invalid provision will be modified to the extent necessary to make it valid and enforceable while preserving the intent of the Grantors.
+At the time of the deceased Grantor's death, if the deceased Grantor has made a lifetime transfer to a trust with an inclusion ratio of greater than zero but have not filed a gift tax return and the due date for the gift tax return has not yet passed, the deceased Grantor's Available GST Exemption will also be reduced so that the trust inclusion ratio is zero, in order to exempt the transfer from generation-skipping transfer tax.
+
+           (c)      Descendants
+
+The term descendants means persons who directly descend from a person, such as children, grandchildren, or great-grandchildren. The term descendants does not include collateral descendants, such as nieces and nephews.
+
+           (d)      Education
+
+The term education is intended to be an ascertainable standard under Internal Revenue Code Sections 2041 and 2514 and includes:
+
+enrollment at private elementary, junior, and senior high school, including boarding school;
+
+undergraduate and graduate study in any field at a college or university;
+
+specialized, vocational, or professional training or instruction at any institution, as well as private instruction; and
+
+any other curriculum or activity that the Trustee considers useful for developing a beneficiary's abilities and interests including athletic training, musical instruction, theatrical training, the arts, and travel.
+
+The term education also includes expenses such as tuition, room and board, fees, books, supplies, computers and other equipment, tutoring, transportation, and a reasonable allowance for living expenses.
+
+           (e)      Good Faith
+
+For the purposes of this trust, a Trustee has acted in good faith if:
+
+an action or inaction is not a result of intentional wrongdoing;
+
+the Trustee did not make the decision to act or not act with reckless indifference to the beneficiaries' interests; and
+
+an action or inaction does not result in an improper personal benefit to the Trustee.
+
+Further, all parties subject to the provisions of this trust will treat any action or inaction made in reliance on information, consent, or directions received from the Personal Representative of each of our estates as made in good faith for the purposes of this Section, except for cases of willful misconduct or malfeasance on the Trustee's part.
+
+           (f)      Grantor
+
+Grantor has the same legal meaning as Settlor, Trustor or any other term referring to the maker of a trust.
+
+           (g)      Incapacity
+
+Except as otherwise provided in this trust, a person is considered incapacitated in any of the following circumstances.
+
+                      (1)      The Opinion of Two Licensed Physicians
+
+An individual is considered to be incapacitated whenever two licensed physicians give the opinion that the individual is unable to effectively manage his or her property or financial affairs, whether as a result of age; illness; use of prescription medications, drugs, or other substances; or any other cause. If an individual whose capacity is in question refuses to provide necessary documentation or otherwise submit to examination by licensed physicians, that individual will be considered incapacitated.
+
+An individual is considered restored to capacity whenever the individual's personal or attending physician provides a written opinion that the individual is able to effectively manage his or her property and financial affairs.
+
+                      (2)      Court Determination
+
+An individual is considered incapacitated if a court of competent jurisdiction has declared the individual to be disabled, incompetent, or legally incapacitated.
+
+                      (3)      Detention, Disappearance, or Absence
+
+An individual is considered to be incapacitated whenever he or she cannot effectively manage his or her property or financial affairs due to the individual's unexplained disappearance or absence for more than 30 days, or whenever he or she is detained under duress.
+
+An individual's disappearance, absence, or detention under duress may be established by an affidavit of the Trustee, or by the affidavit of any beneficiary if no Trustee is then serving. The affidavit must describe the circumstances of the individual's disappearance, absence, or detention, and may be relied upon by any third party dealing in good faith with the Trustee.
+
+           (h)      Include, Includes, Including
+
+In this document, the words include, includes, and including mean include without limitation, includes without limitation and including without limitation, respectively. Include, includes, and including are words of illustration and enlargement, not words of limitation or exclusivity.
+
+           (i)      Income Beneficiary
+
+The term Income Beneficiary means any beneficiary who is then entitled to receive distributions of the trust's net income, whether mandatory or discretionary.
+
+Unless otherwise provided in this trust, the phrase majority of the Income Beneficiaries means any combination of Income Beneficiaries who would receive more than 50% of the accrued net income if that income were distributed on the day of a vote. For purposes of this calculation, beneficiaries who are eligible to receive discretionary distributions of net income receive the imputed income in equal shares.
+
+References to a majority refer to a majority of the entire trust collectively until the Trustee allocates property to separate trusts or trust shares. After the Trustee allocates property to separate trusts or trust shares, references to a majority refer to a majority of each separate trust or trust share.
+
+           (j)      Independent Trustee
+
+The term Independent Trustee means any Trustee who is not an Interested Trustee as defined in Subsection (aa) and includes an Independent Special Trustee appointed under the provisions of Section 2.08.
+
+           (k)      Instrument
+
+The term this instrument means this trust, and includes all trusts created under the terms of this trust.
+
+           (l)      Interested Trustee
+
+The term Interested Trustee means a Trustee who:
+
+is a transferor or beneficiary;
+
+is related or subordinate to a transferor or beneficiary;
+
+can be removed and replaced by a transferor with either the transferor or a party who is related or subordinate to the transferor; or
+
+can be removed and replaced by a beneficiary with either the beneficiary or a party who is related or subordinate to the beneficiary.
+
+For purposes of this Subsection, transferor means a person who transferred property to the trust during that person's lifetime, including a person whose disclaimer resulted in property passing to the trust. A person is only a transferor during his or her lifetime. Beneficiary means a person who is or may become eligible to receive income or principal from the trust under the terms of the trust, even if this person has only a remote contingent remainder interest in the trust, but not if the person's only interest is as a potential appointee under a power of appointment. Related or subordinate is used as defined in Internal Revenue Code Section 672(c).
+
+           (m)      Internal Revenue Code and Treasury Regulations
+
+References to the Internal Revenue Code or to its provisions are to the Internal Revenue Code of 1986, as amended, and any corresponding Treasury Regulations. References to the Treasury Regulations, are to the Treasury Regulations under the Internal Revenue Code in effect. If a particular provision of the Internal Revenue Code is renumbered or the Internal Revenue Code is superseded by a subsequent federal tax law, any reference is considered to be made to the renumbered provision or to the corresponding provision of the subsequent law, unless to do so would clearly be contrary to our intent as expressed in this trust. The same rule applies to references to the Treasury Regulations.
+
+           (n)      Legal Representative or Personal Representative
+
+As used in this trust document, the term Legal Representative or Personal Representative means a person's guardian, conservator, executor, administrator, Trustee, attorney in fact under a Durable Power of Attorney, or any other person or entity representing a person or the person's estate. In the case of a minor beneficiary, the beneficiary's parent or another adult with custody of the beneficiary, except for any transferor to a trust created under this instrument, will be considered the beneficiary's Legal Representative for purposes of this trust.
+
+           (o)      Per Stirpes
+
+Whenever a distribution is to be made to a person's descendants per stirpes, the distribution will be divided into as many equal shares as there are then living children and deceased children who left then-living descendants. Each then-living child will receive one share, and the share of each deceased child will be divided among the deceased child's then-living descendants in the same manner.
+
+           (p)      Permissible Distributee
+
+Permissible Distributee means a beneficiary who is currently eligible to receive distributions of trust income or principal, whether the distribution is mandatory or discretionary.
+
+           (q)      Primary Beneficiary
+
+The Primary Beneficiary of a trust created under this trust is that trust's oldest Income Beneficiary, unless some other individual is specifically designated as the Primary Beneficiary of that separate trust.
+
+           (r)      Qualified Beneficiary
+
+Qualified Beneficiary means a beneficiary who, on the date the beneficiary's qualification is determined:
+
+(1) is a distributee or Permissible Distributee of trust income or principal;
+
+(2) would be a distributee or Permissible Distributee of trust income or principal if the interests of the distributees described in subparagraph (1) terminated on that date; or
+
+(3) would be a distributee or Permissible Distributee of trust income or principal if the trust terminated on that date.
+
+           (s)      Qualified Retirement Benefits
+
+The term qualified retirement plan means a plan qualified under Internal Revenue Code Section 401, an individual retirement arrangement under Section 408 or Section 408A, or a tax-sheltered annuity under Section 403. The term qualified retirement benefits means the amounts held in or distributed pursuant to a plan qualified under Section 401, an individual retirement arrangement under Section 408 or Section 408A, a tax-sheltered annuity under Section 403, or any other benefit subject to the distribution rules of Section 401(a)(9).
+
+           (t)      Shall and May
+
+Unless otherwise specifically provided in this trust or by the context in which used, we use the word shall in this trust to impose a duty, command, direct, or require, and the word may to allow or permit, but not require. In the context of the Trustee, when we use the word shall we intend to impose a fiduciary duty on the Trustee. When we use the word may we intend to empower the Trustee to act with the Trustee's sole and absolute discretion unless otherwise stated in this trust. When we use the words may not in reference to the Trustee, we specifically mean the Trustee is not permitted to.
+
+           (u)      Trust
+
+The terms this trust, this document, instrument, and this trust document refer to this trust and all trusts created under the terms of this trust.
+
+           (v)      Trustee
+
+The terms the Trustee and Trustee refer to the Initial Trustee named in Article One and to any successor, substitute, replacement, or additional person, corporation, or other entity that ever acts as the Trustee of any trust created under the terms of this trust. The term Trustee refers to singular or plural as the context may require.
+
+           (w)      Trust Property
+
+The term trust property means all property acquired from any source and held by a Trustee under this trust.
+
+Section 16.08      General Provisions and Rules of Construction
+
+The following general provisions and rules of construction apply to this trust.
+
+           (a)      Multiple Originals; Validity of Paper or Electronic Copies
+
+This trust may be executed in any number of counterparts, each of which will be considered an original.
+
+Any person may rely on a paper or electronic copy of this trust that the Trustee certifies to be a true copy as if it were an original.
+
+           (b)      Singular and Plural; Gender
+
+Unless the context requires otherwise, singular words may be construed as plural, and plural words may be construed as singular. Words of one gender may be construed as denoting another gender as is appropriate within the context. The word or, when used in a list of more than two items, may function as both a conjunction and a disjunction as the context requires.
+
+           (c)      Headings of Articles, Sections, and Subsections
+
+The headings of Articles, Sections, and Subsections used within this trust are included solely for the convenience of the reader. They have no significance in the interpretation or construction of this trust.
+
+           (d)      Governing State Law
+
+This trust is governed, construed, and administered according to the laws of California, as amended except as to trust property required by law to be governed by the laws of another jurisdiction and unless the situs of administration is changed under Section 16.06.
+
+           (e)      Notices
+
+Unless otherwise stated, any notice required under this trust will be in writing. The notice may be personally delivered with proof of delivery to the party requiring notice and will be effective on the date personally delivered. Notice may also be mailed, postage prepaid, by certified mail with return receipt requested to the last known address of the party requiring notice. Mailed notice is effective on the date of the return receipt. If a party giving notice does not receive the return receipt but has proof that he or she mailed the notice, notice will be effective on the date it would normally have been received via certified mail. If the party requiring notice is a minor or incapacitated individual, notice will be given to the parent or Legal Representative.
+
+           (f)      Severability
+
+The invalidity or unenforceability of any provision of this trust does not affect the validity or enforceability of any other provision of this trust. If a court of competent jurisdiction determines that any provision is invalid, the remaining provisions of this trust are to be interpreted as if the invalid provision had never been included.
+
+We have executed this trust on January 10, 2025. This trust instrument is effective when signed by us, whether or not now signed by a Trustee.
 
 
 SCHEDULE A
