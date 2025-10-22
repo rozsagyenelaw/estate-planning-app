@@ -411,6 +411,17 @@ const generateWordFromText = async (textContent, documentTitle, formData = null)
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
 
+      // Check for explicit page break marker (form feed character)
+      if (line.includes('\f') || lines[i].includes('\f')) {
+        paragraphs.push(
+          new Paragraph({
+            children: [new TextRun({ text: '', size: 1 })],
+            pageBreakBefore: true,
+          })
+        );
+        continue;
+      }
+
       if (!line) {
         paragraphs.push(new Paragraph({ children: [new TextRun({ text: '' })] }));
         continue;
@@ -1132,6 +1143,149 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
 
   } catch (error) {
     console.error('Error generating complete package:', error);
+    throw error;
+  }
+};
+
+/**
+ * Generate Complete Estate Planning Package as Word Document
+ * @param {Object} formData - Complete form data
+ * @returns {Promise<Blob>} Word document as Blob
+ */
+export const generateCompleteEstatePlanningPackageWord = async (formData) => {
+  console.log('=== Generating Complete Estate Planning Package (Word) ===');
+
+  // Add currentDate if not present
+  if (!formData.currentDate) {
+    const today = new Date();
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                   'July', 'August', 'September', 'October', 'November', 'December'];
+    formData.currentDate = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+  }
+
+  const isJoint = formData.isJoint || formData.trustType === 'joint';
+  const templateData = prepareTemplateData(formData);
+  let combinedContent = '';
+
+  try {
+    // Helper function to add document separator
+    const addDocumentSeparator = (title) => {
+      return `\n\n\n[PAGE_BREAK]\n\n\n${title}\n\n`;
+    };
+
+    // 1. Certificate of Trust (joint document - one for both grantors)
+    console.log('Adding Certificate of Trust...');
+    const certTemplate = certificateOfTrustTemplate();
+    const certText = processTemplate(certTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += certText;
+
+    // 2. Trustee Affidavit (joint document - one for both grantors)
+    console.log('Adding Trustee Affidavit...');
+    combinedContent += addDocumentSeparator('TRUSTEE AFFIDAVIT');
+    const affidavitTemplate = trusteeAffidavitTemplate();
+    const affidavitText = processTemplate(affidavitTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += affidavitText;
+
+    // 3. Pour Over Will - CLIENT (separate for each grantor)
+    console.log('Adding Pour Over Will...');
+    combinedContent += addDocumentSeparator('POUR OVER WILL - ' + (isJoint ? 'CLIENT' : ''));
+    const pourOverTemplate = pourOverWillTemplate('client');
+    const pourOverText = processTemplate(pourOverTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += pourOverText;
+
+    // 4. Pour Over Will - SPOUSE (if joint trust)
+    if (isJoint) {
+      combinedContent += addDocumentSeparator('POUR OVER WILL - SPOUSE');
+      const pourOverSpouseTemplate = pourOverWillTemplate('spouse');
+      const pourOverSpouseText = processTemplate(pourOverSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+      combinedContent += pourOverSpouseText;
+    }
+
+    // 5. Durable Power of Attorney - CLIENT (separate for each grantor)
+    console.log('Adding Durable Power of Attorney...');
+    combinedContent += addDocumentSeparator('DURABLE POWER OF ATTORNEY - ' + (isJoint ? 'CLIENT' : ''));
+    const durableTemplate = durablePowerOfAttorneyTemplate('client');
+    const durableText = processTemplate(durableTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += durableText;
+
+    // 6. Durable Power of Attorney - SPOUSE (if joint trust)
+    if (isJoint) {
+      combinedContent += addDocumentSeparator('DURABLE POWER OF ATTORNEY - SPOUSE');
+      const durableSpouseTemplate = durablePowerOfAttorneyTemplate('spouse');
+      const durableSpouseText = processTemplate(durableSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+      combinedContent += durableSpouseText;
+    }
+
+    // 7. Advanced Healthcare Directive - CLIENT (separate for each grantor)
+    console.log('Adding Advanced Healthcare Directive...');
+    combinedContent += addDocumentSeparator('ADVANCED HEALTHCARE DIRECTIVE - ' + (isJoint ? 'CLIENT' : ''));
+    const healthcareTemplate = advancedHealthcareDirectiveTemplate('client');
+    const healthcareText = processTemplate(healthcareTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += healthcareText;
+
+    // 8. Advanced Healthcare Directive - SPOUSE (if joint trust)
+    if (isJoint) {
+      combinedContent += addDocumentSeparator('ADVANCED HEALTHCARE DIRECTIVE - SPOUSE');
+      const healthcareSpouseTemplate = advancedHealthcareDirectiveTemplate('spouse');
+      const healthcareSpouseText = processTemplate(healthcareSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+      combinedContent += healthcareSpouseText;
+    }
+
+    // 9. HIPAA Authorization - CLIENT (separate for each grantor)
+    console.log('Adding HIPAA Authorization...');
+    combinedContent += addDocumentSeparator('HIPAA AUTHORIZATION - ' + (isJoint ? 'CLIENT' : ''));
+    const hipaaTemplate = hipaaAuthorizationTemplate('client');
+    const hipaaText = processTemplate(hipaaTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += hipaaText;
+
+    // 10. HIPAA Authorization - SPOUSE (if joint trust)
+    if (isJoint) {
+      combinedContent += addDocumentSeparator('HIPAA AUTHORIZATION - SPOUSE');
+      const hipaaSpouseTemplate = hipaaAuthorizationTemplate('spouse');
+      const hipaaSpouseText = processTemplate(hipaaSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+      combinedContent += hipaaSpouseText;
+    }
+
+    // 11. Personal Property Assignment - CLIENT (separate for each grantor)
+    console.log('Adding Personal Property Assignment...');
+    combinedContent += addDocumentSeparator('PERSONAL PROPERTY ASSIGNMENT - ' + (isJoint ? 'CLIENT' : ''));
+    const propAssignTemplate = personalPropertyAssignmentTemplate('client');
+    const propAssignText = processTemplate(propAssignTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += propAssignText;
+
+    // 12. Personal Property Assignment - SPOUSE (if joint trust)
+    if (isJoint) {
+      combinedContent += addDocumentSeparator('PERSONAL PROPERTY ASSIGNMENT - SPOUSE');
+      const propAssignSpouseTemplate = personalPropertyAssignmentTemplate('spouse');
+      const propAssignSpouseText = processTemplate(propAssignSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+      combinedContent += propAssignSpouseText;
+    }
+
+    // 13. Personal Property Memorandum - CLIENT (separate for each grantor)
+    console.log('Adding Personal Property Memorandum...');
+    combinedContent += addDocumentSeparator('PERSONAL PROPERTY MEMORANDUM - ' + (isJoint ? 'CLIENT' : ''));
+    const propMemoTemplate = personalPropertyMemorandumTemplate('client');
+    const propMemoText = processTemplate(propMemoTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+    combinedContent += propMemoText;
+
+    // 14. Personal Property Memorandum - SPOUSE (if joint trust)
+    if (isJoint) {
+      combinedContent += addDocumentSeparator('PERSONAL PROPERTY MEMORANDUM - SPOUSE');
+      const propMemoSpouseTemplate = personalPropertyMemorandumTemplate('spouse');
+      const propMemoSpouseText = processTemplate(propMemoSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
+      combinedContent += propMemoSpouseText;
+    }
+
+    console.log('Total combined content length:', combinedContent.length);
+
+    // Replace [PAGE_BREAK] markers with form feed characters
+    combinedContent = combinedContent.replace(/\[PAGE_BREAK\]/g, '\f');
+
+    // Generate Word document with all content
+    return generateWordFromText(combinedContent, 'Complete Estate Planning Package', formData);
+
+  } catch (error) {
+    console.error('Error generating complete package (Word):', error);
     throw error;
   }
 };

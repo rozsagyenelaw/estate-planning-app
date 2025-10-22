@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useFormContext } from '../../context/FormContext';
 import { Button, Card } from '../common';
-import { generateLivingTrust, generateLivingTrustWord, generateAllDocuments, generateCompleteEstatePlanningPackage, downloadDocument } from '../../services/documentGenerator';
+import { generateLivingTrust, generateLivingTrustWord, generateAllDocuments, generateCompleteEstatePlanningPackage, generateCompleteEstatePlanningPackageWord, downloadDocument } from '../../services/documentGenerator';
 import { sampleFormData } from '../../utils/testDocumentGeneration';
 import { saveFormDraft } from '../../services/autocompleteService';
 
@@ -74,17 +74,46 @@ const EstatePlanningForm = () => {
 
   const handleGenerateAllDocuments = async () => {
     setLoading(true);
-    setStatus('Generating complete estate planning package...');
+    setStatus('Generating complete estate planning package (PDF)...');
     try {
       const completePDF = await generateCompleteEstatePlanningPackage(formData);
       const clientName = formData.client.firstName + '_' + formData.client.lastName;
       const filename = `${clientName}_Complete_Estate_Planning_Package.pdf`;
       downloadDocument(completePDF, filename);
-      setStatus('Successfully generated complete estate planning package!');
+      setStatus('Successfully generated complete estate planning package (PDF)!');
       setTimeout(() => setStatus(''), 3000);
     } catch (error) {
       console.error('Error generating documents:', error);
       setStatus('Error generating documents. Please check the console for details.');
+      setTimeout(() => setStatus(''), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerateAllDocumentsWord = async () => {
+    setLoading(true);
+    setStatus('Generating complete estate planning package (Word)...');
+    try {
+      const blob = await generateCompleteEstatePlanningPackageWord(formData);
+      const clientName = formData.client.firstName + '_' + formData.client.lastName;
+      const filename = `${clientName}_Complete_Estate_Planning_Package.docx`;
+
+      // Create download link for Blob
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      setStatus('Successfully generated complete estate planning package (Word)!');
+      setTimeout(() => setStatus(''), 3000);
+    } catch (error) {
+      console.error('Error generating Word document:', error);
+      setStatus('Error generating Word document. Please check the console for details.');
       setTimeout(() => setStatus(''), 5000);
     } finally {
       setLoading(false);
@@ -210,7 +239,16 @@ const EstatePlanningForm = () => {
               loading={loading}
               disabled={loading}
             >
-              Generate Complete Estate Plan
+              Generate Complete Estate Plan (PDF)
+            </Button>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={handleGenerateAllDocumentsWord}
+              loading={loading}
+              disabled={loading}
+            >
+              Generate Complete Estate Plan (Word)
             </Button>
           </div>
 
