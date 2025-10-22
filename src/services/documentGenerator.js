@@ -51,13 +51,6 @@ const addCoverPage = (doc, formData, documentTitle) => {
 
   yPos += 0.3;
 
-  yPos += 0.8;
-
-  // Client name
-  doc.setFont('times', 'normal');
-  doc.setFontSize(14);
-  doc.text(`${formData.client.firstName} ${formData.client.lastName}`, pageWidth / 2, yPos, { align: 'center' });
-
   // Footer - Prepared by
   doc.setFont('times', 'normal');
   doc.setFontSize(12);
@@ -183,7 +176,7 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
       if (line.match(/^Section \d+\.\d+/)) {
         currentY += baseLineHeight * 0.8;
         doc.setFont('times', 'bold');
-        doc.setFontSize(12);
+        doc.setFontSize(14);
         const wrappedSection = doc.splitTextToSize(line, contentWidth);
         for (let w of wrappedSection) {
           if (currentY > pageHeight - marginBottom - 0.3) {
@@ -197,6 +190,7 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
         // Add blank line after section header
         currentY += baseLineHeight;
         doc.setFont('times', 'normal');
+        doc.setFontSize(12);
         continue;
       }
 
@@ -228,6 +222,7 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
           }
         }
         doc.setFont('times', 'normal');
+        doc.setFontSize(12);
         continue;
       }
 
