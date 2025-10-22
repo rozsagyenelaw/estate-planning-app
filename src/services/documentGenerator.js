@@ -112,12 +112,9 @@ const generatePDFFromText = (textContent, documentTitle, formData = null) => {
     const lines = textContent.split('\n');
     console.log('Processing', lines.length, 'lines with formatting...');
 
-    // Add page numbers
+    // NO PAGE NUMBERS - user requested removal
     const addPageNumber = () => {
-      const pageCount = doc.internal.getNumberOfPages();
-      doc.setFont('times', 'normal');
-      doc.setFontSize(10);
-      doc.text(`Page ${pageCount}`, pageWidth / 2, pageHeight - 0.5, { align: 'center' });
+      // Empty - no page numbers
     };
 
     for (let i = 0; i < lines.length; i++) {

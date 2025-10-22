@@ -1,14 +1,7 @@
 export const singleTrustTemplate = (formData) => `
-THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} LIVING TRUST
-DATED ${formData.currentDate}
-${formData.isRestatement ? `Restatement of trust originally dated ${formData.originalTrustDate}` : ''}
+${formData.isRestatement ? `On ${formData.originalTrustDate}, I, ${formData.client.firstName} ${formData.client.lastName}, established The ${formData.client.firstName} ${formData.client.lastName} Living Trust, and reserved the right to amend the trust, in whole or in part. On this day, ${formData.currentDate}, I revoke all prior restatements and amendments to that instrument and now exercise my power to amend that instrument in its entirety, so that after amendment The ${formData.client.firstName} ${formData.client.lastName} Living Trust now states:
 
-
-${formData.isRestatement ? `
-On ${formData.originalTrustDate}, I, ${formData.client.firstName} ${formData.client.lastName}, established The ${formData.client.firstName} ${formData.client.lastName} Living Trust, and reserved the right to amend the trust, in whole or in part. On this day, ${formData.currentDate}, I revoke all prior restatements and amendments to that instrument and now exercise my power to amend that instrument in its entirety, so that after amendment The ${formData.client.firstName} ${formData.client.lastName} Living Trust now states:
-` : ''}
-
-Article One
+` : ''}Article One
 Establishing the Trust
 The parties to this ${formData.isRestatement ? 'restated ' : ''}trust are ${formData.client.firstName} ${formData.client.lastName} (the Grantor) and ${formData.client.firstName} ${formData.client.lastName} (the Trustee).
 I intend to create a valid trust under the laws of ${formData.client.state} and under the laws of any state in which any trust created under this trust document is administered.  The terms of this trust prevail over any provision of ${formData.client.state} law, except those provisions that are mandatory and may not be waived.
