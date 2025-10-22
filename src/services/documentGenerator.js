@@ -7,7 +7,7 @@ import jsPDF from 'jspdf';
 import { formatDate, formatPhoneNumber } from '../utils/formatters';
 import { DOCUMENT_TYPES } from '../utils/constants';
 import { processTemplate, prepareTemplateData } from './templateEngine';
-import { singleLivingTrustTemplate } from '../templates/singleLivingTrustNew';
+import { singleLivingTrustTemplate } from '../templates/singleLivingTrust';
 import { jointLivingTrustTemplate } from '../templates/jointLivingTrust';
 import { singleIrrevocableTrustTemplate } from '../templates/singleIrrevocableTrust';
 import { jointIrrevocableTrustTemplate } from '../templates/jointIrrevocableTrust';
@@ -83,55 +83,80 @@ const generatePDFFromHTML = async (htmlContent, documentTitle) => {
  * @returns {jsPDF} PDF document
  */
 export const generateLivingTrust = async (formData) => {
-  // Prepare data for template
-  const templateData = prepareTemplateData(formData);
-
-  // DEBUG: Log what we're working with
   console.log('=== DEBUG: generateLivingTrust ===');
   console.log('formData.trustType:', formData.trustType);
-  console.log('singleLivingTrustTemplate type:', typeof singleLivingTrustTemplate);
-  console.log('singleLivingTrustTemplate defined?', singleLivingTrustTemplate !== undefined);
-  if (singleLivingTrustTemplate) {
-    console.log('singleLivingTrustTemplate length:', singleLivingTrustTemplate.length);
-  }
+  console.log('formData:', formData);
 
-  // Select template based on trust type
-  let template;
-  switch (formData.trustType) {
-    case 'single':
-      template = singleLivingTrustTemplate;
-      break;
-    case 'joint':
-      template = jointLivingTrustTemplate;
-      break;
-    case 'single_irrevocable':
-      template = singleIrrevocableTrustTemplate;
-      break;
-    case 'joint_irrevocable':
-      template = jointIrrevocableTrustTemplate;
-      break;
-    default:
-      // Fallback to single trust for backward compatibility
-      template = formData.isJoint ? jointLivingTrustTemplate : singleLivingTrustTemplate;
-  }
+  // For single living trust, use the old system (function-based template)
+  let content;
+  if (formData.trustType === 'single' || !formData.trustType) {
+    console.log('Using OLD SYSTEM: singleLivingTrustTemplate is a function');
 
-  console.log('Selected template type:', typeof template);
-  console.log('Selected template defined?', template !== undefined);
-  if (template) {
-    console.log('Selected template length:', template.length);
+    // Call the template function with formData directly
+    content = singleLivingTrustTemplate(formData);
+
+    console.log('Template function returned content length:', content.length);
+    console.log('First 200 chars:', content.substring(0, 200));
   } else {
-    console.error('ERROR: Template is undefined!');
+    // For other trust types, use the new system (placeholder-based templates)
+    console.log('Using NEW SYSTEM: placeholder-based template');
+
+    const templateData = prepareTemplateData(formData);
+    let template;
+
+    switch (formData.trustType) {
+      case 'joint':
+        template = jointLivingTrustTemplate;
+        break;
+      case 'single_irrevocable':
+        template = singleIrrevocableTrustTemplate;
+        break;
+      case 'joint_irrevocable':
+        template = jointIrrevocableTrustTemplate;
+        break;
+      default:
+        template = formData.isJoint ? jointLivingTrustTemplate : singleLivingTrustTemplate;
+    }
+
+    content = processTemplate(template, templateData);
   }
 
-  // Process template with data
-  const processedHtml = processTemplate(template, templateData);
+  console.log('Final content length:', content.length);
 
   // Determine document title
   const isIrrevocable = formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable';
   const docTitle = isIrrevocable ? 'Irrevocable Trust' : 'Living Trust';
 
+  // For old system (plain text), wrap in minimal HTML for PDF generation
+  let htmlContent;
+  if (formData.trustType === 'single' || !formData.trustType) {
+    htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.6;
+      margin: 0.5in;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+${content}
+</body>
+</html>`;
+  } else {
+    htmlContent = content;
+  }
+
+  console.log('HTML content ready, generating PDF...');
+
   // Generate PDF
-  return generatePDFFromHTML(processedHtml, docTitle);
+  return generatePDFFromHTML(htmlContent, docTitle);
 };
 
 /**

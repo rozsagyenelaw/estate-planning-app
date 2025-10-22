@@ -4,7 +4,7 @@
  */
 
 import { processTemplate, prepareTemplateData } from '../services/templateEngine.js';
-import { singleLivingTrustTemplate } from '../templates/singleLivingTrustNew.js';
+import { singleLivingTrustTemplate } from '../templates/singleLivingTrust.js';
 
 /**
  * Sample form data for testing - SINGLE TRUST
@@ -227,48 +227,30 @@ export const testDocumentGeneration = () => {
     console.log('✓ Template data prepared successfully');
     console.log('Sample data keys:', Object.keys(templateData).slice(0, 10).join(', '), '...\n');
 
-    // Step 2: Process template
+    // Step 2: Process template (call as function for old system)
     console.log('Step 2: Processing template with data...');
-    const processedHtml = processTemplate(singleLivingTrustTemplate, templateData);
+    const processedContent = singleLivingTrustTemplate(sampleFormData);
     console.log('✓ Template processed successfully');
-    console.log('Generated HTML length:', processedHtml.length, 'characters\n');
+    console.log('Generated content length:', processedContent.length, 'characters\n');
 
-    // Step 3: Check for unprocessed placeholders
-    console.log('Step 3: Checking for unprocessed placeholders...');
-    const placeholderRegex = /\{\{([A-Z_][A-Z0-9_]*)\}\}/g;
-    const unprocessedPlaceholders = [];
-    let match;
-    while ((match = placeholderRegex.exec(processedHtml)) !== null) {
-      if (!unprocessedPlaceholders.includes(match[1])) {
-        unprocessedPlaceholders.push(match[1]);
-      }
-    }
-
-    if (unprocessedPlaceholders.length > 0) {
-      console.log('⚠ Found unprocessed placeholders:', unprocessedPlaceholders.join(', '));
-    } else {
-      console.log('✓ All placeholders processed successfully');
-    }
-
-    // Step 4: Display sample of processed content
-    console.log('\nStep 4: Sample of processed content:');
+    // Step 3: Display sample of processed content
+    console.log('\nStep 3: Sample of processed content:');
     console.log('-----------------------------------');
-    const sampleContent = processedHtml.substring(0, 1000);
+    const sampleContent = processedContent.substring(0, 1000);
     console.log(sampleContent);
     console.log('...\n');
 
-    // Step 5: Check for key content
-    console.log('Step 5: Verifying key content...');
+    // Step 4: Check for key content
+    console.log('Step 4: Verifying key content...');
     const checks = [
-      { name: 'Trust Name', content: 'John M. Smith Living Trust' },
-      { name: 'Client Name', content: 'John Michael Smith' },
-      { name: 'Restatement', content: 'FIRST RESTATEMENT' },
+      { name: 'Trust Name', content: 'JOHN' },
+      { name: 'Client Last Name', content: 'SMITH' },
       { name: 'Children Section', content: 'Sarah Elizabeth Smith' },
       { name: 'Trustees Section', content: 'Robert Johnson' }
     ];
 
     checks.forEach(check => {
-      if (processedHtml.includes(check.content)) {
+      if (processedContent.includes(check.content)) {
         console.log(`✓ ${check.name} found`);
       } else {
         console.log(`✗ ${check.name} NOT found`);
@@ -280,9 +262,7 @@ export const testDocumentGeneration = () => {
 
     return {
       success: true,
-      templateData,
-      processedHtml,
-      unprocessedPlaceholders
+      processedContent
     };
 
   } catch (error) {

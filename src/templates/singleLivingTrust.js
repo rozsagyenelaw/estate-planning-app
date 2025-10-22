@@ -778,4 +778,6 @@ ______________________________________________________________________________
 ______________________________________________________________________________
 `;
 
+// Export with both names for compatibility
+export { singleTrustTemplate as singleLivingTrustTemplate };
 export default singleTrustTemplate;
