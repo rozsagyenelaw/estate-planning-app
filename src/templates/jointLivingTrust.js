@@ -39,13 +39,31 @@ Section 1.03      Transferring Property to the Trust
 
 Any person or entity may transfer any property to the trust in any manner authorized by law.
 
-        (a)      Initial Funding of the Trust
+           (a)      Initial Funding of the Trust
 
 By executing this instrument, we transfer to the Trustee the properties listed in the Schedule of Assets.
 
-        (b)      Acceptance by the Trustee
+           (b)      Acceptance by the Trustee
 
 By executing this instrument, the Trustee accepts and agrees to hold the properties listed in the Schedule of Assets as trust property. All property transferred to the trust after the date of this trust must be acceptable to the Trustee. The Trustee may refuse to accept any property. The Trustee shall hold, administer, and dispose of all accepted trust property for our benefit and for the benefit of our beneficiaries, in accordance with the terms of this trust.
+
+           (c)      Community Property
+
+Any community property transferred to the trust, including the property's income and the proceeds from the property's sale or exchange, will retain its character as community property during our lives, to the same extent as if it had not been transferred to the trust.
+
+           (d)      Separate Property
+
+Separate property transferred to the trust will retain its character as separate property. Our separate property may be identified as the separate property of either of us on the attached schedules. The separate property of either of us, including the property's income and proceeds from the property's sale or exchange, will remain separate property. Each of us has the unrestricted right to remove all or any part of our separate property at any time.
+
+An amount that is payable to the trust on a life insurance policy that is the separate property of either of us will retain its character as separate property.
+
+           (e)      Joint Property
+
+If joint tenancy property with right of survivorship is transferred to the trust, we will be considered to have severed the joint tenancy immediately before transferring the property, and no right of survivorship will exist with respect to this property.
+
+           (f)      Marital Property Agreement Controls
+
+If we have entered into or in the future enter into a marital property agreement, the terms of that agreement will control the characterization of property titled in the name of the trust. In the absence of a marital property agreement, property titled in the name of the trust will be governed by the terms of this trust.
 
 Section 1.04      Powers Reserved by Us as Grantors
 
