@@ -111,8 +111,10 @@ export const FORM_SECTIONS = {
 // Default form values
 export const DEFAULT_CLIENT = {
   notaryDate: '',
-  name: '',
-  birthdate: '',
+  firstName: '',
+  middleName: '',
+  lastName: '',
+  dateOfBirth: '',
   sex: '',
   ssn: '',
   maritalStatus: '',
@@ -120,7 +122,7 @@ export const DEFAULT_CLIENT = {
   phone: '',
   address: '',
   city: '',
-  zipCode: '',
+  zip: '',
   county: '',
   state: 'CA',
 };

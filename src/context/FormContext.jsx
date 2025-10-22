@@ -129,7 +129,6 @@ export const FormProvider = ({ children }) => {
     }));
 
     // Add to autocomplete suggestions
-    if (field === 'name' && value) addNameSuggestion(value);
     if (field === 'address' && value) addAddressSuggestion(value);
     if (field === 'phone' && value) addPhoneSuggestion(value);
     if (field === 'city' && value) addCitySuggestion(value);
@@ -147,7 +146,6 @@ export const FormProvider = ({ children }) => {
     }));
 
     // Add to autocomplete suggestions
-    if (field === 'name' && value) addNameSuggestion(value);
     if (field === 'address' && value) addAddressSuggestion(value);
     if (field === 'phone' && value) addPhoneSuggestion(value);
     if (field === 'city' && value) addCitySuggestion(value);

@@ -3,6 +3,7 @@ import { useFormContext } from '../../context/FormContext';
 import { Button, Card } from '../common';
 import { generateLivingTrust, generateAllDocuments, downloadDocument } from '../../services/documentGenerator';
 import { sampleFormData } from '../../utils/testDocumentGeneration';
+import { saveFormDraft } from '../../services/autocompleteService';
 
 // Import form sections
 import TrustTypeSection from './sections/TrustTypeSection';
@@ -70,6 +71,17 @@ const EstatePlanningForm = () => {
     }
   };
 
+  const handleSaveForm = () => {
+    const success = saveFormDraft(formData);
+    if (success) {
+      setStatus('Form data saved successfully!');
+      setTimeout(() => setStatus(''), 3000);
+    } else {
+      setStatus('Error saving form data. Please try again.');
+      setTimeout(() => setStatus(''), 5000);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="space-y-6">
@@ -134,9 +146,17 @@ const EstatePlanningForm = () => {
         {/* Anatomical Gifts */}
         <AnatomicalGiftsSection />
 
-        {/* Generate Buttons */}
+        {/* Save and Generate Buttons */}
         <Card>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={handleSaveForm}
+              disabled={loading}
+            >
+              Save Form Data
+            </Button>
             <Button
               variant="secondary"
               size="lg"

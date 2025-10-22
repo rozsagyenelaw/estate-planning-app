@@ -50,20 +50,33 @@ const ClientInfoSection = () => {
         required
       />
 
-      <Autocomplete
-        label="Full Name"
-        value={person.name}
-        onChange={(e) => handleChange('name', e.target.value)}
-        onSelect={(value) => handleChange('name', value)}
-        suggestions={getNameSuggestions()}
-        placeholder="Enter full name"
+      <Input
+        label="First Name"
+        value={person.firstName}
+        onChange={(e) => handleChange('firstName', e.target.value)}
+        placeholder="Enter first name"
+        required
+      />
+
+      <Input
+        label="Middle Name"
+        value={person.middleName}
+        onChange={(e) => handleChange('middleName', e.target.value)}
+        placeholder="Enter middle name (optional)"
+      />
+
+      <Input
+        label="Last Name"
+        value={person.lastName}
+        onChange={(e) => handleChange('lastName', e.target.value)}
+        placeholder="Enter last name"
         required
       />
 
       <DatePicker
-        label="Birthdate"
-        value={person.birthdate}
-        onChange={(e) => handleChange('birthdate', e.target.value)}
+        label="Date of Birth"
+        value={person.dateOfBirth}
+        onChange={(e) => handleChange('dateOfBirth', e.target.value)}
         required
       />
 
@@ -136,8 +149,8 @@ const ClientInfoSection = () => {
 
         <Input
           label="Zip Code"
-          value={person.zipCode}
-          onChange={(e) => handleChange('zipCode', e.target.value)}
+          value={person.zip}
+          onChange={(e) => handleChange('zip', e.target.value)}
           placeholder="12345"
           maxLength={5}
           required

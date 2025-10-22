@@ -7,7 +7,7 @@ import jsPDF from 'jspdf';
 import { formatDate, formatPhoneNumber } from '../utils/formatters';
 import { DOCUMENT_TYPES } from '../utils/constants';
 import { processTemplate, prepareTemplateData } from './templateEngine';
-import { singleLivingTrustTemplate } from '../templates/singleLivingTrust';
+import { singleLivingTrustTemplate } from '../templates/singleLivingTrustNew';
 import { jointLivingTrustTemplate } from '../templates/jointLivingTrust';
 import { singleIrrevocableTrustTemplate } from '../templates/singleIrrevocableTrust';
 import { jointIrrevocableTrustTemplate } from '../templates/jointIrrevocableTrust';

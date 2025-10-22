@@ -4,7 +4,7 @@
  */
 
 import { processTemplate, prepareTemplateData } from '../services/templateEngine.js';
-import { singleLivingTrustTemplate } from '../templates/singleLivingTrust.js';
+import { singleLivingTrustTemplate } from '../templates/singleLivingTrustNew.js';
 
 /**
  * Sample form data for testing - SINGLE TRUST
