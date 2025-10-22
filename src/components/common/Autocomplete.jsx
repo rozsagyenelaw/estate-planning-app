@@ -71,8 +71,11 @@ const Autocomplete = forwardRef(({
   };
 
   const handleClick = (suggestion) => {
+    console.log('✅ handleClick called with suggestion:', suggestion);
+    console.log('  → onSelect function exists?', !!onSelect);
     setShowSuggestions(false);
     if (onSelect) {
+      console.log('  → Calling onSelect with:', suggestion);
       onSelect(suggestion);
     }
   };
@@ -138,7 +141,11 @@ const Autocomplete = forwardRef(({
           {filteredSuggestions.map((suggestion, index) => (
             <li
               key={index}
-              onClick={() => handleClick(suggestion)}
+              onMouseDown={(e) => {
+                e.preventDefault(); // Prevent input blur
+                console.log('🖱️ Suggestion clicked:', suggestion);
+                handleClick(suggestion);
+              }}
               className={`px-4 py-2 cursor-pointer hover:bg-primary-50 ${
                 index === activeSuggestionIndex ? 'bg-primary-100' : ''
               }`}
