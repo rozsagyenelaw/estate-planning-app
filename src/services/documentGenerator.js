@@ -1019,42 +1019,27 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
       return `\n\n\n[PAGE_BREAK]\n\n\n${title}\n\n`;
     };
 
-    // 1. Living Trust (main document)
-    console.log('Adding Living Trust...');
-    if (isJoint) {
-      combinedContent += jointLivingTrustTemplate(formData);
-    } else {
-      combinedContent += singleLivingTrustTemplate(formData);
-    }
-
-    // 2. Certificate of Trust
+    // 1. Certificate of Trust (joint document - one for both grantors)
     console.log('Adding Certificate of Trust...');
-    combinedContent += addDocumentSeparator('CERTIFICATE OF TRUST');
     const certTemplate = certificateOfTrustTemplate();
     const certText = processTemplate(certTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
     combinedContent += certText;
 
-    // 3. Trustee Affidavit
+    // 2. Trustee Affidavit (joint document - one for both grantors)
     console.log('Adding Trustee Affidavit...');
     combinedContent += addDocumentSeparator('TRUSTEE AFFIDAVIT');
     const affidavitTemplate = trusteeAffidavitTemplate();
     const affidavitText = processTemplate(affidavitTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
     combinedContent += affidavitText;
 
-    // 4. Confirmation of Names
-    console.log('Adding Confirmation of Names...');
-    combinedContent += addDocumentSeparator('CONFIRMATION OF NAMES AND FIDUCIARIES');
-    const confirmationTemplate = confirmationOfNamesTemplate();
-    const confirmationText = processTemplate(confirmationTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += confirmationText;
-
-    // 5. Pour Over Will(s)
+    // 3. Pour Over Will - CLIENT (separate for each grantor)
     console.log('Adding Pour Over Will...');
     combinedContent += addDocumentSeparator('POUR OVER WILL - ' + (isJoint ? 'CLIENT' : ''));
     const pourOverTemplate = pourOverWillTemplate('client');
     const pourOverText = processTemplate(pourOverTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
     combinedContent += pourOverText;
 
+    // 4. Pour Over Will - SPOUSE (if joint trust)
     if (isJoint) {
       combinedContent += addDocumentSeparator('POUR OVER WILL - SPOUSE');
       const pourOverSpouseTemplate = pourOverWillTemplate('spouse');
@@ -1062,13 +1047,14 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
       combinedContent += pourOverSpouseText;
     }
 
-    // 6. Durable Power of Attorney
+    // 5. Durable Power of Attorney - CLIENT (separate for each grantor)
     console.log('Adding Durable Power of Attorney...');
     combinedContent += addDocumentSeparator('DURABLE POWER OF ATTORNEY - ' + (isJoint ? 'CLIENT' : ''));
     const durableTemplate = durablePowerOfAttorneyTemplate('client');
     const durableText = processTemplate(durableTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
     combinedContent += durableText;
 
+    // 6. Durable Power of Attorney - SPOUSE (if joint trust)
     if (isJoint) {
       combinedContent += addDocumentSeparator('DURABLE POWER OF ATTORNEY - SPOUSE');
       const durableSpouseTemplate = durablePowerOfAttorneyTemplate('spouse');
@@ -1076,13 +1062,14 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
       combinedContent += durableSpouseText;
     }
 
-    // 7. Advanced Healthcare Directive
+    // 7. Advanced Healthcare Directive - CLIENT (separate for each grantor)
     console.log('Adding Advanced Healthcare Directive...');
     combinedContent += addDocumentSeparator('ADVANCED HEALTHCARE DIRECTIVE - ' + (isJoint ? 'CLIENT' : ''));
     const healthcareTemplate = advancedHealthcareDirectiveTemplate('client');
     const healthcareText = processTemplate(healthcareTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
     combinedContent += healthcareText;
 
+    // 8. Advanced Healthcare Directive - SPOUSE (if joint trust)
     if (isJoint) {
       combinedContent += addDocumentSeparator('ADVANCED HEALTHCARE DIRECTIVE - SPOUSE');
       const healthcareSpouseTemplate = advancedHealthcareDirectiveTemplate('spouse');
@@ -1090,13 +1077,14 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
       combinedContent += healthcareSpouseText;
     }
 
-    // 8. HIPAA Authorization
+    // 9. HIPAA Authorization - CLIENT (separate for each grantor)
     console.log('Adding HIPAA Authorization...');
     combinedContent += addDocumentSeparator('HIPAA AUTHORIZATION - ' + (isJoint ? 'CLIENT' : ''));
     const hipaaTemplate = hipaaAuthorizationTemplate('client');
     const hipaaText = processTemplate(hipaaTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
     combinedContent += hipaaText;
 
+    // 10. HIPAA Authorization - SPOUSE (if joint trust)
     if (isJoint) {
       combinedContent += addDocumentSeparator('HIPAA AUTHORIZATION - SPOUSE');
       const hipaaSpouseTemplate = hipaaAuthorizationTemplate('spouse');
@@ -1104,13 +1092,14 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
       combinedContent += hipaaSpouseText;
     }
 
-    // 9. Personal Property Assignment
+    // 11. Personal Property Assignment - CLIENT (separate for each grantor)
     console.log('Adding Personal Property Assignment...');
     combinedContent += addDocumentSeparator('PERSONAL PROPERTY ASSIGNMENT - ' + (isJoint ? 'CLIENT' : ''));
     const propAssignTemplate = personalPropertyAssignmentTemplate('client');
     const propAssignText = processTemplate(propAssignTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
     combinedContent += propAssignText;
 
+    // 12. Personal Property Assignment - SPOUSE (if joint trust)
     if (isJoint) {
       combinedContent += addDocumentSeparator('PERSONAL PROPERTY ASSIGNMENT - SPOUSE');
       const propAssignSpouseTemplate = personalPropertyAssignmentTemplate('spouse');
@@ -1118,32 +1107,19 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
       combinedContent += propAssignSpouseText;
     }
 
-    // 10. Personal Property Memorandum
+    // 13. Personal Property Memorandum - CLIENT (separate for each grantor)
     console.log('Adding Personal Property Memorandum...');
     combinedContent += addDocumentSeparator('PERSONAL PROPERTY MEMORANDUM - ' + (isJoint ? 'CLIENT' : ''));
     const propMemoTemplate = personalPropertyMemorandumTemplate('client');
     const propMemoText = processTemplate(propMemoTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
     combinedContent += propMemoText;
 
+    // 14. Personal Property Memorandum - SPOUSE (if joint trust)
     if (isJoint) {
       combinedContent += addDocumentSeparator('PERSONAL PROPERTY MEMORANDUM - SPOUSE');
       const propMemoSpouseTemplate = personalPropertyMemorandumTemplate('spouse');
       const propMemoSpouseText = processTemplate(propMemoSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
       combinedContent += propMemoSpouseText;
-    }
-
-    // 11. Memorial Instructions
-    console.log('Adding Memorial Instructions...');
-    combinedContent += addDocumentSeparator('MEMORIAL INSTRUCTIONS - ' + (isJoint ? 'CLIENT' : ''));
-    const memorialTemplate = memorialInstructionsTemplate('client');
-    const memorialText = processTemplate(memorialTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += memorialText;
-
-    if (isJoint) {
-      combinedContent += addDocumentSeparator('MEMORIAL INSTRUCTIONS - SPOUSE');
-      const memorialSpouseTemplate = memorialInstructionsTemplate('spouse');
-      const memorialSpouseText = processTemplate(memorialSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-      combinedContent += memorialSpouseText;
     }
 
     console.log('Total combined content length:', combinedContent.length);
