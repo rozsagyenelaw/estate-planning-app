@@ -451,29 +451,29 @@ Section 6.${formData.specificDistributions && formData.specificDistributions.len
 Any property not distributed under this or prior Articles of this instrument will be distributed as provided in the following Articles.
 
 Article Seven
-Creating Trust Shares Upon Death of First Grantor
+Creating Trust Shares upon the Death of a Grantor
+
+The Trustee shall administer the deceased Grantor's remaining trust property as provided in this Article.
 
 Section 7.01      Allocation to the Survivor's Trust
 
 The Trustee shall allocate all of the deceased Grantor's remaining trust property to the Survivor's Trust, and shall administer the property as provided in Article Eight.
 
-Section 7.02      Disclaimer by Surviving Grantor
+Section 7.02      Disposition of Property upon Disclaimer by the Surviving Grantor
 
-The surviving Grantor may disclaim any portion of any interest in property passing from the deceased Grantor. If the surviving Grantor disclaims any property that would otherwise be allocated to the Survivor's Trust, the Trustee shall allocate the disclaimed property to the Family Trust and administer it as provided in Article Nine.
+The surviving Grantor, his or her fiduciary, or his or her agent serving under a power of attorney may disclaim any portion of any interest in or power over property passing from the deceased Grantor to or for the surviving Grantor's benefit under this instrument. If the surviving Grantor disclaims any property that would otherwise be allocated to the Survivor's Trust, the Trustee shall allocate the disclaimed property to the Non-Marital Share. The Trustee shall administer the Non-Marital Share as provided in Article Nine.
 
-Any disclaimer must be made in accordance with the requirements of federal and California law governing qualified disclaimers.
+If the surviving Grantor disclaims his or her interest in any portion of the Non-Marital Share, the Trustee shall dispose of the disclaimed interest as though the surviving Grantor had predeceased the deceased Grantor.
 
-Section 7.03      Allocation of Assets
+Section 7.03      Option to Allocate Deceased Grantor Trust Property to the Survivor's Trust
 
-In making allocations between trusts, the Trustee may:
+The Trustee may waive any allocation to the Marital and Non-Marital Shares and administer all of the trust assets under the provisions of the Survivor's Trust if:
 
-     (a) Allocate assets in kind, in cash, or partly in each;
+the combined value of the deceased and surviving Grantors' assets is less than the exemption equivalent for the deceased Grantor allowed by the Internal Revenue Service; and
 
-     (b) Allocate assets disproportionately; and
+all of the then-living current and remainder beneficiaries entitled to the assets of any trusts that would otherwise be created from the Marital Share, Non-Marital Share, or both agree to waive any allocation to those shares or trusts or both in writing.
 
-     (c) Make allocations on a non-pro rata basis, even if the resulting tax basis of property allocated to different trusts differs.
-
-The Trustee's judgment with respect to these matters is conclusive and binding on all persons interested in the trust.
+If any of the beneficiaries is a minor, the minor's parent or guardian may waive the allocation on behalf of the minor in writing.
 
 Article Eight
 The Survivor's Trust
