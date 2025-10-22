@@ -1,7 +1,7 @@
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Button, Autocomplete, Input, Select } from '../../common';
 import { DEFAULT_NEEDS_TRUST } from '../../../utils/constants';
-import { getNameSuggestions } from '../../../services/autocompleteService';
+import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
 
 const GeneralNeedsTrustSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
@@ -88,6 +88,7 @@ const GeneralNeedsTrustSection = () => {
                     onSelect={(value) =>
                       handleNeedsTrustChange(index, 'beneficiary', value)
                     }
+                    onBlur={(e) => addNameSuggestion(e.target.value)}
                     suggestions={getNameSuggestions()}
                     placeholder="Enter beneficiary name"
                     required

@@ -1,7 +1,7 @@
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Button, Input, DatePicker, Select, Autocomplete } from '../../common';
 import { DEFAULT_CHILD, RELATION_OPTIONS } from '../../../utils/constants';
-import { getNameSuggestions } from '../../../services/autocompleteService';
+import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
 
 const ChildrenSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
@@ -61,6 +61,7 @@ const ChildrenSection = () => {
                     value={child.name}
                     onChange={(e) => handleChildChange(index, 'name', e.target.value)}
                     onSelect={(value) => handleChildChange(index, 'name', value)}
+                    onBlur={(e) => addNameSuggestion(e.target.value)}
                     suggestions={getNameSuggestions()}
                     placeholder="Enter child's full name"
                     required

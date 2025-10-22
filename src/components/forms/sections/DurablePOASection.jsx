@@ -1,6 +1,6 @@
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Button, Checkbox, Autocomplete } from '../../common';
-import { getNameSuggestions } from '../../../services/autocompleteService';
+import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
 
 const DurablePOASection = () => {
   const { formData, updateFormData } = useFormContext();
@@ -98,6 +98,7 @@ const DurablePOASection = () => {
                     onSelect={(value) =>
                       handleRepresentativeChange(type, index, 'name', value)
                     }
+                    onBlur={(e) => addNameSuggestion(e.target.value)}
                     suggestions={getNameSuggestions()}
                     placeholder="Enter representative name"
                     required

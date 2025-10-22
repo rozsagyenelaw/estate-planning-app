@@ -3,8 +3,11 @@ import { Card, Button, Checkbox, Autocomplete, Input } from '../../common';
 import { DEFAULT_GUARDIAN } from '../../../utils/constants';
 import {
   getNameSuggestions,
+  addNameSuggestion,
   getAddressSuggestions,
+  addAddressSuggestion,
   getPhoneSuggestions,
+  addPhoneSuggestion,
 } from '../../../services/autocompleteService';
 import { formatPhoneNumber } from '../../../utils/formatters';
 
@@ -79,6 +82,7 @@ const GuardiansSection = () => {
                     value={guardian.name}
                     onChange={(e) => handleGuardianChange(index, 'name', e.target.value)}
                     onSelect={(value) => handleGuardianChange(index, 'name', value)}
+                    onBlur={(e) => addNameSuggestion(e.target.value)}
                     suggestions={getNameSuggestions()}
                     placeholder="Enter guardian's full name"
                     required
@@ -91,15 +95,19 @@ const GuardiansSection = () => {
                       handleGuardianChange(index, 'address', e.target.value)
                     }
                     onSelect={(value) => handleGuardianChange(index, 'address', value)}
+                    onBlur={(e) => addAddressSuggestion(e.target.value)}
                     suggestions={getAddressSuggestions()}
                     placeholder="Enter guardian's address"
                     required
                   />
 
-                  <Input
+                  <Autocomplete
                     label="Phone Number"
                     value={guardian.phone}
                     onChange={(e) => handleGuardianChange(index, 'phone', e.target.value)}
+                    onSelect={(value) => handleGuardianChange(index, 'phone', value)}
+                    onBlur={(e) => addPhoneSuggestion(e.target.value)}
+                    suggestions={getPhoneSuggestions()}
                     placeholder="(XXX) XXX-XXXX"
                     maxLength={14}
                     required

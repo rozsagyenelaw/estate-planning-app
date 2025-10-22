@@ -1,6 +1,6 @@
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Button, Autocomplete } from '../../common';
-import { getNameSuggestions } from '../../../services/autocompleteService';
+import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
 
 const PourOverWillSection = () => {
   const { formData, updateFormData } = useFormContext();
@@ -77,6 +77,7 @@ const PourOverWillSection = () => {
                     onSelect={(value) =>
                       handleRepresentativeChange(type, index, value)
                     }
+                    onBlur={(e) => addNameSuggestion(e.target.value)}
                     suggestions={getNameSuggestions()}
                     placeholder="Enter representative name"
                     required

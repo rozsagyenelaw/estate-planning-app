@@ -6,7 +6,7 @@ import {
   DISTRIBUTION_TYPE,
   SEX_OPTIONS,
 } from '../../../utils/constants';
-import { getNameSuggestions } from '../../../services/autocompleteService';
+import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
 
 const ResiduaryDistributionSection = () => {
   const { formData, updateFormData, addArrayItem, updateArrayItem, removeArrayItem } =
@@ -136,6 +136,7 @@ const ResiduaryDistributionSection = () => {
                         onSelect={(value) =>
                           handleBeneficiaryChange(index, 'name', value)
                         }
+                        onBlur={(e) => addNameSuggestion(e.target.value)}
                         suggestions={getNameSuggestions()}
                         placeholder="Enter beneficiary name"
                         required

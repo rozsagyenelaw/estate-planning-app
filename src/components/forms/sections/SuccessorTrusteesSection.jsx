@@ -3,8 +3,11 @@ import { Card, Button, Checkbox, Autocomplete, Input } from '../../common';
 import { DEFAULT_TRUSTEE } from '../../../utils/constants';
 import {
   getNameSuggestions,
+  addNameSuggestion,
   getAddressSuggestions,
+  addAddressSuggestion,
   getPhoneSuggestions,
+  addPhoneSuggestion,
 } from '../../../services/autocompleteService';
 import { formatPhoneNumber } from '../../../utils/formatters';
 
@@ -75,6 +78,7 @@ const SuccessorTrusteesSection = () => {
                     value={trustee.name}
                     onChange={(e) => handleTrusteeChange(index, 'name', e.target.value)}
                     onSelect={(value) => handleTrusteeChange(index, 'name', value)}
+                    onBlur={(e) => addNameSuggestion(e.target.value)}
                     suggestions={getNameSuggestions()}
                     placeholder="Enter trustee's full name"
                     required
@@ -85,15 +89,19 @@ const SuccessorTrusteesSection = () => {
                     value={trustee.address}
                     onChange={(e) => handleTrusteeChange(index, 'address', e.target.value)}
                     onSelect={(value) => handleTrusteeChange(index, 'address', value)}
+                    onBlur={(e) => addAddressSuggestion(e.target.value)}
                     suggestions={getAddressSuggestions()}
                     placeholder="Enter trustee's address"
                     required
                   />
 
-                  <Input
+                  <Autocomplete
                     label="Phone Number"
                     value={trustee.phone}
                     onChange={(e) => handleTrusteeChange(index, 'phone', e.target.value)}
+                    onSelect={(value) => handleTrusteeChange(index, 'phone', value)}
+                    onBlur={(e) => addPhoneSuggestion(e.target.value)}
+                    suggestions={getPhoneSuggestions()}
                     placeholder="(XXX) XXX-XXXX"
                     maxLength={14}
                     required

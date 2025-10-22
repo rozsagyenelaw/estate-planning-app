@@ -2,8 +2,11 @@ import { useFormContext } from '../../../context/FormContext';
 import { Card, Button, Checkbox, Autocomplete, Input } from '../../common';
 import {
   getNameSuggestions,
+  addNameSuggestion,
   getAddressSuggestions,
+  addAddressSuggestion,
   getPhoneSuggestions,
+  addPhoneSuggestion,
 } from '../../../services/autocompleteService';
 import { formatPhoneNumber } from '../../../utils/formatters';
 
@@ -106,6 +109,7 @@ const HealthcarePOASection = () => {
                     onSelect={(value) =>
                       handleRepresentativeChange(type, index, 'name', value)
                     }
+                    onBlur={(e) => addNameSuggestion(e.target.value)}
                     suggestions={getNameSuggestions()}
                     placeholder="Enter representative name"
                     required
@@ -120,17 +124,23 @@ const HealthcarePOASection = () => {
                     onSelect={(value) =>
                       handleRepresentativeChange(type, index, 'address', value)
                     }
+                    onBlur={(e) => addAddressSuggestion(e.target.value)}
                     suggestions={getAddressSuggestions()}
                     placeholder="Enter address"
                     required
                   />
 
-                  <Input
+                  <Autocomplete
                     label="Phone Number"
                     value={rep.phone}
                     onChange={(e) =>
                       handleRepresentativeChange(type, index, 'phone', e.target.value)
                     }
+                    onSelect={(value) =>
+                      handleRepresentativeChange(type, index, 'phone', value)
+                    }
+                    onBlur={(e) => addPhoneSuggestion(e.target.value)}
+                    suggestions={getPhoneSuggestions()}
                     placeholder="(XXX) XXX-XXXX"
                     maxLength={14}
                     required

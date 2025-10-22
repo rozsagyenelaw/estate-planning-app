@@ -55,25 +55,34 @@ const ClientInfoSection = () => {
         required
       />
 
-      <Input
+      <Autocomplete
         label="First Name"
         value={person.firstName}
         onChange={(e) => handleChange('firstName', e.target.value)}
+        onSelect={(value) => handleChange('firstName', value)}
+        onBlur={(e) => addNameSuggestion(e.target.value)}
+        suggestions={getNameSuggestions()}
         placeholder="Enter first name"
         required
       />
 
-      <Input
+      <Autocomplete
         label="Middle Name"
         value={person.middleName}
         onChange={(e) => handleChange('middleName', e.target.value)}
+        onSelect={(value) => handleChange('middleName', value)}
+        onBlur={(e) => addNameSuggestion(e.target.value)}
+        suggestions={getNameSuggestions()}
         placeholder="Enter middle name (optional)"
       />
 
-      <Input
+      <Autocomplete
         label="Last Name"
         value={person.lastName}
         onChange={(e) => handleChange('lastName', e.target.value)}
+        onSelect={(value) => handleChange('lastName', value)}
+        onBlur={(e) => addNameSuggestion(e.target.value)}
+        suggestions={getNameSuggestions()}
         placeholder="Enter last name"
         required
       />

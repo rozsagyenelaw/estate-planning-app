@@ -1,7 +1,7 @@
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Button, Autocomplete, Input, Radio, Checkbox, Select } from '../../common';
 import { DEFAULT_SPECIFIC_DISTRIBUTION, LAPSE_OPTIONS } from '../../../utils/constants';
-import { getNameSuggestions } from '../../../services/autocompleteService';
+import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
 
 const SpecificDistributionSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
@@ -97,6 +97,7 @@ const SpecificDistributionSection = () => {
                     onSelect={(value) =>
                       handleDistributionChange(distIndex, 'beneficiary', value)
                     }
+                    onBlur={(e) => addNameSuggestion(e.target.value)}
                     suggestions={getNameSuggestions()}
                     placeholder="Enter beneficiary name"
                     required
