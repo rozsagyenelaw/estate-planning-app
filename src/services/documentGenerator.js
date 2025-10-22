@@ -25,6 +25,98 @@ import { estatePlanningCoverPageTemplate } from '../templates/estatePlanningCove
 import { tableOfContentsTemplate } from '../templates/tableOfContents';
 
 /**
+ * Helper function to generate PDF from plain text (for old template system)
+ * @param {string} textContent - Plain text content from template
+ * @param {string} documentTitle - Title for the document
+ * @returns {jsPDF} PDF document
+ */
+const generatePDFFromText = (textContent, documentTitle) => {
+  try {
+    console.log('generatePDFFromText called');
+    console.log('Text content length:', textContent.length);
+    console.log('First 200 chars:', textContent.substring(0, 200));
+
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'in',
+      format: 'letter'
+    });
+
+    // Set font and size
+    doc.setFont('times', 'normal');
+    doc.setFontSize(12);
+
+    // Page settings
+    const pageWidth = 8.5;
+    const pageHeight = 11;
+    const marginLeft = 0.75;
+    const marginRight = 0.75;
+    const marginTop = 0.75;
+    const marginBottom = 0.75;
+    const contentWidth = pageWidth - marginLeft - marginRight;
+    const lineHeight = 0.2; // inches between lines
+    const maxLinesPerPage = Math.floor((pageHeight - marginTop - marginBottom) / lineHeight);
+
+    let currentY = marginTop;
+    let currentPage = 1;
+
+    // Split content into lines
+    const lines = textContent.split('\n');
+    console.log('Total lines to process:', lines.length);
+
+    let lineCount = 0;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+
+      // Check if we need a new page
+      if (lineCount >= maxLinesPerPage) {
+        doc.addPage();
+        currentPage++;
+        currentY = marginTop;
+        lineCount = 0;
+      }
+
+      // Split long lines to fit page width
+      const wrappedLines = doc.splitTextToSize(line || ' ', contentWidth);
+
+      for (let j = 0; j < wrappedLines.length; j++) {
+        // Check again for page break within wrapped lines
+        if (lineCount >= maxLinesPerPage) {
+          doc.addPage();
+          currentPage++;
+          currentY = marginTop;
+          lineCount = 0;
+        }
+
+        doc.text(wrappedLines[j], marginLeft, currentY);
+        currentY += lineHeight;
+        lineCount++;
+      }
+    }
+
+    console.log('PDF generation complete');
+    console.log('Total pages:', doc.internal.getNumberOfPages());
+
+    return doc;
+  } catch (error) {
+    console.error(`CRITICAL ERROR generating ${documentTitle}:`, error);
+    console.error('Error stack:', error.stack);
+
+    // Fallback to simple error document
+    const doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.text(documentTitle.toUpperCase(), 4.25, 1, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text(`Error: Failed to generate document.`, 1, 2);
+    doc.setFontSize(10);
+    doc.text(`Error details: ${error.message}`, 1, 2.5);
+
+    return doc;
+  }
+};
+
+/**
  * Helper function to generate PDF from HTML template
  * @param {string} htmlContent - HTML content from template
  * @param {string} documentTitle - Title for fallback PDF
@@ -140,36 +232,15 @@ export const generateLivingTrust = async (formData) => {
   const isIrrevocable = formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable';
   const docTitle = isIrrevocable ? 'Irrevocable Trust' : 'Living Trust';
 
-  // For old system (plain text), wrap in minimal HTML for PDF generation
-  let htmlContent;
+  // For old system (plain text), use direct text-to-PDF conversion
   if (formData.trustType === 'single' || !formData.trustType) {
-    htmlContent = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <style>
-    body {
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 12pt;
-      line-height: 1.6;
-      margin: 0.5in;
-      white-space: pre-wrap;
-    }
-  </style>
-</head>
-<body>
-${content}
-</body>
-</html>`;
-  } else {
-    htmlContent = content;
+    console.log('Using text-based PDF generation (no HTML)...');
+    return generatePDFFromText(content, docTitle);
   }
 
-  console.log('HTML content ready, generating PDF...');
-
-  // Generate PDF
-  return generatePDFFromHTML(htmlContent, docTitle);
+  // For new system, use HTML-based PDF generation
+  console.log('Using HTML-based PDF generation...');
+  return generatePDFFromHTML(content, docTitle);
 };
 
 /**
