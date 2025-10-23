@@ -120,6 +120,16 @@ export const fillPDFFormFields = async (templateBytes, formData) => {
 };
 
 /**
+ * Helper function to add field with multiple naming variations
+ * Supports: FIELD_NAME, ${FIELD_NAME}, {{FIELD_NAME}}
+ */
+const addField = (map, fieldName, value) => {
+  map[fieldName] = value;                    // Plain: CLIENT_FIRST_NAME
+  map[`\${${fieldName}}`] = value;           // Dollar braces: ${CLIENT_FIRST_NAME}
+  map[`{{${fieldName}}}`] = value;           // Double braces: {{CLIENT_FIRST_NAME}}
+};
+
+/**
  * Create a map of placeholders to values from form data
  * @param {Object} formData - Form data
  * @returns {Object} - Placeholder map
@@ -129,151 +139,154 @@ const createPlaceholderMap = (formData) => {
 
   // Client information
   if (formData.client) {
-    map['CLIENT_FIRST_NAME'] = formData.client.firstName || '';
-    map['CLIENT_MIDDLE_NAME'] = formData.client.middleName || '';
-    map['CLIENT_LAST_NAME'] = formData.client.lastName || '';
-    map['CLIENT_FULL_NAME'] = `${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''}`.trim();
-    map['CLIENT_ADDRESS'] = formData.client.address || '';
-    map['CLIENT_CITY'] = formData.client.city || '';
-    map['CLIENT_STATE'] = formData.client.state || '';
-    map['CLIENT_ZIP'] = formData.client.zip || '';
-    map['CLIENT_COUNTY'] = formData.client.county || '';
-    map['CLIENT_PHONE'] = formData.client.phone || '';
-    map['CLIENT_EMAIL'] = formData.client.email || '';
-    map['CLIENT_SSN'] = formData.client.ssn || '';
-    map['CLIENT_DOB'] = formData.client.dateOfBirth || '';
-    map['CLIENT_SEX'] = formData.client.sex || '';
-    map['CLIENT_MARITAL_STATUS'] = formData.client.maritalStatus || '';
-    map['CLIENT_NOTARY_DATE'] = formData.client.notaryDate || '';
+    addField(map, 'CLIENT_FIRST_NAME', formData.client.firstName || '');
+    addField(map, 'CLIENT_MIDDLE_NAME', formData.client.middleName || '');
+    addField(map, 'CLIENT_LAST_NAME', formData.client.lastName || '');
+    addField(map, 'CLIENT_FULL_NAME', `${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''}`.trim());
+    addField(map, 'CLIENT_ADDRESS', formData.client.address || '');
+    addField(map, 'CLIENT_CITY', formData.client.city || '');
+    addField(map, 'CLIENT_STATE', formData.client.state || '');
+    addField(map, 'CLIENT_ZIP', formData.client.zip || '');
+    addField(map, 'CLIENT_COUNTY', formData.client.county || '');
+    addField(map, 'CLIENT_PHONE', formData.client.phone || '');
+    addField(map, 'CLIENT_EMAIL', formData.client.email || '');
+    addField(map, 'CLIENT_SSN', formData.client.ssn || '');
+    addField(map, 'CLIENT_DOB', formData.client.dateOfBirth || '');
+    addField(map, 'CLIENT_SEX', formData.client.sex || '');
+    addField(map, 'CLIENT_MARITAL_STATUS', formData.client.maritalStatus || '');
+    addField(map, 'CLIENT_NOTARY_DATE', formData.client.notaryDate || '');
   }
 
   // Spouse information
   if (formData.spouse && formData.isJoint) {
-    map['SPOUSE_FIRST_NAME'] = formData.spouse.firstName || '';
-    map['SPOUSE_MIDDLE_NAME'] = formData.spouse.middleName || '';
-    map['SPOUSE_LAST_NAME'] = formData.spouse.lastName || '';
-    map['SPOUSE_FULL_NAME'] = `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim();
-    map['SPOUSE_ADDRESS'] = formData.spouse.address || '';
-    map['SPOUSE_CITY'] = formData.spouse.city || '';
-    map['SPOUSE_STATE'] = formData.spouse.state || '';
-    map['SPOUSE_ZIP'] = formData.spouse.zip || '';
-    map['SPOUSE_COUNTY'] = formData.spouse.county || '';
-    map['SPOUSE_PHONE'] = formData.spouse.phone || '';
-    map['SPOUSE_EMAIL'] = formData.spouse.email || '';
-    map['SPOUSE_SSN'] = formData.spouse.ssn || '';
-    map['SPOUSE_DOB'] = formData.spouse.dateOfBirth || '';
-    map['SPOUSE_SEX'] = formData.spouse.sex || '';
-    map['SPOUSE_NOTARY_DATE'] = formData.spouse.notaryDate || '';
+    addField(map, 'SPOUSE_FIRST_NAME', formData.spouse.firstName || '');
+    addField(map, 'SPOUSE_MIDDLE_NAME', formData.spouse.middleName || '');
+    addField(map, 'SPOUSE_LAST_NAME', formData.spouse.lastName || '');
+    addField(map, 'SPOUSE_FULL_NAME', `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim());
+    addField(map, 'SPOUSE_ADDRESS', formData.spouse.address || '');
+    addField(map, 'SPOUSE_CITY', formData.spouse.city || '');
+    addField(map, 'SPOUSE_STATE', formData.spouse.state || '');
+    addField(map, 'SPOUSE_ZIP', formData.spouse.zip || '');
+    addField(map, 'SPOUSE_COUNTY', formData.spouse.county || '');
+    addField(map, 'SPOUSE_PHONE', formData.spouse.phone || '');
+    addField(map, 'SPOUSE_EMAIL', formData.spouse.email || '');
+    addField(map, 'SPOUSE_SSN', formData.spouse.ssn || '');
+    addField(map, 'SPOUSE_DOB', formData.spouse.dateOfBirth || '');
+    addField(map, 'SPOUSE_SEX', formData.spouse.sex || '');
+    addField(map, 'SPOUSE_NOTARY_DATE', formData.spouse.notaryDate || '');
   }
 
   // Trust information
-  map['TRUST_NAME'] = formData.trustName || '';
-  map['TRUST_TYPE'] = formData.trustType || '';
-  map['IS_JOINT'] = formData.isJoint ? 'Yes' : 'No';
-  map['IS_IRREVOCABLE'] = formData.isIrrevocable ? 'Yes' : 'No';
-  map['IS_RESTATEMENT'] = formData.isRestatement ? 'Yes' : 'No';
-  map['ORIGINAL_TRUST_NAME'] = formData.originalTrustName || '';
-  map['ORIGINAL_TRUST_DATE'] = formData.originalTrustDate || '';
-  map['CURRENT_DATE'] = formData.currentDate || new Date().toLocaleDateString();
+  addField(map, 'TRUST_NAME', formData.trustName || '');
+  addField(map, 'TRUST_TYPE', formData.trustType || '');
+  addField(map, 'IS_JOINT', formData.isJoint ? 'Yes' : 'No');
+  addField(map, 'IS_IRREVOCABLE', formData.isIrrevocable ? 'Yes' : 'No');
+  addField(map, 'IS_RESTATEMENT', formData.isRestatement ? 'Yes' : 'No');
+  addField(map, 'ORIGINAL_TRUST_NAME', formData.originalTrustName || '');
+  addField(map, 'ORIGINAL_TRUST_DATE', formData.originalTrustDate || '');
+  addField(map, 'CURRENT_DATE', formData.currentDate || new Date().toLocaleDateString());
 
   // Children
   if (formData.children && formData.children.length > 0) {
-    map['NUM_CHILDREN'] = String(formData.children.length);
+    addField(map, 'NUM_CHILDREN', String(formData.children.length));
     formData.children.forEach((child, index) => {
-      map[`CHILD_${index + 1}_FIRST_NAME`] = child.firstName || '';
-      map[`CHILD_${index + 1}_LAST_NAME`] = child.lastName || '';
-      map[`CHILD_${index + 1}_DOB`] = child.dateOfBirth || '';
-      map[`CHILD_${index + 1}_RELATION`] = child.relation || '';
-      map[`CHILD_${index + 1}_FULL_NAME`] = `${child.firstName || ''} ${child.lastName || ''}`.trim();
+      addField(map, `CHILD_${index + 1}_FIRST_NAME`, child.firstName || '');
+      addField(map, `CHILD_${index + 1}_LAST_NAME`, child.lastName || '');
+      addField(map, `CHILD_${index + 1}_DOB`, child.dateOfBirth || '');
+      addField(map, `CHILD_${index + 1}_RELATION`, child.relation || '');
+      addField(map, `CHILD_${index + 1}_FULL_NAME`, `${child.firstName || ''} ${child.lastName || ''}`.trim());
     });
 
     // Combined children list
-    map['CHILDREN_LIST'] = formData.children.map((c, i) =>
+    const childrenList = formData.children.map((c, i) =>
       `${i + 1}. ${c.firstName} ${c.lastName}, born ${c.dateOfBirth}`
     ).join('\n');
+    addField(map, 'CHILDREN_LIST', childrenList);
   } else {
-    map['NUM_CHILDREN'] = '0';
-    map['CHILDREN_LIST'] = 'None';
+    addField(map, 'NUM_CHILDREN', '0');
+    addField(map, 'CHILDREN_LIST', 'None');
   }
 
   // Successor Trustees
   if (formData.successorTrustees && formData.successorTrustees.length > 0) {
-    map['NUM_TRUSTEES'] = String(formData.successorTrustees.length);
+    addField(map, 'NUM_TRUSTEES', String(formData.successorTrustees.length));
     formData.successorTrustees.forEach((trustee, index) => {
-      map[`TRUSTEE_${index + 1}_FIRST_NAME`] = trustee.firstName || '';
-      map[`TRUSTEE_${index + 1}_LAST_NAME`] = trustee.lastName || '';
-      map[`TRUSTEE_${index + 1}_ADDRESS`] = trustee.address || '';
-      map[`TRUSTEE_${index + 1}_PHONE`] = trustee.phone || '';
-      map[`TRUSTEE_${index + 1}_EMAIL`] = trustee.email || '';
-      map[`TRUSTEE_${index + 1}_FULL_NAME`] = `${trustee.firstName || ''} ${trustee.lastName || ''}`.trim();
+      addField(map, `TRUSTEE_${index + 1}_FIRST_NAME`, trustee.firstName || '');
+      addField(map, `TRUSTEE_${index + 1}_LAST_NAME`, trustee.lastName || '');
+      addField(map, `TRUSTEE_${index + 1}_ADDRESS`, trustee.address || '');
+      addField(map, `TRUSTEE_${index + 1}_PHONE`, trustee.phone || '');
+      addField(map, `TRUSTEE_${index + 1}_EMAIL`, trustee.email || '');
+      addField(map, `TRUSTEE_${index + 1}_FULL_NAME`, `${trustee.firstName || ''} ${trustee.lastName || ''}`.trim());
     });
 
     // Combined trustees list
-    map['TRUSTEES_LIST'] = formData.successorTrustees.map((t, i) =>
+    const trusteesList = formData.successorTrustees.map((t, i) =>
       `${i + 1}. ${t.firstName} ${t.lastName}`
     ).join('\n');
+    addField(map, 'TRUSTEES_LIST', trusteesList);
   } else {
-    map['NUM_TRUSTEES'] = '0';
-    map['TRUSTEES_LIST'] = 'None designated';
+    addField(map, 'NUM_TRUSTEES', '0');
+    addField(map, 'TRUSTEES_LIST', 'None designated');
   }
 
   // Guardians
   if (formData.guardians && formData.guardians.length > 0) {
     formData.guardians.forEach((guardian, index) => {
-      map[`GUARDIAN_${index + 1}_FIRST_NAME`] = guardian.firstName || '';
-      map[`GUARDIAN_${index + 1}_LAST_NAME`] = guardian.lastName || '';
-      map[`GUARDIAN_${index + 1}_ADDRESS`] = guardian.address || '';
-      map[`GUARDIAN_${index + 1}_PHONE`] = guardian.phone || '';
+      addField(map, `GUARDIAN_${index + 1}_FIRST_NAME`, guardian.firstName || '');
+      addField(map, `GUARDIAN_${index + 1}_LAST_NAME`, guardian.lastName || '');
+      addField(map, `GUARDIAN_${index + 1}_ADDRESS`, guardian.address || '');
+      addField(map, `GUARDIAN_${index + 1}_PHONE`, guardian.phone || '');
     });
 
-    map['GUARDIANS_LIST'] = formData.guardians.map((g, i) =>
+    const guardiansList = formData.guardians.map((g, i) =>
       `${i + 1}. ${g.firstName} ${g.lastName}`
     ).join('\n');
+    addField(map, 'GUARDIANS_LIST', guardiansList);
   } else {
-    map['GUARDIANS_LIST'] = 'None designated';
+    addField(map, 'GUARDIANS_LIST', 'None designated');
   }
 
   // POA Agents - Client
   if (formData.durablePOA?.client && formData.durablePOA.client.length > 0) {
     formData.durablePOA.client.forEach((agent, index) => {
-      map[`CLIENT_POA_${index + 1}_FIRST_NAME`] = agent.firstName || '';
-      map[`CLIENT_POA_${index + 1}_LAST_NAME`] = agent.lastName || '';
-      map[`CLIENT_POA_${index + 1}_ADDRESS`] = agent.address || '';
-      map[`CLIENT_POA_${index + 1}_PHONE`] = agent.phone || '';
+      addField(map, `CLIENT_POA_${index + 1}_FIRST_NAME`, agent.firstName || '');
+      addField(map, `CLIENT_POA_${index + 1}_LAST_NAME`, agent.lastName || '');
+      addField(map, `CLIENT_POA_${index + 1}_ADDRESS`, agent.address || '');
+      addField(map, `CLIENT_POA_${index + 1}_PHONE`, agent.phone || '');
     });
   }
 
   // POA Agents - Spouse
   if (formData.durablePOA?.spouse && formData.durablePOA.spouse.length > 0) {
     formData.durablePOA.spouse.forEach((agent, index) => {
-      map[`SPOUSE_POA_${index + 1}_FIRST_NAME`] = agent.firstName || '';
-      map[`SPOUSE_POA_${index + 1}_LAST_NAME`] = agent.lastName || '';
-      map[`SPOUSE_POA_${index + 1}_ADDRESS`] = agent.address || '';
-      map[`SPOUSE_POA_${index + 1}_PHONE`] = agent.phone || '';
+      addField(map, `SPOUSE_POA_${index + 1}_FIRST_NAME`, agent.firstName || '');
+      addField(map, `SPOUSE_POA_${index + 1}_LAST_NAME`, agent.lastName || '');
+      addField(map, `SPOUSE_POA_${index + 1}_ADDRESS`, agent.address || '');
+      addField(map, `SPOUSE_POA_${index + 1}_PHONE`, agent.phone || '');
     });
   }
 
   // Healthcare Agents - Client
   if (formData.healthcarePOA?.client && formData.healthcarePOA.client.length > 0) {
     formData.healthcarePOA.client.forEach((agent, index) => {
-      map[`CLIENT_HEALTHCARE_${index + 1}_FIRST_NAME`] = agent.firstName || '';
-      map[`CLIENT_HEALTHCARE_${index + 1}_LAST_NAME`] = agent.lastName || '';
-      map[`CLIENT_HEALTHCARE_${index + 1}_PHONE`] = agent.phone || '';
+      addField(map, `CLIENT_HEALTHCARE_${index + 1}_FIRST_NAME`, agent.firstName || '');
+      addField(map, `CLIENT_HEALTHCARE_${index + 1}_LAST_NAME`, agent.lastName || '');
+      addField(map, `CLIENT_HEALTHCARE_${index + 1}_PHONE`, agent.phone || '');
     });
   }
 
   // Healthcare Agents - Spouse
   if (formData.healthcarePOA?.spouse && formData.healthcarePOA.spouse.length > 0) {
     formData.healthcarePOA.spouse.forEach((agent, index) => {
-      map[`SPOUSE_HEALTHCARE_${index + 1}_FIRST_NAME`] = agent.firstName || '';
-      map[`SPOUSE_HEALTHCARE_${index + 1}_LAST_NAME`] = agent.lastName || '';
-      map[`SPOUSE_HEALTHCARE_${index + 1}_PHONE`] = agent.phone || '';
+      addField(map, `SPOUSE_HEALTHCARE_${index + 1}_FIRST_NAME`, agent.firstName || '');
+      addField(map, `SPOUSE_HEALTHCARE_${index + 1}_LAST_NAME`, agent.lastName || '');
+      addField(map, `SPOUSE_HEALTHCARE_${index + 1}_PHONE`, agent.phone || '');
     });
   }
 
   // Anatomical Gifts
-  map['CLIENT_ANATOMICAL_GIFT'] = formData.anatomicalGifts?.client || 'none';
-  map['SPOUSE_ANATOMICAL_GIFT'] = formData.anatomicalGifts?.spouse || 'none';
+  addField(map, 'CLIENT_ANATOMICAL_GIFT', formData.anatomicalGifts?.client || 'none');
+  addField(map, 'SPOUSE_ANATOMICAL_GIFT', formData.anatomicalGifts?.spouse || 'none');
 
   return map;
 };
