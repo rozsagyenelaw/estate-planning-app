@@ -351,16 +351,27 @@ export const templateExists = async (templatePath) => {
     console.log('PDF template HEAD response status:', response.status, 'ok:', response.ok);
 
     // Check content type to avoid HTML being served instead of PDF (SPA fallback)
-    const contentType = response.headers.get('content-type');
-    console.log('PDF template content-type:', contentType);
+    const contentType = response.headers.get('content-type') || '';
+    console.log('PDF template content-type:', contentType || '(empty)');
 
-    if (response.ok && contentType && contentType.includes('html')) {
+    // If response is OK and content-type is explicitly HTML, it's the SPA fallback
+    if (response.ok && contentType.toLowerCase().includes('html')) {
       console.warn('❌ PDF template path returns HTML (SPA fallback) - file does not exist');
       return false;
     }
 
-    if (response.ok) {
-      console.log('✅ PDF template found!');
+    // Check Content-Length to ensure it's a real file
+    const contentLength = response.headers.get('content-length');
+    console.log('PDF template content-length:', contentLength);
+
+    if (response.ok && contentLength && parseInt(contentLength) > 1000) {
+      console.log('✅ PDF template found! Size:', contentLength, 'bytes');
+      return true;
+    }
+
+    if (response.ok && !contentType.includes('html')) {
+      // Empty content-type but 200 response - likely the file exists
+      console.log('✅ PDF template found (empty content-type but 200 OK)');
       return true;
     }
 

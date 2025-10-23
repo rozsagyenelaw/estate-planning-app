@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Template Detection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-result {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>DOCX Template Detection Test</h1>
+    <button onclick="testTemplateDetection()">Run Template Detection Test</button>
+    <div id="results"></div>
+
+    <script type="module">
+        import { docxTemplateExists } from '/src/services/docxTemplateService.js';
+        import { getDOCXTemplatePath } from '/src/services/docxTemplateConfig.js';
+
+        window.testTemplateDetection = async function() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="info test-result">Running tests... Check console for detailed logs.</div>';
+
+            const tests = [
+                {
+                    name: 'Single Living Trust',
+                    formData: { trustType: 'single', isJoint: false }
+                },
+                {
+                    name: 'Joint Living Trust',
+                    formData: { trustType: 'joint', isJoint: true }
+                },
+                {
+                    name: 'Single Estate Plan',
+                    formData: { trustType: 'single', isJoint: false },
+                    isCompletePlan: true
+                },
+                {
+                    name: 'Joint Estate Plan',
+                    formData: { trustType: 'joint', isJoint: true },
+                    isCompletePlan: true
+                }
+            ];
+
+            let html = '';
+
+            for (const test of tests) {
+                console.log(`\n========== Testing: ${test.name} ==========`);
+
+                const templatePath = getDOCXTemplatePath(test.formData, test.isCompletePlan || false);
+                console.log('Template path:', templatePath);
+
+                const exists = await docxTemplateExists(templatePath);
+                console.log('Template exists:', exists);
+
+                const resultClass = exists ? 'success' : 'error';
+                const resultIcon = exists ? '✅' : '❌';
+
+                html += `
+                    <div class="${resultClass} test-result">
+                        <strong>${resultIcon} ${test.name}</strong><br>
+                        Path: ${templatePath}<br>
+                        Status: ${exists ? 'FOUND' : 'NOT FOUND'}
+                    </div>
+                `;
+            }
+
+            resultsDiv.innerHTML = html;
+        };
+    </script>
+</body>
+</html>

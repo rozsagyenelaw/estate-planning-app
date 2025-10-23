@@ -201,16 +201,27 @@ export const docxTemplateExists = async (templatePath) => {
     console.log('DOCX template HEAD response status:', response.status, 'ok:', response.ok);
 
     // Check content type to avoid HTML being served instead of DOCX (SPA fallback)
-    const contentType = response.headers.get('content-type');
-    console.log('DOCX template content-type:', contentType);
+    const contentType = response.headers.get('content-type') || '';
+    console.log('DOCX template content-type:', contentType || '(empty)');
 
-    if (response.ok && contentType && contentType.includes('html')) {
+    // If response is OK and content-type is explicitly HTML, it's the SPA fallback
+    if (response.ok && contentType.toLowerCase().includes('html')) {
       console.warn('❌ DOCX template path returns HTML (SPA fallback) - file does not exist');
       return false;
     }
 
-    if (response.ok) {
-      console.log('✅ DOCX template found!');
+    // Check Content-Length to ensure it's a real file (not an error page)
+    const contentLength = response.headers.get('content-length');
+    console.log('DOCX template content-length:', contentLength);
+
+    if (response.ok && contentLength && parseInt(contentLength) > 1000) {
+      console.log('✅ DOCX template found! Size:', contentLength, 'bytes');
+      return true;
+    }
+
+    if (response.ok && !contentType.includes('html')) {
+      // Empty content-type but 200 response - likely the file exists
+      console.log('✅ DOCX template found (empty content-type but 200 OK)');
       return true;
     }
 
