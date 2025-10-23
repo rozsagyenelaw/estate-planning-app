@@ -4,7 +4,7 @@ import { Button, Card } from '../common';
 import { generateLivingTrust, generateLivingTrustWord, generateAllDocuments, generateCompleteEstatePlanningPackage, generateCompleteEstatePlanningPackageWord, downloadDocument } from '../../services/documentGenerator';
 import { sampleFormData } from '../../utils/testDocumentGeneration';
 import { saveFormDraft } from '../../services/autocompleteService';
-import { saveClientWithDocuments } from '../../services/clientDocumentService';
+import { saveClientWithDocuments, saveClientWithLivingTrust } from '../../services/clientDocumentService';
 
 // Import form sections
 import TrustTypeSection from './sections/TrustTypeSection';
@@ -26,7 +26,8 @@ const EstatePlanningForm = () => {
   const { formData, setFormData } = useFormContext();
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
-  const [savedDocuments, setSavedDocuments] = useState(null);
+  const [savedLivingTrust, setSavedLivingTrust] = useState(null);
+  const [savedCompletePlan, setSavedCompletePlan] = useState(null);
   const [saveProgress, setSaveProgress] = useState({ percent: 0, message: '' });
 
   const handleGenerateTrust = async () => {
@@ -142,10 +143,44 @@ const EstatePlanningForm = () => {
     }
   };
 
-  const handleSaveToDatabase = async () => {
+  const handleSaveLivingTrust = async () => {
     setLoading(true);
-    setSavedDocuments(null);
-    setStatus('Saving to database...');
+    setSavedLivingTrust(null);
+    setStatus('Saving Living Trust to database...');
+
+    try {
+      const result = await saveClientWithLivingTrust(
+        formData,
+        (progress) => {
+          setSaveProgress(progress);
+          setStatus(`${progress.message} (${Math.round(progress.percent)}%)`);
+        }
+      );
+
+      if (result.success) {
+        setSavedLivingTrust({
+          clientId: result.clientId,
+          pdf: result.documents.livingTrustPdf,
+          word: result.documents.livingTrustWord
+        });
+        setStatus('Living Trust saved successfully! Documents are ready for download.');
+      } else {
+        setStatus(`Error: ${result.error}`);
+        setTimeout(() => setStatus(''), 5000);
+      }
+    } catch (error) {
+      console.error('Error saving Living Trust:', error);
+      setStatus('Error saving Living Trust. Please check the console for details.');
+      setTimeout(() => setStatus(''), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveCompletePlan = async () => {
+    setLoading(true);
+    setSavedCompletePlan(null);
+    setStatus('Saving complete estate plan to database...');
 
     try {
       const result = await saveClientWithDocuments(
@@ -157,19 +192,19 @@ const EstatePlanningForm = () => {
       );
 
       if (result.success) {
-        setSavedDocuments({
+        setSavedCompletePlan({
           clientId: result.clientId,
           pdf: result.documents.pdf,
           word: result.documents.word
         });
-        setStatus('Successfully saved to database! Documents are ready for download.');
+        setStatus('Complete Estate Plan saved successfully! Documents are ready for download.');
       } else {
         setStatus(`Error: ${result.error}`);
         setTimeout(() => setStatus(''), 5000);
       }
     } catch (error) {
-      console.error('Error saving to database:', error);
-      setStatus('Error saving to database. Please check the console for details.');
+      console.error('Error saving complete plan:', error);
+      setStatus('Error saving complete estate plan. Please check the console for details.');
       setTimeout(() => setStatus(''), 5000);
     } finally {
       setLoading(false);
@@ -243,17 +278,27 @@ const EstatePlanningForm = () => {
         {/* Save and Generate Buttons */}
         <Card>
           <div className="space-y-4">
-            {/* Primary Action - Save to Database */}
-            <div className="flex justify-center">
+            {/* Primary Actions - Two Save Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 variant="primary"
                 size="lg"
-                onClick={handleSaveToDatabase}
+                onClick={handleSaveLivingTrust}
                 loading={loading}
                 disabled={loading}
                 className="px-8"
               >
-                💾 Save Client & Generate Documents
+                📜 Save Living Trust
+              </Button>
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={handleSaveCompletePlan}
+                loading={loading}
+                disabled={loading}
+                className="px-8"
+              >
+                📦 Save Complete Estate Plan
               </Button>
             </div>
 
@@ -317,26 +362,89 @@ const EstatePlanningForm = () => {
             </div>
           )}
 
-          {/* Download Links */}
-          {savedDocuments && (
-            <div className="mt-6 p-6 bg-green-50 border-2 border-green-400 rounded-lg">
+          {/* Download Links - Living Trust */}
+          {savedLivingTrust && (
+            <div className="mt-6 p-6 bg-blue-50 border-2 border-blue-400 rounded-lg">
               <div className="flex items-start gap-3 mb-4">
                 <span className="text-3xl">✅</span>
                 <div>
-                  <h3 className="text-lg font-bold text-green-900">
-                    Documents Saved Successfully!
+                  <h3 className="text-lg font-bold text-blue-900">
+                    Living Trust Saved Successfully!
                   </h3>
-                  <p className="text-sm text-green-700 mt-1">
-                    Client ID: <code className="px-2 py-1 bg-white rounded text-xs">{savedDocuments.clientId}</code>
+                  <p className="text-sm text-blue-700 mt-1">
+                    Client ID: <code className="px-2 py-1 bg-white rounded text-xs">{savedLivingTrust.clientId}</code>
                   </p>
                 </div>
               </div>
 
               <div className="space-y-3">
-                <p className="font-semibold text-green-900">Download Documents:</p>
+                <p className="font-semibold text-blue-900">Download Living Trust:</p>
 
                 <a
-                  href={savedDocuments.pdf}
+                  href={savedLivingTrust.pdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full p-4 bg-white hover:bg-gray-50 border-2 border-blue-300 rounded-lg transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">📄</span>
+                      <div>
+                        <div className="font-semibold text-gray-900">Living Trust PDF</div>
+                        <div className="text-xs text-gray-600">Trust Document Only</div>
+                      </div>
+                    </div>
+                    <span className="text-blue-600 font-semibold">Download →</span>
+                  </div>
+                </a>
+
+                <a
+                  href={savedLivingTrust.word}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full p-4 bg-white hover:bg-gray-50 border-2 border-blue-300 rounded-lg transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">📝</span>
+                      <div>
+                        <div className="font-semibold text-gray-900">Living Trust Word</div>
+                        <div className="text-xs text-gray-600">Trust Document Only</div>
+                      </div>
+                    </div>
+                    <span className="text-blue-600 font-semibold">Download →</span>
+                  </div>
+                </a>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-blue-300">
+                <p className="text-xs text-blue-700">
+                  📜 Living Trust document saved to Firebase Storage
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Download Links - Complete Estate Plan */}
+          {savedCompletePlan && (
+            <div className="mt-6 p-6 bg-green-50 border-2 border-green-400 rounded-lg">
+              <div className="flex items-start gap-3 mb-4">
+                <span className="text-3xl">✅</span>
+                <div>
+                  <h3 className="text-lg font-bold text-green-900">
+                    Complete Estate Plan Saved Successfully!
+                  </h3>
+                  <p className="text-sm text-green-700 mt-1">
+                    Client ID: <code className="px-2 py-1 bg-white rounded text-xs">{savedCompletePlan.clientId}</code>
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <p className="font-semibold text-green-900">Download Complete Package:</p>
+
+                <a
+                  href={savedCompletePlan.pdf}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full p-4 bg-white hover:bg-gray-50 border-2 border-green-300 rounded-lg transition-colors"
@@ -345,8 +453,8 @@ const EstatePlanningForm = () => {
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">📄</span>
                       <div>
-                        <div className="font-semibold text-gray-900">PDF Document</div>
-                        <div className="text-xs text-gray-600">Complete Estate Planning Package</div>
+                        <div className="font-semibold text-gray-900">Complete Package PDF</div>
+                        <div className="text-xs text-gray-600">All Estate Planning Documents</div>
                       </div>
                     </div>
                     <span className="text-green-600 font-semibold">Download →</span>
@@ -354,7 +462,7 @@ const EstatePlanningForm = () => {
                 </a>
 
                 <a
-                  href={savedDocuments.word}
+                  href={savedCompletePlan.word}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full p-4 bg-white hover:bg-gray-50 border-2 border-green-300 rounded-lg transition-colors"
@@ -363,8 +471,8 @@ const EstatePlanningForm = () => {
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">📝</span>
                       <div>
-                        <div className="font-semibold text-gray-900">Word Document</div>
-                        <div className="text-xs text-gray-600">Complete Estate Planning Package</div>
+                        <div className="font-semibold text-gray-900">Complete Package Word</div>
+                        <div className="text-xs text-gray-600">All Estate Planning Documents</div>
                       </div>
                     </div>
                     <span className="text-green-600 font-semibold">Download →</span>
@@ -374,14 +482,14 @@ const EstatePlanningForm = () => {
 
               <div className="mt-4 pt-4 border-t border-green-300">
                 <p className="text-xs text-green-700">
-                  💡 Documents are permanently saved in Firebase Storage and can be accessed anytime from the{' '}
+                  💡 All documents permanently saved in{' '}
                   <a
                     href="https://console.firebase.google.com/project/estate-planning-app-b5335/storage/files"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline font-semibold"
                   >
-                    Firebase Console
+                    Firebase Storage
                   </a>
                 </p>
               </div>

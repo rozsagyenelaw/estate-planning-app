@@ -6,10 +6,104 @@
 
 import { saveClientData, getClientData, searchClients, updateClientData, generateClientId } from './firestoreService';
 import { uploadDocument, uploadMultipleDocuments, listClientDocuments, generateDocumentName } from './storageService';
-import { generateCompleteEstatePlanningPackage, generateCompleteEstatePlanningPackageWord } from './documentGenerator';
+import { generateCompleteEstatePlanningPackage, generateCompleteEstatePlanningPackageWord, generateLivingTrust, generateLivingTrustWord } from './documentGenerator';
 
 /**
- * Save complete client data and generate/upload all documents
+ * Save client data and generate/upload Living Trust only
+ * @param {Object} formData - Complete form data from the estate planning form
+ * @param {Function} onProgress - Optional callback for progress updates
+ * @returns {Promise<Object>} - Result with client ID and document URLs
+ */
+export const saveClientWithLivingTrust = async (formData, onProgress = null) => {
+  try {
+    // Step 1: Generate unique client ID
+    updateProgress(onProgress, 10, 'Generating client ID...');
+    const clientId = generateClientId(
+      formData.client.firstName,
+      formData.client.lastName
+    );
+
+    // Step 2: Save client data to Firestore
+    updateProgress(onProgress, 20, 'Saving client information...');
+    const saveResult = await saveClientData(clientId, {
+      ...formData,
+      clientId, // Include the ID in the data
+      createdAt: new Date().toISOString()
+    });
+
+    if (!saveResult.success) {
+      throw new Error(`Failed to save client data: ${saveResult.error}`);
+    }
+
+    // Step 3: Generate Living Trust documents (PDF and Word)
+    updateProgress(onProgress, 40, 'Generating Living Trust PDF...');
+    const pdfDoc = await generateLivingTrust(formData);
+    const pdfBlob = pdfDoc.output('blob');
+
+    updateProgress(onProgress, 55, 'Generating Living Trust Word document...');
+    const wordBlob = await generateLivingTrustWord(formData);
+
+    // Step 4: Upload documents to Firebase Storage
+    updateProgress(onProgress, 70, 'Uploading documents...');
+    const timestamp = new Date();
+    const pdfName = generateDocumentName('living_trust', 'pdf', timestamp);
+    const wordName = generateDocumentName('living_trust', 'docx', timestamp);
+
+    const documents = [
+      { blob: pdfBlob, name: pdfName },
+      { blob: wordBlob, name: wordName }
+    ];
+
+    const uploadResult = await uploadMultipleDocuments(
+      clientId,
+      documents,
+      (uploadProgress) => {
+        // Map upload progress from 70-95%
+        const totalProgress = 70 + (uploadProgress * 0.25);
+        updateProgress(onProgress, totalProgress, 'Uploading documents...');
+      }
+    );
+
+    if (!uploadResult.success) {
+      throw new Error('Failed to upload some documents');
+    }
+
+    // Step 5: Update client record with document URLs
+    updateProgress(onProgress, 95, 'Finalizing...');
+    const documentUrls = {};
+    uploadResult.results.forEach((result, index) => {
+      if (result.success) {
+        const docType = index === 0 ? 'livingTrustPdf' : 'livingTrustWord';
+        documentUrls[docType] = result.downloadURL;
+      }
+    });
+
+    await updateClientData(clientId, {
+      livingTrustDocuments: documentUrls,
+      livingTrustGeneratedAt: new Date().toISOString()
+    });
+
+    updateProgress(onProgress, 100, 'Complete!');
+
+    return {
+      success: true,
+      clientId,
+      documents: documentUrls,
+      message: 'Living Trust saved successfully'
+    };
+
+  } catch (error) {
+    console.error('Error in saveClientWithLivingTrust:', error);
+    return {
+      success: false,
+      error: error.message,
+      message: 'Failed to save Living Trust'
+    };
+  }
+};
+
+/**
+ * Save complete client data and generate/upload all estate planning documents
  * This is the main function to use when submitting the estate planning form
  *
  * @param {Object} formData - Complete form data from the estate planning form
