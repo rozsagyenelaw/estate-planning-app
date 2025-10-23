@@ -127,56 +127,43 @@ export const searchClients = async (searchTerm, maxResults = 10) => {
       };
     }
 
-    const clientsRef = collection(db, CLIENTS_COLLECTION);
+    // Get all clients and filter client-side for case-insensitive search
+    // This is practical for small to medium datasets (< 1000 clients)
+    // For larger datasets, consider using Algolia or similar search service
+    const allClientsResult = await getAllClients(100);
 
-    // Search by client first name or last name
-    // Note: Firestore doesn't support full-text search natively
-    // For better search, consider using Algolia or similar service
+    if (!allClientsResult.success) {
+      return {
+        success: false,
+        error: allClientsResult.error,
+        data: []
+      };
+    }
+
     const searchTermLower = searchTerm.toLowerCase();
 
-    // Create queries for different search fields
-    const queries = [
-      query(
-        clientsRef,
-        where('client.firstName', '>=', searchTermLower),
-        where('client.firstName', '<=', searchTermLower + '\uf8ff'),
-        orderBy('client.firstName'),
-        limit(maxResults)
-      ),
-      query(
-        clientsRef,
-        where('client.lastName', '>=', searchTermLower),
-        where('client.lastName', '<=', searchTermLower + '\uf8ff'),
-        orderBy('client.lastName'),
-        limit(maxResults)
-      )
-    ];
+    // Filter clients by first name, last name, or email (case-insensitive)
+    const filteredClients = allClientsResult.data.filter(client => {
+      const firstName = (client.client?.firstName || '').toLowerCase();
+      const lastName = (client.client?.lastName || '').toLowerCase();
+      const email = (client.client?.email || '').toLowerCase();
+      const spouseFirstName = (client.spouse?.firstName || '').toLowerCase();
+      const spouseLastName = (client.spouse?.lastName || '').toLowerCase();
 
-    // Execute all queries
-    const results = await Promise.all(
-      queries.map(q => getDocs(q))
-    );
-
-    // Combine and deduplicate results
-    const clientsMap = new Map();
-    results.forEach(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-        clientsMap.set(doc.id, {
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate?.() || data.createdAt,
-          updatedAt: data.updatedAt?.toDate?.() || data.updatedAt,
-        });
-      });
+      return firstName.includes(searchTermLower) ||
+             lastName.includes(searchTermLower) ||
+             email.includes(searchTermLower) ||
+             spouseFirstName.includes(searchTermLower) ||
+             spouseLastName.includes(searchTermLower);
     });
 
-    const clients = Array.from(clientsMap.values());
+    // Limit results
+    const limitedResults = filteredClients.slice(0, maxResults);
 
-    console.log(`Found ${clients.length} clients matching "${searchTerm}"`);
+    console.log(`Found ${limitedResults.length} clients matching "${searchTerm}"`);
     return {
       success: true,
-      data: clients
+      data: limitedResults
     };
   } catch (error) {
     console.error('Error searching clients:', error);

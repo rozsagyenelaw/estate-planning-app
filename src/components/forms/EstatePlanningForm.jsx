@@ -7,6 +7,7 @@ import { saveFormDraft } from '../../services/autocompleteService';
 import { saveClientWithDocuments, saveClientWithLivingTrust } from '../../services/clientDocumentService';
 
 // Import form sections
+import LoadClientSection from './sections/LoadClientSection';
 import TrustTypeSection from './sections/TrustTypeSection';
 import ClientInfoSection from './sections/ClientInfoSection';
 import TrustNameSection from './sections/TrustNameSection';
@@ -214,6 +215,9 @@ const EstatePlanningForm = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="space-y-6">
+        {/* Load Existing Client */}
+        <LoadClientSection />
+
         {/* Test Data Button */}
         <Card>
           <div className="flex items-center justify-between">
