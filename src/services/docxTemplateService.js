@@ -370,15 +370,16 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
     console.error('Error filling DOCX template:', error);
     if (error.properties && error.properties.errors) {
       console.error('Template errors:', error.properties.errors);
-      console.error('Detailed error info:');
+      console.error('=== DETAILED ERROR INFO ===');
       error.properties.errors.forEach((err, i) => {
-        console.error(`  Error ${i + 1}:`, {
-          message: err.message,
-          tag: err.properties?.xtag,
-          context: err.properties?.context?.substring(0, 150),
-          explanation: err.properties?.explanation,
-        });
+        console.error(`\nError ${i + 1}:`);
+        console.error('  Message:', err.message);
+        console.error('  Tag:', err.properties?.xtag || 'N/A');
+        console.error('  Context:', err.properties?.context?.substring(0, 150) || 'N/A');
+        console.error('  Explanation:', err.properties?.explanation || 'N/A');
+        console.error('  File:', err.properties?.file || 'N/A');
       });
+      console.error('=========================');
     }
     throw error;
   }
