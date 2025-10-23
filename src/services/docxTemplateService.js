@@ -7,6 +7,36 @@ import Docxtemplater from 'docxtemplater';
 import PizZip from 'pizzip';
 
 /**
+ * Get marital status statement
+ */
+const getMaritalStatusStatement = (maritalStatus) => {
+  const status = (maritalStatus || '').toLowerCase();
+  if (status === 'single' || status === 'unmarried') {
+    return 'I am not married';
+  } else if (status === 'married') {
+    return 'I am married';
+  } else if (status === 'divorced') {
+    return 'I am divorced';
+  } else if (status === 'widowed') {
+    return 'I am widowed';
+  }
+  return '';
+};
+
+/**
+ * Get possessive pronoun based on sex
+ */
+const getPronounPossessive = (sex) => {
+  const gender = (sex || '').toLowerCase();
+  if (gender === 'male' || gender === 'm') {
+    return 'his';
+  } else if (gender === 'female' || gender === 'f') {
+    return 'her';
+  }
+  return 'their';
+};
+
+/**
  * Load a DOCX template from the public folder
  * @param {string} templatePath - Path to template (e.g., '/templates/single_living_trust_template.docx')
  * @returns {Promise<ArrayBuffer>} - Template as ArrayBuffer
@@ -50,6 +80,7 @@ const prepareTemplateData = (formData) => {
       dateOfBirth: formData.client?.dateOfBirth || '',
       sex: formData.client?.sex || '',
       maritalStatus: formData.client?.maritalStatus || '',
+      maritalStatusStatement: getMaritalStatusStatement(formData.client?.maritalStatus),
       notaryDate: formData.client?.notaryDate || '',
     },
 
@@ -104,11 +135,28 @@ const prepareTemplateData = (formData) => {
       lastName: formData.children[0].lastName || '',
       dateOfBirth: formData.children[0].dateOfBirth || '',
       fullName: `${formData.children[0].firstName || ''} ${formData.children[0].lastName || ''}`.trim(),
+      relation: formData.children[0].relation || 'child',
     } : {
       firstName: '',
       lastName: '',
       dateOfBirth: '',
       fullName: '',
+      relation: '',
+    },
+
+    // Example child (same as first child for template compatibility)
+    exampleChild: formData.children && formData.children.length > 0 ? {
+      firstName: formData.children[0].firstName || '',
+      lastName: formData.children[0].lastName || '',
+      dateOfBirth: formData.children[0].dateOfBirth || '',
+      fullName: `${formData.children[0].firstName || ''} ${formData.children[0].lastName || ''}`.trim(),
+      relation: formData.children[0].relation || 'child',
+    } : {
+      firstName: '',
+      lastName: '',
+      dateOfBirth: '',
+      fullName: '',
+      relation: '',
     },
 
     // Successor Trustees
@@ -124,17 +172,133 @@ const prepareTemplateData = (formData) => {
       `${i + 1}. ${g.firstName} ${g.lastName}`
     ).join('\n'),
 
-    // POA Agents - Client
+    // POA Agents - Client (individual agents with pronouns)
     clientPOA: formData.durablePOA?.client || [],
+    clientPOA1: formData.durablePOA?.client && formData.durablePOA.client.length > 0 ? {
+      firstName: formData.durablePOA.client[0].firstName || '',
+      lastName: formData.durablePOA.client[0].lastName || '',
+      fullName: `${formData.durablePOA.client[0].firstName || ''} ${formData.durablePOA.client[0].lastName || ''}`.trim(),
+      pronounPossessive: getPronounPossessive(formData.durablePOA.client[0].sex),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+      pronounPossessive: 'their',
+    },
+    clientPOA2: formData.durablePOA?.client && formData.durablePOA.client.length > 1 ? {
+      firstName: formData.durablePOA.client[1].firstName || '',
+      lastName: formData.durablePOA.client[1].lastName || '',
+      fullName: `${formData.durablePOA.client[1].firstName || ''} ${formData.durablePOA.client[1].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
 
     // POA Agents - Spouse
     spousePOA: formData.durablePOA?.spouse || [],
+    spousePOA1: formData.durablePOA?.spouse && formData.durablePOA.spouse.length > 0 ? {
+      firstName: formData.durablePOA.spouse[0].firstName || '',
+      lastName: formData.durablePOA.spouse[0].lastName || '',
+      fullName: `${formData.durablePOA.spouse[0].firstName || ''} ${formData.durablePOA.spouse[0].lastName || ''}`.trim(),
+      pronounPossessive: getPronounPossessive(formData.durablePOA.spouse[0].sex),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+      pronounPossessive: 'their',
+    },
+    spousePOA2: formData.durablePOA?.spouse && formData.durablePOA.spouse.length > 1 ? {
+      firstName: formData.durablePOA.spouse[1].firstName || '',
+      lastName: formData.durablePOA.spouse[1].lastName || '',
+      fullName: `${formData.durablePOA.spouse[1].firstName || ''} ${formData.durablePOA.spouse[1].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
 
     // Healthcare Agents - Client
     clientHealthcare: formData.healthcarePOA?.client || [],
+    clientHealthcare1: formData.healthcarePOA?.client && formData.healthcarePOA.client.length > 0 ? {
+      firstName: formData.healthcarePOA.client[0].firstName || '',
+      lastName: formData.healthcarePOA.client[0].lastName || '',
+      fullName: `${formData.healthcarePOA.client[0].firstName || ''} ${formData.healthcarePOA.client[0].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
+    clientHealthcare2: formData.healthcarePOA?.client && formData.healthcarePOA.client.length > 1 ? {
+      firstName: formData.healthcarePOA.client[1].firstName || '',
+      lastName: formData.healthcarePOA.client[1].lastName || '',
+      fullName: `${formData.healthcarePOA.client[1].firstName || ''} ${formData.healthcarePOA.client[1].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
 
     // Healthcare Agents - Spouse
     spouseHealthcare: formData.healthcarePOA?.spouse || [],
+    spouseHealthcare1: formData.healthcarePOA?.spouse && formData.healthcarePOA.spouse.length > 0 ? {
+      firstName: formData.healthcarePOA.spouse[0].firstName || '',
+      lastName: formData.healthcarePOA.spouse[0].lastName || '',
+      fullName: `${formData.healthcarePOA.spouse[0].firstName || ''} ${formData.healthcarePOA.spouse[0].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
+    spouseHealthcare2: formData.healthcarePOA?.spouse && formData.healthcarePOA.spouse.length > 1 ? {
+      firstName: formData.healthcarePOA.spouse[1].firstName || '',
+      lastName: formData.healthcarePOA.spouse[1].lastName || '',
+      fullName: `${formData.healthcarePOA.spouse[1].firstName || ''} ${formData.healthcarePOA.spouse[1].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
+
+    // Pour-Over Will Personal Representatives - Client
+    clientPourOverRep1: formData.pourOverWill?.client?.personalRepresentatives && formData.pourOverWill.client.personalRepresentatives.length > 0 ? {
+      firstName: formData.pourOverWill.client.personalRepresentatives[0].firstName || '',
+      lastName: formData.pourOverWill.client.personalRepresentatives[0].lastName || '',
+      fullName: `${formData.pourOverWill.client.personalRepresentatives[0].firstName || ''} ${formData.pourOverWill.client.personalRepresentatives[0].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
+    clientPourOverRep2: formData.pourOverWill?.client?.personalRepresentatives && formData.pourOverWill.client.personalRepresentatives.length > 1 ? {
+      firstName: formData.pourOverWill.client.personalRepresentatives[1].firstName || '',
+      lastName: formData.pourOverWill.client.personalRepresentatives[1].lastName || '',
+      fullName: `${formData.pourOverWill.client.personalRepresentatives[1].firstName || ''} ${formData.pourOverWill.client.personalRepresentatives[1].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
+
+    // Pour-Over Will Personal Representatives - Spouse
+    spousePourOverRep1: formData.pourOverWill?.spouse?.personalRepresentatives && formData.pourOverWill.spouse.personalRepresentatives.length > 0 ? {
+      firstName: formData.pourOverWill.spouse.personalRepresentatives[0].firstName || '',
+      lastName: formData.pourOverWill.spouse.personalRepresentatives[0].lastName || '',
+      fullName: `${formData.pourOverWill.spouse.personalRepresentatives[0].firstName || ''} ${formData.pourOverWill.spouse.personalRepresentatives[0].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
+    spousePourOverRep2: formData.pourOverWill?.spouse?.personalRepresentatives && formData.pourOverWill.spouse.personalRepresentatives.length > 1 ? {
+      firstName: formData.pourOverWill.spouse.personalRepresentatives[1].firstName || '',
+      lastName: formData.pourOverWill.spouse.personalRepresentatives[1].lastName || '',
+      fullName: `${formData.pourOverWill.spouse.personalRepresentatives[1].firstName || ''} ${formData.pourOverWill.spouse.personalRepresentatives[1].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
 
     // Anatomical Gifts
     anatomicalGifts: {
