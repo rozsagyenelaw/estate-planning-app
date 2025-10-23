@@ -64,21 +64,37 @@ export const fillPDFTemplate = async (templateBytes, formData) => {
  * Alternative: Fill PDF Form Fields (if template has form fields)
  * @param {Uint8Array} templateBytes - PDF template bytes
  * @param {Object} formData - Form data with client information
- * @returns {Promise<Blob>} - Filled PDF as Blob
+ * @returns {Promise<Blob|null>} - Filled PDF as Blob, or null if no form fields found
  */
 export const fillPDFFormFields = async (templateBytes, formData) => {
   try {
     const pdfDoc = await PDFDocument.load(templateBytes);
-    const form = pdfDoc.getForm();
+
+    // Check if PDF has a form
+    let form;
+    try {
+      form = pdfDoc.getForm();
+    } catch (formError) {
+      console.warn('PDF does not have a form:', formError.message);
+      return null; // No form found
+    }
 
     // Get all form fields
     const fields = form.getFields();
-    console.log('Found form fields:', fields.map(f => f.getName()));
+    console.log('Found form fields:', fields.length);
+
+    if (fields.length === 0) {
+      console.warn('PDF has no form fields - cannot fill placeholders');
+      return null; // No fields to fill
+    }
+
+    console.log('Form field names:', fields.map(f => f.getName()));
 
     // Create placeholder mapping
     const placeholders = createPlaceholderMap(formData);
 
     // Fill each field
+    let filledCount = 0;
     fields.forEach(field => {
       const fieldName = field.getName();
       const value = placeholders[fieldName];
@@ -89,12 +105,14 @@ export const fillPDFFormFields = async (templateBytes, formData) => {
 
           if (fieldType === 'PDFTextField') {
             field.setText(String(value));
+            filledCount++;
           } else if (fieldType === 'PDFCheckBox') {
             if (value === true || value === 'true' || value === 'yes') {
               field.check();
             } else {
               field.uncheck();
             }
+            filledCount++;
           }
 
           console.log(`Filled field: ${fieldName} = ${value}`);
@@ -103,6 +121,8 @@ export const fillPDFFormFields = async (templateBytes, formData) => {
         }
       }
     });
+
+    console.log(`Successfully filled ${filledCount} out of ${fields.length} fields`);
 
     // Flatten the form (optional - makes fields non-editable)
     // form.flatten();
@@ -295,7 +315,7 @@ const createPlaceholderMap = (formData) => {
  * Generate Estate Planning Package from PDF Template
  * @param {Object} formData - Form data
  * @param {string} templatePath - Path to PDF template
- * @returns {Promise<Blob>} - Filled PDF as Blob
+ * @returns {Promise<Blob|null>} - Filled PDF as Blob, or null if PDF has no form fields
  */
 export const generateFromPDFTemplate = async (formData, templatePath) => {
   try {
@@ -304,6 +324,11 @@ export const generateFromPDFTemplate = async (formData, templatePath) => {
 
     console.log('Filling PDF template with form data...');
     const filledPDF = await fillPDFFormFields(templateBytes, formData);
+
+    if (filledPDF === null) {
+      console.warn('PDF template has no form fields - cannot use PDF template system');
+      return null;
+    }
 
     console.log('PDF template filled successfully, size:', filledPDF.size, 'bytes');
     return filledPDF;

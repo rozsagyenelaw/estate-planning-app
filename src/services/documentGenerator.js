@@ -575,12 +575,18 @@ export const generateLivingTrust = async (formData) => {
     if (pdfTemplateExists) {
       console.log('Using PDF template system for Living Trust');
       const filledPDF = await generateFromPDFTemplate(formData, templatePath);
-      return filledPDF;
+
+      if (filledPDF !== null) {
+        console.log('PDF template filled successfully');
+        return filledPDF;
+      } else {
+        console.warn('PDF template has no form fields - falling back to JavaScript templates');
+      }
     } else {
       console.log('PDF template not found, falling back to JavaScript templates');
     }
   } catch (error) {
-    console.warn('Error checking PDF template, falling back to JavaScript templates:', error);
+    console.warn('Error with PDF template, falling back to JavaScript templates:', error);
   }
 
   // STEP 2: Fall back to JavaScript template system
@@ -1075,12 +1081,18 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
     if (pdfTemplateExists) {
       console.log('Using PDF template system for Complete Estate Plan');
       const filledPDF = await generateFromPDFTemplate(formData, templatePath);
-      return filledPDF;
+
+      if (filledPDF !== null) {
+        console.log('PDF template filled successfully');
+        return filledPDF;
+      } else {
+        console.warn('PDF template has no form fields - falling back to JavaScript templates');
+      }
     } else {
       console.log('PDF template not found, falling back to JavaScript templates');
     }
   } catch (error) {
-    console.warn('Error checking PDF template, falling back to JavaScript templates:', error);
+    console.warn('Error with PDF template, falling back to JavaScript templates:', error);
   }
 
   // STEP 2: Fall back to JavaScript template system
