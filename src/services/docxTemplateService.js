@@ -196,9 +196,28 @@ export const generateFromDOCXTemplate = async (formData, templatePath) => {
  */
 export const docxTemplateExists = async (templatePath) => {
   try {
+    console.log('Checking if DOCX template exists at:', templatePath);
     const response = await fetch(templatePath, { method: 'HEAD' });
-    return response.ok;
+    console.log('DOCX template HEAD response status:', response.status, 'ok:', response.ok);
+
+    // Check content type to avoid HTML being served instead of DOCX (SPA fallback)
+    const contentType = response.headers.get('content-type');
+    console.log('DOCX template content-type:', contentType);
+
+    if (response.ok && contentType && contentType.includes('html')) {
+      console.warn('❌ DOCX template path returns HTML (SPA fallback) - file does not exist');
+      return false;
+    }
+
+    if (response.ok) {
+      console.log('✅ DOCX template found!');
+      return true;
+    }
+
+    console.warn('❌ DOCX template not found (status:', response.status, ')');
+    return false;
   } catch (error) {
+    console.error('❌ Error checking DOCX template:', error);
     return false;
   }
 };

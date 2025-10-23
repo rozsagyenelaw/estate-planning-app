@@ -346,9 +346,28 @@ export const generateFromPDFTemplate = async (formData, templatePath) => {
  */
 export const templateExists = async (templatePath) => {
   try {
+    console.log('Checking if PDF template exists at:', templatePath);
     const response = await fetch(templatePath, { method: 'HEAD' });
-    return response.ok;
+    console.log('PDF template HEAD response status:', response.status, 'ok:', response.ok);
+
+    // Check content type to avoid HTML being served instead of PDF (SPA fallback)
+    const contentType = response.headers.get('content-type');
+    console.log('PDF template content-type:', contentType);
+
+    if (response.ok && contentType && contentType.includes('html')) {
+      console.warn('❌ PDF template path returns HTML (SPA fallback) - file does not exist');
+      return false;
+    }
+
+    if (response.ok) {
+      console.log('✅ PDF template found!');
+      return true;
+    }
+
+    console.warn('❌ PDF template not found (status:', response.status, ')');
+    return false;
   } catch (error) {
+    console.error('❌ Error checking PDF template:', error);
     return false;
   }
 };
