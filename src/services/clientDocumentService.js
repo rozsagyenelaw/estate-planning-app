@@ -38,7 +38,9 @@ export const saveClientWithLivingTrust = async (formData, onProgress = null) => 
     // Step 3: Generate Living Trust documents (PDF and Word)
     updateProgress(onProgress, 40, 'Generating Living Trust PDF...');
     const pdfDoc = await generateLivingTrust(formData);
-    const pdfBlob = pdfDoc.output('blob');
+
+    // Handle both jsPDF objects and Blobs
+    const pdfBlob = (pdfDoc instanceof Blob) ? pdfDoc : pdfDoc.output('blob');
 
     updateProgress(onProgress, 55, 'Generating Living Trust Word document...');
     const wordBlob = await generateLivingTrustWord(formData);

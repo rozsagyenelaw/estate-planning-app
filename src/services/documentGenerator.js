@@ -1504,12 +1504,26 @@ export const generateCompleteEstatePlanningPackageWord = async (formData) => {
 
 /**
  * Download a PDF document
- * @param {jsPDF} doc - PDF document
+ * @param {jsPDF|Blob} doc - PDF document (jsPDF object or Blob)
  * @param {string} filename - Filename for download
  */
 export const downloadDocument = (doc, filename) => {
   try {
-    doc.save(filename);
+    // Check if doc is a Blob
+    if (doc instanceof Blob) {
+      // Create a temporary URL for the Blob and download it
+      const url = URL.createObjectURL(doc);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } else {
+      // Assume it's a jsPDF object with .save() method
+      doc.save(filename);
+    }
   } catch (error) {
     console.error('Error downloading document:', error);
     throw error;
