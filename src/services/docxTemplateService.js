@@ -370,6 +370,15 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
     console.error('Error filling DOCX template:', error);
     if (error.properties && error.properties.errors) {
       console.error('Template errors:', error.properties.errors);
+      console.error('Detailed error info:');
+      error.properties.errors.forEach((err, i) => {
+        console.error(`  Error ${i + 1}:`, {
+          message: err.message,
+          tag: err.properties?.xtag,
+          context: err.properties?.context?.substring(0, 150),
+          explanation: err.properties?.explanation,
+        });
+      });
     }
     throw error;
   }
