@@ -8,6 +8,8 @@ import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel } fro
 import { formatDate, formatPhoneNumber } from '../utils/formatters';
 import { DOCUMENT_TYPES } from '../utils/constants';
 import { processTemplate, prepareTemplateData } from './templateEngine';
+import { getTemplatePath, getTemplateName } from './pdfTemplateConfig';
+import { templateExists, generateFromPDFTemplate } from './pdfTemplateService';
 import { singleLivingTrustTemplate } from '../templates/singleLivingTrust';
 import { jointLivingTrustTemplate } from '../templates/jointLivingTrust';
 import { singleIrrevocableTrustTemplate } from '../templates/singleIrrevocableTrust';
@@ -547,7 +549,7 @@ const generateWordFromText = async (textContent, documentTitle, formData = null)
 /**
  * Generate Living Trust document
  * @param {Object} formData - Complete form data
- * @returns {jsPDF} PDF document
+ * @returns {jsPDF|Blob} PDF document (jsPDF for JS templates, Blob for PDF templates)
  */
 export const generateLivingTrust = async (formData) => {
   console.log('=== DEBUG: generateLivingTrust ===');
@@ -562,7 +564,26 @@ export const generateLivingTrust = async (formData) => {
     formData.currentDate = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
   }
 
-  // For single and joint living trusts, use the function-based template system
+  // STEP 1: Try to use PDF template first
+  try {
+    const templatePath = getTemplatePath(formData, false); // false = Living Trust only
+    console.log('Checking for PDF template at:', templatePath);
+
+    const pdfTemplateExists = await templateExists(templatePath);
+    console.log('PDF template exists:', pdfTemplateExists);
+
+    if (pdfTemplateExists) {
+      console.log('Using PDF template system for Living Trust');
+      const filledPDF = await generateFromPDFTemplate(formData, templatePath);
+      return filledPDF;
+    } else {
+      console.log('PDF template not found, falling back to JavaScript templates');
+    }
+  } catch (error) {
+    console.warn('Error checking PDF template, falling back to JavaScript templates:', error);
+  }
+
+  // STEP 2: Fall back to JavaScript template system
   let content;
   if (formData.trustType === 'single' || formData.trustType === 'joint' || !formData.trustType) {
     console.log('Using function-based template system');
@@ -1030,7 +1051,7 @@ export const generateAllDocuments = async (formData) => {
 /**
  * Generate Complete Estate Planning Package (All documents in one PDF)
  * @param {Object} formData - Complete form data
- * @returns {jsPDF} Single PDF with all documents
+ * @returns {jsPDF|Blob} Single PDF with all documents (jsPDF for JS templates, Blob for PDF templates)
  */
 export const generateCompleteEstatePlanningPackage = async (formData) => {
   console.log('=== Generating Complete Estate Planning Package ===');
@@ -1043,6 +1064,26 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
     formData.currentDate = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
   }
 
+  // STEP 1: Try to use PDF template first
+  try {
+    const templatePath = getTemplatePath(formData, true); // true = Complete Estate Plan
+    console.log('Checking for PDF template at:', templatePath);
+
+    const pdfTemplateExists = await templateExists(templatePath);
+    console.log('PDF template exists:', pdfTemplateExists);
+
+    if (pdfTemplateExists) {
+      console.log('Using PDF template system for Complete Estate Plan');
+      const filledPDF = await generateFromPDFTemplate(formData, templatePath);
+      return filledPDF;
+    } else {
+      console.log('PDF template not found, falling back to JavaScript templates');
+    }
+  } catch (error) {
+    console.warn('Error checking PDF template, falling back to JavaScript templates:', error);
+  }
+
+  // STEP 2: Fall back to JavaScript template system
   const isJoint = formData.isJoint || formData.trustType === 'joint';
   const templateData = prepareTemplateData(formData);
   let combinedContent = '';
