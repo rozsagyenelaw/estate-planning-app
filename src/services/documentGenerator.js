@@ -45,11 +45,20 @@ const addCoverPage = (doc, formData, documentTitle) => {
   const pageWidth = 8.5;
   let yPos = 3.5; // Start 3.5 inches from top
 
-  // Trust name (uppercase) with date - handle joint vs single trusts
+  // Trust name (uppercase) with date - handle restatements and regular trusts
   let trustName;
-  if (formData.isJoint || formData.trustType === 'joint') {
+
+  if (formData.isRestatement && formData.originalTrustName) {
+    // For restatements, use the original trust name
+    trustName = formData.originalTrustName.toUpperCase();
+    if (formData.originalTrustDate) {
+      trustName += ` DATED ${formData.originalTrustDate.toUpperCase()}`;
+    }
+  } else if (formData.isJoint || formData.trustType === 'joint') {
+    // Joint trust (not restatement)
     trustName = `THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} AND ${formData.spouse.firstName.toUpperCase()} ${formData.spouse.lastName.toUpperCase()} LIVING TRUST DATED ${formData.currentDate.toUpperCase()}`;
   } else {
+    // Single trust (not restatement)
     trustName = `THE ${formData.client.firstName.toUpperCase()} ${formData.client.lastName.toUpperCase()} LIVING TRUST DATED ${formData.currentDate.toUpperCase()}`;
   }
 
@@ -60,7 +69,15 @@ const addCoverPage = (doc, formData, documentTitle) => {
     yPos += 0.3;
   }
 
-  yPos += 0.3;
+  // Add "RESTATEMENT DATED" if this is a restatement
+  if (formData.isRestatement) {
+    yPos += 0.2;
+    doc.setFontSize(16);
+    doc.text(`RESTATEMENT DATED ${formData.currentDate.toUpperCase()}`, pageWidth / 2, yPos, { align: 'center' });
+    yPos += 0.3;
+  } else {
+    yPos += 0.3;
+  }
 
   // Footer - Prepared by
   doc.setFont('times', 'normal');
