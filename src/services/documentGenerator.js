@@ -1216,7 +1216,13 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
     combinedContent = combinedContent.replace(/\[PAGE_BREAK\]/g, '\f');
 
     // Generate single PDF with all content
-    return generatePDFFromText(combinedContent, 'Complete Estate Planning Package', formData);
+    const pdfDoc = generatePDFFromText(combinedContent, 'Complete Estate Planning Package', formData);
+
+    // Convert jsPDF document to Blob for upload
+    const pdfBlob = pdfDoc.output('blob');
+    console.log('PDF blob created, size:', pdfBlob.size, 'bytes');
+
+    return pdfBlob;
 
   } catch (error) {
     console.error('Error generating complete package:', error);

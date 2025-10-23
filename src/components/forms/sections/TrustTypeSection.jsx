@@ -10,7 +10,9 @@ const TrustTypeSection = () => {
   };
 
   const handleRestatementChange = (e) => {
-    updateFormData({ isRestatement: e.target.checked });
+    const isChecked = e.target.checked;
+    console.log('Restatement checkbox changed to:', isChecked);
+    updateFormData({ isRestatement: isChecked });
   };
 
   // Get current trust type label for display
@@ -38,21 +40,13 @@ const TrustTypeSection = () => {
         />
 
         {formData.isRestatement && (
-          <div className="ml-6 space-y-4 p-4 bg-gray-50 rounded-lg">
-            <Input
-              label="Original Trust Name"
-              value={formData.originalTrustName}
-              onChange={(e) => updateFormData({ originalTrustName: e.target.value })}
-              placeholder="Enter original trust name"
-              required
-            />
-
-            <DatePicker
-              label="Original Trust Date"
-              value={formData.originalTrustDate}
-              onChange={(e) => updateFormData({ originalTrustDate: e.target.value })}
-              required
-            />
+          <div className="ml-6 p-4 bg-yellow-50 border border-yellow-300 rounded-lg">
+            <p className="text-sm text-yellow-800 font-semibold">
+              ⚠️ Restatement Mode Active
+            </p>
+            <p className="text-xs text-yellow-700 mt-1">
+              You will be asked to provide the exact original trust name and date in the Trust Name section below.
+            </p>
           </div>
         )}
 

@@ -1,0 +1,19 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Client documents
+    match /clients/{clientId}/documents/{document} {
+      // For now, allow all read/write operations
+      // TODO: Add authentication and restrict to authorized users only
+      allow read, write: if true;
+
+      // Limit file size to 10MB
+      allow write: if request.resource.size < 10 * 1024 * 1024;
+
+      // For production with authentication, use:
+      // allow read: if request.auth != null;
+      // allow write: if request.auth != null && request.resource.size < 10 * 1024 * 1024;
+    }
+  }
+}
