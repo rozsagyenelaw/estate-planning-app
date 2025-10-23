@@ -1,0 +1,41 @@
+═══════════════════════════════════════════════════════════════════
+
+  📍 PUT YOUR 6 PDF TEMPLATES IN THIS FOLDER:
+  
+  /Users/rozsagyene/estate-planning-app/public/templates/
+  
+═══════════════════════════════════════════════════════════════════
+
+COPY THESE 6 FILES INTO THE FOLDER ABOVE:
+
+1. single_living_trust_template.pdf
+2. joint_living_trust_template.pdf
+3. single_irrevocable_trust_template.pdf
+4. joint_irrevocable_trust_template.pdf
+5. single_estate_planning_template.pdf
+6. joint_estate_planning_template.pdf
+
+═══════════════════════════════════════════════════════════════════
+
+HOW TO DO IT:
+
+Option 1 (Easy):
+  • Open Finder
+  • Go to: /Users/rozsagyene/estate-planning-app/public/templates/
+  • Drag your 6 PDFs into that folder
+  • Done!
+
+Option 2 (GitHub):
+  • Go to: https://github.com/rozsagyenelaw/estate-planning-app/tree/main/public/templates
+  • Click "Add file" → "Upload files"
+  • Drag your 6 PDFs
+  • Click "Commit changes"
+  • Done!
+
+═══════════════════════════════════════════════════════════════════
+
+Then tell me: "Templates are uploaded!"
+
+And I'll integrate them into the app.
+
+═══════════════════════════════════════════════════════════════════
