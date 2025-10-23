@@ -1,0 +1,87 @@
+/**
+ * PDF Template Configuration
+ * Maps trust types to their corresponding PDF templates
+ */
+
+export const PDF_TEMPLATES = {
+  // Living Trust Templates (Trust document only)
+  SINGLE_LIVING_TRUST: {
+    name: 'Single Living Trust',
+    path: '/templates/single_living_trust_template.pdf',
+    description: 'Single revocable living trust document only'
+  },
+  JOINT_LIVING_TRUST: {
+    name: 'Joint Living Trust',
+    path: '/templates/joint_living_trust_template.pdf',
+    description: 'Joint revocable living trust document only'
+  },
+
+  // Irrevocable Trust Templates (Trust document only)
+  SINGLE_IRREVOCABLE_TRUST: {
+    name: 'Single Irrevocable Trust',
+    path: '/templates/single_irrevocable_trust_template.pdf',
+    description: 'Single irrevocable trust document only'
+  },
+  JOINT_IRREVOCABLE_TRUST: {
+    name: 'Joint Irrevocable Trust',
+    path: '/templates/joint_irrevocable_trust_template.pdf',
+    description: 'Joint irrevocable trust document only'
+  },
+
+  // Complete Estate Planning Package Templates (All documents)
+  SINGLE_ESTATE_PLAN: {
+    name: 'Single Estate Planning Package',
+    path: '/templates/single_estate_planning_template.pdf',
+    description: 'Complete estate planning portfolio for single person'
+  },
+  JOINT_ESTATE_PLAN: {
+    name: 'Joint Estate Planning Package',
+    path: '/templates/joint_estate_planning_template.pdf',
+    description: 'Complete estate planning portfolio for married couple'
+  }
+};
+
+/**
+ * Get the appropriate template based on form data
+ * @param {Object} formData - Form data
+ * @param {boolean} isCompletePlan - True for complete package, false for living trust only
+ * @returns {Object} Template configuration
+ */
+export const getTemplateForFormData = (formData, isCompletePlan = false) => {
+  const isJoint = formData.isJoint || formData.trustType === 'joint' || formData.trustType === 'joint_irrevocable';
+  const isIrrevocable = formData.isIrrevocable || formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable';
+
+  if (isCompletePlan) {
+    // Complete Estate Planning Package
+    return isJoint ? PDF_TEMPLATES.JOINT_ESTATE_PLAN : PDF_TEMPLATES.SINGLE_ESTATE_PLAN;
+  } else {
+    // Living Trust Only
+    if (isIrrevocable) {
+      return isJoint ? PDF_TEMPLATES.JOINT_IRREVOCABLE_TRUST : PDF_TEMPLATES.SINGLE_IRREVOCABLE_TRUST;
+    } else {
+      return isJoint ? PDF_TEMPLATES.JOINT_LIVING_TRUST : PDF_TEMPLATES.SINGLE_LIVING_TRUST;
+    }
+  }
+};
+
+/**
+ * Get template path for form data
+ * @param {Object} formData - Form data
+ * @param {boolean} isCompletePlan - True for complete package, false for living trust only
+ * @returns {string} Template path
+ */
+export const getTemplatePath = (formData, isCompletePlan = false) => {
+  const template = getTemplateForFormData(formData, isCompletePlan);
+  return template.path;
+};
+
+/**
+ * Get template name for form data
+ * @param {Object} formData - Form data
+ * @param {boolean} isCompletePlan - True for complete package, false for living trust only
+ * @returns {string} Template name
+ */
+export const getTemplateName = (formData, isCompletePlan = false) => {
+  const template = getTemplateForFormData(formData, isCompletePlan);
+  return template.name;
+};

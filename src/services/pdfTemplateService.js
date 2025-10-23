@@ -284,7 +284,7 @@ const createPlaceholderMap = (formData) => {
  * @param {string} templatePath - Path to PDF template
  * @returns {Promise<Blob>} - Filled PDF as Blob
  */
-export const generateFromPDFTemplate = async (formData, templatePath = '/templates/estate_planning_portfolio_template.pdf') => {
+export const generateFromPDFTemplate = async (formData, templatePath) => {
   try {
     console.log('Loading PDF template from:', templatePath);
     const templateBytes = await loadPDFTemplate(templatePath);
@@ -298,5 +298,19 @@ export const generateFromPDFTemplate = async (formData, templatePath = '/templat
   } catch (error) {
     console.error('Error generating from PDF template:', error);
     throw error;
+  }
+};
+
+/**
+ * Check if a PDF template exists
+ * @param {string} templatePath - Path to PDF template
+ * @returns {Promise<boolean>} - True if template exists
+ */
+export const templateExists = async (templatePath) => {
+  try {
+    const response = await fetch(templatePath, { method: 'HEAD' });
+    return response.ok;
+  } catch (error) {
+    return false;
   }
 };
