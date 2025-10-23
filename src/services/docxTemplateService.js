@@ -91,6 +91,26 @@ const prepareTemplateData = (formData) => {
       `${i + 1}. ${c.firstName} ${c.lastName}, born ${c.dateOfBirth}`
     ).join('\n'),
 
+    // Children statement (for templates)
+    childrenStatement: formData.children && formData.children.length > 0
+      ? formData.children.length === 1
+        ? `I have one child, ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formData.children[0].dateOfBirth}.`
+        : `I have ${formData.children.length} children.`
+      : 'I have no children.',
+
+    // First child info (for templates that reference first child specifically)
+    firstChild: formData.children && formData.children.length > 0 ? {
+      firstName: formData.children[0].firstName || '',
+      lastName: formData.children[0].lastName || '',
+      dateOfBirth: formData.children[0].dateOfBirth || '',
+      fullName: `${formData.children[0].firstName || ''} ${formData.children[0].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      dateOfBirth: '',
+      fullName: '',
+    },
+
     // Successor Trustees
     successorTrustees: formData.successorTrustees || [],
     numTrustees: formData.successorTrustees?.length || 0,
@@ -136,9 +156,33 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
   try {
     // Load the template
     const zip = new PizZip(templateBuffer);
+
+    // Fix split tags in the ZIP
+    // When Word formats text, it often splits {placeholders} across multiple XML elements
+    // We need to merge these back together
+    const documentXml = zip.file('word/document.xml').asText();
+
+    // Simple regex to merge split placeholders
+    // Match: {</w:t>...<w:t>text</w:t>...<w:t>}
+    const mergedXml = documentXml.replace(
+      /\{([^}]*?)<\/w:t>([\s\S]*?)<w:t>([^}]*?)\}/g,
+      function(match, before, middle, after) {
+        // Extract just the text content from middle section
+        const middleText = middle.replace(/<[^>]+>/g, '');
+        return `{${before}${middleText}${after}}`;
+      }
+    );
+
+    // Update the zip with merged content
+    zip.file('word/document.xml', mergedXml);
+
     const doc = new Docxtemplater(zip, {
       paragraphLoop: true,
       linebreaks: true,
+      nullGetter: function(part) {
+        // Return empty string for undefined values instead of throwing error
+        return '';
+      },
     });
 
     // Prepare data
