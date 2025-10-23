@@ -10,6 +10,8 @@ import { DOCUMENT_TYPES } from '../utils/constants';
 import { processTemplate, prepareTemplateData } from './templateEngine';
 import { getTemplatePath, getTemplateName } from './pdfTemplateConfig';
 import { templateExists, generateFromPDFTemplate } from './pdfTemplateService';
+import { getDOCXTemplatePath, getDOCXTemplateName } from './docxTemplateConfig';
+import { docxTemplateExists, generateFromDOCXTemplate } from './docxTemplateService';
 import { singleLivingTrustTemplate } from '../templates/singleLivingTrust';
 import { jointLivingTrustTemplate } from '../templates/jointLivingTrust';
 import { singleIrrevocableTrustTemplate } from '../templates/singleIrrevocableTrust';
@@ -564,7 +566,27 @@ export const generateLivingTrust = async (formData) => {
     formData.currentDate = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
   }
 
-  // STEP 1: Try to use PDF template first
+  // STEP 1: Try to use DOCX template first
+  try {
+    const docxPath = getDOCXTemplatePath(formData, false); // false = Living Trust only
+    console.log('Checking for DOCX template at:', docxPath);
+
+    const docxExists = await docxTemplateExists(docxPath);
+    console.log('DOCX template exists:', docxExists);
+
+    if (docxExists) {
+      console.log('Using DOCX template system for Living Trust');
+      const filledDOCX = await generateFromDOCXTemplate(formData, docxPath);
+      console.log('DOCX template filled successfully');
+      return filledDOCX;
+    } else {
+      console.log('DOCX template not found, checking for PDF template...');
+    }
+  } catch (error) {
+    console.warn('Error with DOCX template, trying PDF template:', error);
+  }
+
+  // STEP 2: Try to use PDF template if DOCX not found
   try {
     const templatePath = getTemplatePath(formData, false); // false = Living Trust only
     console.log('Checking for PDF template at:', templatePath);
@@ -1070,7 +1092,27 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
     formData.currentDate = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
   }
 
-  // STEP 1: Try to use PDF template first
+  // STEP 1: Try to use DOCX template first
+  try {
+    const docxPath = getDOCXTemplatePath(formData, true); // true = Complete Estate Plan
+    console.log('Checking for DOCX template at:', docxPath);
+
+    const docxExists = await docxTemplateExists(docxPath);
+    console.log('DOCX template exists:', docxExists);
+
+    if (docxExists) {
+      console.log('Using DOCX template system for Complete Estate Plan');
+      const filledDOCX = await generateFromDOCXTemplate(formData, docxPath);
+      console.log('DOCX template filled successfully');
+      return filledDOCX;
+    } else {
+      console.log('DOCX template not found, checking for PDF template...');
+    }
+  } catch (error) {
+    console.warn('Error with DOCX template, trying PDF template:', error);
+  }
+
+  // STEP 2: Try to use PDF template if DOCX not found
   try {
     const templatePath = getTemplatePath(formData, true); // true = Complete Estate Plan
     console.log('Checking for PDF template at:', templatePath);
