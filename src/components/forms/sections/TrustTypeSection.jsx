@@ -10,9 +10,7 @@ const TrustTypeSection = () => {
   };
 
   const handleRestatementChange = (e) => {
-    const isChecked = e.target.checked;
-    console.log('Restatement checkbox changed to:', isChecked);
-    updateFormData({ isRestatement: isChecked });
+    updateFormData({ isRestatement: e.target.checked });
   };
 
   // Get current trust type label for display

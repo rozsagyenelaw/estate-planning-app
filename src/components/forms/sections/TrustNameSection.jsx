@@ -6,10 +6,6 @@ import { generateTrustName } from '../../../utils/formatters';
 const TrustNameSection = () => {
   const { formData, updateFormData } = useFormContext();
 
-  // Debug: log formData changes
-  console.log('TrustNameSection - formData.isRestatement:', formData.isRestatement);
-  console.log('TrustNameSection - formData.customTrustName:', formData.customTrustName);
-
   // Auto-generate trust name when not using custom name
   useEffect(() => {
     if (!formData.customTrustName && formData.client.name) {
