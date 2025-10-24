@@ -625,6 +625,7 @@ export const generateLivingTrust = async (formData) => {
 
 /**
  * Generate Living Trust Word document
+ * MODIFIED: ONLY uses DOCX templates - NO JavaScript templates
  * @param {Object} formData - Complete form data
  * @returns {Promise<Blob>} Word document as Blob
  */
@@ -639,38 +640,35 @@ export const generateLivingTrustWord = async (formData) => {
     formData.currentDate = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
   }
 
-  // Generate content
-  let content;
-  if (formData.trustType === 'single' || formData.trustType === 'joint' || !formData.trustType) {
-    // Function-based templates for living trusts
-    if (formData.trustType === 'joint' || formData.isJoint) {
-      content = jointLivingTrustTemplate(formData);
+  // ONLY USE DOCX TEMPLATES - no more JavaScript templates
+  try {
+    const docxPath = getDOCXTemplatePath(formData, false); // false = Living Trust only
+    console.log('Using DOCX template at:', docxPath);
+
+    const docxExists = await docxTemplateExists(docxPath);
+    console.log('DOCX template exists:', docxExists);
+
+    if (docxExists) {
+      console.log('Generating from DOCX template...');
+      const filledDOCX = await generateFromDOCXTemplate(formData, docxPath);
+      console.log('DOCX generated successfully');
+      return filledDOCX;
     } else {
-      content = singleLivingTrustTemplate(formData);
+      const isJoint = formData.isJoint || formData.trustType === 'joint';
+      const templateType = isJoint ? 'Joint' : 'Single';
+      
+      throw new Error(
+        `No DOCX template found for ${templateType} Living Trust.\n\n` +
+        'Please upload:\n' +
+        `${templateType.toLowerCase()}_living_trust_template.docx\n\n` +
+        'to the /public/templates/ folder.\n\n' +
+        'See HOW_TO_CREATE_DOCX_TEMPLATES.md for instructions.'
+      );
     }
-  } else {
-    // Placeholder-based templates for irrevocable trusts
-    const templateData = prepareTemplateData(formData);
-    let template;
-
-    switch (formData.trustType) {
-      case 'single_irrevocable':
-        template = singleIrrevocableTrustTemplate;
-        break;
-      case 'joint_irrevocable':
-        template = jointIrrevocableTrustTemplate;
-        break;
-      default:
-        template = singleIrrevocableTrustTemplate;
-    }
-
-    content = processTemplate(template, templateData);
+  } catch (error) {
+    console.error('Error generating Living Trust Word document:', error);
+    throw error;
   }
-
-  const isIrrevocable = formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable';
-  const docTitle = isIrrevocable ? 'Irrevocable Trust' : 'Living Trust';
-
-  return generateWordFromText(content, docTitle, formData);
 };
 
 /**
@@ -1110,6 +1108,7 @@ export const generateCompleteEstatePlanningPackage = async (formData) => {
 
 /**
  * Generate Complete Estate Planning Package as Word Document
+ * MODIFIED: ONLY uses DOCX templates - NO JavaScript templates
  * @param {Object} formData - Complete form data
  * @returns {Promise<Blob>} Word document as Blob
  */
@@ -1124,200 +1123,33 @@ export const generateCompleteEstatePlanningPackageWord = async (formData) => {
     formData.currentDate = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
   }
 
-  const isJoint = formData.isJoint || formData.trustType === 'joint';
-  const templateData = prepareTemplateData(formData);
-  let combinedContent = '';
-
+  // ONLY USE DOCX TEMPLATES - no more JavaScript templates
   try {
-    // Helper function to add document separator
-    const addDocumentSeparator = (title) => {
-      return `\n\n\n[PAGE_BREAK]\n\n\n${title}\n\n`;
-    };
+    const docxPath = getDOCXTemplatePath(formData, true); // true = Complete Estate Plan
+    console.log('Using DOCX template at:', docxPath);
 
-    // INTRO PAGES - Portfolio Cover and Information Pages
+    const docxExists = await docxTemplateExists(docxPath);
+    console.log('DOCX template exists:', docxExists);
 
-    // 1. Cover Page
-    console.log('Adding Cover Page...');
-    const coverTemplate = estatePlanningCoverPageTemplate();
-    const coverText = processTemplate(coverTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += coverText;
-
-    // 2. Table of Contents
-    console.log('Adding Table of Contents...');
-    combinedContent += addDocumentSeparator('');
-    const tocTemplate = tableOfContentsTemplate();
-    const tocText = processTemplate(tocTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += tocText;
-
-    // 3. Introduction Page
-    console.log('Adding Introduction Page...');
-    combinedContent += addDocumentSeparator('');
-    const introTemplate = introductionPageTemplate();
-    const introText = processTemplate(introTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += introText;
-
-    // 4. Overview Page (Trust Information)
-    console.log('Adding Overview Page...');
-    combinedContent += addDocumentSeparator('');
-    const overviewTemplate = overviewPageTemplate();
-    const overviewText = processTemplate(overviewTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += overviewText;
-
-    // 5. Revocable Living Trust Section Page
-    console.log('Adding Revocable Living Trust Section Page...');
-    combinedContent += addDocumentSeparator('');
-    const trustSectionTemplate = revocableLivingTrustSectionPageTemplate();
-    const trustSectionText = processTemplate(trustSectionTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += trustSectionText;
-
-    // LEGAL DOCUMENTS START HERE
-
-    // 6. Certificate of Trust (joint document - one for both grantors)
-    console.log('Adding Certificate of Trust...');
-    combinedContent += addDocumentSeparator('');
-    const certTemplate = certificateOfTrustTemplate();
-    const certText = processTemplate(certTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += certText;
-
-    // 2. Trustee Affidavit (joint document - one for both grantors)
-    console.log('Adding Trustee Affidavit...');
-    combinedContent += addDocumentSeparator('TRUSTEE AFFIDAVIT');
-    const affidavitTemplate = trusteeAffidavitTemplate();
-    const affidavitText = processTemplate(affidavitTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += affidavitText;
-
-    // 3. Pour Over Will - CLIENT (separate for each grantor)
-    console.log('Adding Pour Over Will...');
-    combinedContent += addDocumentSeparator('POUR OVER WILL - ' + (isJoint ? 'CLIENT' : ''));
-    const pourOverTemplate = pourOverWillTemplate('client');
-    const pourOverText = processTemplate(pourOverTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += pourOverText;
-
-    // 4. Pour Over Will - SPOUSE (if joint trust)
-    if (isJoint) {
-      combinedContent += addDocumentSeparator('POUR OVER WILL - SPOUSE');
-      const pourOverSpouseTemplate = pourOverWillTemplate('spouse');
-      const pourOverSpouseText = processTemplate(pourOverSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-      combinedContent += pourOverSpouseText;
+    if (docxExists) {
+      console.log('Generating from DOCX template...');
+      const filledDOCX = await generateFromDOCXTemplate(formData, docxPath);
+      console.log('DOCX generated successfully');
+      return filledDOCX;
+    } else {
+      const isJoint = formData.isJoint || formData.trustType === 'joint';
+      const templateType = isJoint ? 'Joint' : 'Single';
+      
+      throw new Error(
+        `No DOCX template found for ${templateType} Estate Planning Package.\n\n` +
+        'Please upload:\n' +
+        `${templateType.toLowerCase()}_estate_planning_template.docx\n\n` +
+        'to the /public/templates/ folder.\n\n' +
+        'See HOW_TO_CREATE_DOCX_TEMPLATES.md for instructions.'
+      );
     }
-
-    // ADDITIONAL PORTFOLIO SECTIONS
-
-    // 5. Nominations Page
-    console.log('Adding Nominations Page...');
-    combinedContent += addDocumentSeparator('');
-    const nominationsTemplate = nominationsPageTemplate();
-    const nominationsText = processTemplate(nominationsTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += nominationsText;
-
-    // 6. Confirmation of Names and Fiduciaries
-    console.log('Adding Confirmation of Names and Fiduciaries...');
-    combinedContent += addDocumentSeparator('');
-    const confirmationTemplate = confirmationOfNamesTemplate();
-    const confirmationText = processTemplate(confirmationTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += confirmationText;
-
-    // 7. Personal Information Page
-    console.log('Adding Personal Information Page...');
-    combinedContent += addDocumentSeparator('');
-    const personalInfoTemplate = personalInformationPageTemplate();
-    const personalInfoText = processTemplate(personalInfoTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += personalInfoText;
-
-    // 8. Funding Instructions Page
-    console.log('Adding Funding Instructions Page...');
-    combinedContent += addDocumentSeparator('');
-    const fundingTemplate = fundingInstructionsPageTemplate();
-    const fundingText = processTemplate(fundingTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += fundingText;
-
-    // POWER OF ATTORNEY AND HEALTHCARE DOCUMENTS
-
-    // 9. Durable Power of Attorney - CLIENT (separate for each grantor)
-    console.log('Adding Durable Power of Attorney...');
-    combinedContent += addDocumentSeparator('DURABLE POWER OF ATTORNEY - ' + (isJoint ? 'CLIENT' : ''));
-    const durableTemplate = durablePowerOfAttorneyTemplate('client');
-    const durableText = processTemplate(durableTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += durableText;
-
-    // 6. Durable Power of Attorney - SPOUSE (if joint trust)
-    if (isJoint) {
-      combinedContent += addDocumentSeparator('DURABLE POWER OF ATTORNEY - SPOUSE');
-      const durableSpouseTemplate = durablePowerOfAttorneyTemplate('spouse');
-      const durableSpouseText = processTemplate(durableSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-      combinedContent += durableSpouseText;
-    }
-
-    // 7. Advanced Healthcare Directive - CLIENT (separate for each grantor)
-    console.log('Adding Advanced Healthcare Directive...');
-    combinedContent += addDocumentSeparator('ADVANCED HEALTHCARE DIRECTIVE - ' + (isJoint ? 'CLIENT' : ''));
-    const healthcareTemplate = advancedHealthcareDirectiveTemplate('client');
-    const healthcareText = processTemplate(healthcareTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += healthcareText;
-
-    // 8. Advanced Healthcare Directive - SPOUSE (if joint trust)
-    if (isJoint) {
-      combinedContent += addDocumentSeparator('ADVANCED HEALTHCARE DIRECTIVE - SPOUSE');
-      const healthcareSpouseTemplate = advancedHealthcareDirectiveTemplate('spouse');
-      const healthcareSpouseText = processTemplate(healthcareSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-      combinedContent += healthcareSpouseText;
-    }
-
-    // 9. HIPAA Authorization - CLIENT (separate for each grantor)
-    console.log('Adding HIPAA Authorization...');
-    combinedContent += addDocumentSeparator('HIPAA AUTHORIZATION - ' + (isJoint ? 'CLIENT' : ''));
-    const hipaaTemplate = hipaaAuthorizationTemplate('client');
-    const hipaaText = processTemplate(hipaaTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += hipaaText;
-
-    // 10. HIPAA Authorization - SPOUSE (if joint trust)
-    if (isJoint) {
-      combinedContent += addDocumentSeparator('HIPAA AUTHORIZATION - SPOUSE');
-      const hipaaSpouseTemplate = hipaaAuthorizationTemplate('spouse');
-      const hipaaSpouseText = processTemplate(hipaaSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-      combinedContent += hipaaSpouseText;
-    }
-
-    // 11. Personal Property Assignment - CLIENT (separate for each grantor)
-    console.log('Adding Personal Property Assignment...');
-    combinedContent += addDocumentSeparator('PERSONAL PROPERTY ASSIGNMENT - ' + (isJoint ? 'CLIENT' : ''));
-    const propAssignTemplate = personalPropertyAssignmentTemplate('client');
-    const propAssignText = processTemplate(propAssignTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += propAssignText;
-
-    // 12. Personal Property Assignment - SPOUSE (if joint trust)
-    if (isJoint) {
-      combinedContent += addDocumentSeparator('PERSONAL PROPERTY ASSIGNMENT - SPOUSE');
-      const propAssignSpouseTemplate = personalPropertyAssignmentTemplate('spouse');
-      const propAssignSpouseText = processTemplate(propAssignSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-      combinedContent += propAssignSpouseText;
-    }
-
-    // 13. Personal Property Memorandum - CLIENT (separate for each grantor)
-    console.log('Adding Personal Property Memorandum...');
-    combinedContent += addDocumentSeparator('PERSONAL PROPERTY MEMORANDUM - ' + (isJoint ? 'CLIENT' : ''));
-    const propMemoTemplate = personalPropertyMemorandumTemplate('client');
-    const propMemoText = processTemplate(propMemoTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-    combinedContent += propMemoText;
-
-    // 14. Personal Property Memorandum - SPOUSE (if joint trust)
-    if (isJoint) {
-      combinedContent += addDocumentSeparator('PERSONAL PROPERTY MEMORANDUM - SPOUSE');
-      const propMemoSpouseTemplate = personalPropertyMemorandumTemplate('spouse');
-      const propMemoSpouseText = processTemplate(propMemoSpouseTemplate, templateData).replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ');
-      combinedContent += propMemoSpouseText;
-    }
-
-    console.log('Total combined content length:', combinedContent.length);
-
-    // Replace [PAGE_BREAK] markers with form feed characters
-    combinedContent = combinedContent.replace(/\[PAGE_BREAK\]/g, '\f');
-
-    // Generate Word document with all content
-    return generateWordFromText(combinedContent, 'Complete Estate Planning Package', formData);
-
   } catch (error) {
-    console.error('Error generating complete package (Word):', error);
+    console.error('Error generating Complete Estate Planning Package Word document:', error);
     throw error;
   }
 };
