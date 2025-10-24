@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useFormContext } from '../../context/FormContext';
 import { Button, Card } from '../common';
 import { generateLivingTrust, generateLivingTrustWord, generateAllDocuments, generateCompleteEstatePlanningPackage, generateCompleteEstatePlanningPackageWord, downloadDocument } from '../../services/documentGenerator';
-import { sampleFormData } from '../../utils/testDocumentGeneration';
 import { saveFormDraft } from '../../services/autocompleteService';
 import { saveClientWithDocuments, saveClientWithLivingTrust } from '../../services/clientDocumentService';
 
@@ -125,14 +124,6 @@ const EstatePlanningForm = () => {
     }
   };
 
-  const handleLoadSampleData = () => {
-    if (window.confirm('Load sample data? This will replace all current form data.')) {
-      setFormData(sampleFormData);
-      setStatus('Sample data loaded successfully!');
-      setTimeout(() => setStatus(''), 3000);
-    }
-  };
-
   const handleSaveForm = () => {
     const success = saveFormDraft(formData);
     if (success) {
@@ -217,25 +208,6 @@ const EstatePlanningForm = () => {
       <div className="space-y-6">
         {/* Load Existing Client */}
         <LoadClientSection />
-
-        {/* Test Data Button */}
-        <Card>
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800">Quick Test</h3>
-              <p className="text-sm text-gray-600 mt-1">
-                Load sample data to quickly test document generation
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              onClick={handleLoadSampleData}
-              disabled={loading}
-            >
-              Load Sample Data
-            </Button>
-          </div>
-        </Card>
 
         {/* Trust Type Selection */}
         <TrustTypeSection />
