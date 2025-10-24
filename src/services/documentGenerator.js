@@ -12,28 +12,7 @@ import { getTemplatePath, getTemplateName } from './pdfTemplateConfig';
 import { templateExists, generateFromPDFTemplate } from './pdfTemplateService';
 import { getDOCXTemplatePath, getDOCXTemplateName } from './docxTemplateConfig';
 import { docxTemplateExists, generateFromDOCXTemplate } from './docxTemplateService';
-import { singleLivingTrustTemplate } from '../templates/singleLivingTrust';
-import { jointLivingTrustTemplate } from '../templates/jointLivingTrust';
-import { singleIrrevocableTrustTemplate } from '../templates/singleIrrevocableTrust';
-import { jointIrrevocableTrustTemplate } from '../templates/jointIrrevocableTrust';
-import { pourOverWillTemplate } from '../templates/pourOverWill';
-import { durablePowerOfAttorneyTemplate } from '../templates/durablePowerOfAttorney';
-import { advancedHealthcareDirectiveTemplate } from '../templates/advancedHealthcareDirective';
-import { hipaaAuthorizationTemplate } from '../templates/hipaaAuthorization';
-import { certificateOfTrustTemplate } from '../templates/certificateOfTrust';
-import { trusteeAffidavitTemplate } from '../templates/trusteeAffidavit';
-import { personalPropertyAssignmentTemplate } from '../templates/personalPropertyAssignment';
-import { personalPropertyMemorandumTemplate } from '../templates/personalPropertyMemorandum';
-import { memorialInstructionsTemplate } from '../templates/memorialInstructions';
-import { confirmationOfNamesTemplate } from '../templates/confirmationOfNames';
-import { estatePlanningCoverPageTemplate } from '../templates/estatePlanningCoverPage';
-import { tableOfContentsTemplate } from '../templates/tableOfContents';
-import { introductionPageTemplate } from '../templates/introductionPage';
-import { overviewPageTemplate } from '../templates/overviewPage';
-import { revocableLivingTrustSectionPageTemplate } from '../templates/revocableLivingTrustSectionPage';
-import { nominationsPageTemplate } from '../templates/nominationsPage';
-import { personalInformationPageTemplate } from '../templates/personalInformationPage';
-import { fundingInstructionsPageTemplate } from '../templates/fundingInstructionsPage';
+
 
 /**
  * Add a professional cover page to the PDF
