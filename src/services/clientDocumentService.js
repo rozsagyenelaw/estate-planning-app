@@ -35,25 +35,20 @@ export const saveClientWithLivingTrust = async (formData, onProgress = null) => 
       throw new Error(`Failed to save client data: ${saveResult.error}`);
     }
 
-    // Step 3: Generate Living Trust documents (PDF and Word)
-    updateProgress(onProgress, 40, 'Generating Living Trust PDF...');
-    const pdfDoc = await generateLivingTrust(formData);
+    // Step 3: Generate Living Trust document (DOCX)
+    updateProgress(onProgress, 40, 'Generating Living Trust document...');
+    const docxDoc = await generateLivingTrust(formData);
 
-    // Handle both jsPDF objects and Blobs
-    const pdfBlob = (pdfDoc instanceof Blob) ? pdfDoc : pdfDoc.output('blob');
+    // Handle both jsPDF objects and Blobs (for backward compatibility)
+    const docxBlob = (docxDoc instanceof Blob) ? docxDoc : docxDoc.output('blob');
 
-    updateProgress(onProgress, 55, 'Generating Living Trust Word document...');
-    const wordBlob = await generateLivingTrustWord(formData);
-
-    // Step 4: Upload documents to Firebase Storage
-    updateProgress(onProgress, 70, 'Uploading documents...');
+    // Step 4: Upload document to Firebase Storage
+    updateProgress(onProgress, 70, 'Uploading document...');
     const timestamp = new Date();
-    const pdfName = generateDocumentName('living_trust', 'pdf', timestamp);
-    const wordName = generateDocumentName('living_trust', 'docx', timestamp);
+    const docxName = generateDocumentName('living_trust', 'docx', timestamp);
 
     const documents = [
-      { blob: pdfBlob, name: pdfName },
-      { blob: wordBlob, name: wordName }
+      { blob: docxBlob, name: docxName }
     ];
 
     const uploadResult = await uploadMultipleDocuments(
@@ -133,22 +128,17 @@ export const saveClientWithDocuments = async (formData, onProgress = null) => {
       throw new Error(`Failed to save client data: ${saveResult.error}`);
     }
 
-    // Step 3: Generate documents (PDF and Word)
-    updateProgress(onProgress, 40, 'Generating PDF document...');
-    const pdfBlob = await generateCompleteEstatePlanningPackage(formData);
+    // Step 3: Generate complete estate plan document (DOCX)
+    updateProgress(onProgress, 40, 'Generating complete estate plan document...');
+    const docxBlob = await generateCompleteEstatePlanningPackage(formData);
 
-    updateProgress(onProgress, 55, 'Generating Word document...');
-    const wordBlob = await generateCompleteEstatePlanningPackageWord(formData);
-
-    // Step 4: Upload documents to Firebase Storage
-    updateProgress(onProgress, 70, 'Uploading documents...');
+    // Step 4: Upload document to Firebase Storage
+    updateProgress(onProgress, 70, 'Uploading document...');
     const timestamp = new Date();
-    const pdfName = generateDocumentName('estate_plan_complete', 'pdf', timestamp);
-    const wordName = generateDocumentName('estate_plan_complete', 'docx', timestamp);
+    const docxName = generateDocumentName('estate_plan_complete', 'docx', timestamp);
 
     const documents = [
-      { blob: pdfBlob, name: pdfName },
-      { blob: wordBlob, name: wordName }
+      { blob: docxBlob, name: docxName }
     ];
 
     const uploadResult = await uploadMultipleDocuments(
@@ -287,20 +277,15 @@ export const updateClientWithDocuments = async (
 
     // Step 2: Regenerate documents if requested
     if (regenerateDocuments) {
-      updateProgress(onProgress, 40, 'Regenerating PDF document...');
-      const pdfBlob = await generateCompleteEstatePlanningPackage(updatedFormData);
+      updateProgress(onProgress, 40, 'Regenerating estate plan document...');
+      const docxBlob = await generateCompleteEstatePlanningPackage(updatedFormData);
 
-      updateProgress(onProgress, 55, 'Regenerating Word document...');
-      const wordBlob = await generateCompleteEstatePlanningPackageWord(updatedFormData);
-
-      updateProgress(onProgress, 70, 'Uploading new documents...');
+      updateProgress(onProgress, 70, 'Uploading new document...');
       const timestamp = new Date();
-      const pdfName = generateDocumentName('estate_plan_complete', 'pdf', timestamp);
-      const wordName = generateDocumentName('estate_plan_complete', 'docx', timestamp);
+      const docxName = generateDocumentName('estate_plan_complete', 'docx', timestamp);
 
       const documents = [
-        { blob: pdfBlob, name: pdfName },
-        { blob: wordBlob, name: wordName }
+        { blob: docxBlob, name: docxName }
       ];
 
       const uploadResult = await uploadMultipleDocuments(clientId, documents);

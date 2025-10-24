@@ -52,7 +52,7 @@ const EstatePlanningForm = () => {
     setLoading(true);
     setStatus('Generating Living Trust Word document...');
     try {
-      const blob = await generateLivingTrustWord(formData);
+      const blob = await generateLivingTrust(formData);
       const filename = `${formData.trustName || 'Living_Trust'}_${new Date().toISOString().split('T')[0]}.docx`;
 
       // Create download link for Blob
@@ -99,7 +99,7 @@ const EstatePlanningForm = () => {
     setLoading(true);
     setStatus('Generating complete estate planning package (Word)...');
     try {
-      const blob = await generateCompleteEstatePlanningPackageWord(formData);
+      const blob = await generateCompleteEstatePlanningPackage(formData);
       const clientName = formData.client.firstName + '_' + formData.client.lastName;
       const filename = `${clientName}_Complete_Estate_Planning_Package.docx`;
 
