@@ -6,7 +6,7 @@
 
 import { saveClientData, getClientData, searchClients, updateClientData, generateClientId } from './firestoreService';
 import { uploadDocument, uploadMultipleDocuments, listClientDocuments, generateDocumentName } from './storageService';
-import { generateCompleteEstatePlanningPackage, generateCompleteEstatePlanningPackageWord, generateLivingTrust, generateLivingTrustWord } from './documentGenerator';
+import { generateCompleteEstatePlanningPackage, generateLivingTrust } from './documentGenerator';
 
 /**
  * Save client data and generate/upload Living Trust only
