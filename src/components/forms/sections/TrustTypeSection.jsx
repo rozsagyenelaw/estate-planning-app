@@ -1,63 +1,41 @@
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Radio, Checkbox, Input, DatePicker } from '../../common';
-import { TRUST_TYPE_OPTIONS } from '../../../utils/constants';
+import { Card, Radio } from '../../common';
 
 const TrustTypeSection = () => {
-  const { formData, updateFormData, setTrustType } = useFormContext();
+  const { formData, updateFormData } = useFormContext();
 
-  const handleTrustTypeChange = (e) => {
-    setTrustType(e.target.value);
-  };
-
-  const handleRestatementChange = (e) => {
-    updateFormData({ isRestatement: e.target.checked });
-  };
-
-  // Get current trust type label for display
-  const getCurrentTypeLabel = () => {
-    const selectedOption = TRUST_TYPE_OPTIONS.find(opt => opt.value === formData.trustType);
-    return selectedOption ? selectedOption.label : 'Single Trust (Revocable)';
+  const handleTrustTypeChange = (value) => {
+    updateFormData({ 
+      isJoint: value === 'joint',
+      trustType: value
+    });
   };
 
   return (
-    <Card title="Trust Type Configuration">
-      <div className="space-y-6">
-        <Radio
-          label="Select Trust Type"
-          name="trustType"
-          options={TRUST_TYPE_OPTIONS}
-          value={formData.trustType}
-          onChange={handleTrustTypeChange}
-          required
-        />
-
-        <Checkbox
-          label="Restatement (Check if this is a restatement of an existing trust)"
-          checked={formData.isRestatement}
-          onChange={handleRestatementChange}
-        />
-
-        {formData.isRestatement && (
-          <div className="ml-6 p-4 bg-yellow-50 border border-yellow-300 rounded-lg">
-            <p className="text-sm text-yellow-800 font-semibold">
-              ⚠️ Restatement Mode Active
-            </p>
-            <p className="text-xs text-yellow-700 mt-1">
-              You will be asked to provide the exact original trust name and date in the Trust Name section below.
-            </p>
-          </div>
-        )}
-
-        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800">
-            <strong>Current Selection:</strong> {getCurrentTypeLabel()}
-            {formData.isRestatement && ' (Restatement)'}
+    <Card>
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800">Trust Type</h3>
+          <p className="text-sm text-gray-600 mt-1">
+            Select whether this is a single or joint trust
           </p>
-          {(formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable') && (
-            <p className="text-sm text-orange-700 mt-2">
-              <strong>Note:</strong> Irrevocable trusts cannot be amended or revoked. The grantor(s) cannot serve as trustee.
-            </p>
-          )}
+        </div>
+
+        <div className="space-y-3">
+          <Radio
+            label="Single Trust"
+            name="trustType"
+            value="single"
+            checked={formData.trustType === 'single' || (!formData.isJoint && !formData.trustType)}
+            onChange={() => handleTrustTypeChange('single')}
+          />
+          <Radio
+            label="Joint Trust (Married Couple)"
+            name="trustType"
+            value="joint"
+            checked={formData.isJoint || formData.trustType === 'joint'}
+            onChange={() => handleTrustTypeChange('joint')}
+          />
         </div>
       </div>
     </Card>

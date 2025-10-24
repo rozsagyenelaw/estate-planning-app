@@ -1,145 +1,88 @@
+import { useState } from 'react';
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Button, Checkbox, Autocomplete, Input } from '../../common';
-import { DEFAULT_GUARDIAN } from '../../../utils/constants';
-import {
-  getNameSuggestions,
-  addNameSuggestion,
-  getAddressSuggestions,
-  addAddressSuggestion,
-  getPhoneSuggestions,
-  addPhoneSuggestion,
-} from '../../../services/autocompleteService';
-import { formatPhoneNumber } from '../../../utils/formatters';
+import { Card, Input, Button } from '../../common';
 
 const GuardiansSection = () => {
-  const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
+  const { formData, updateFormData } = useFormContext();
   const guardians = formData.guardians || [];
 
-  const handleAddGuardian = () => {
-    addArrayItem('guardians', { ...DEFAULT_GUARDIAN });
+  const addGuardian = () => {
+    updateFormData({
+      guardians: [
+        ...guardians,
+        { firstName: '', lastName: '', relationship: '' }
+      ]
+    });
   };
 
-  const handleRemoveGuardian = (index) => {
-    if (window.confirm('Are you sure you want to remove this guardian?')) {
-      removeArrayItem('guardians', index);
-    }
+  const updateGuardian = (index, field, value) => {
+    const updatedGuardians = [...guardians];
+    updatedGuardians[index] = { ...updatedGuardians[index], [field]: value };
+    updateFormData({ guardians: updatedGuardians });
   };
 
-  const handleGuardianChange = (index, field, value) => {
-    if (field === 'phone') {
-      value = formatPhoneNumber(value);
-    }
-    updateArrayItem('guardians', index, { [field]: value });
+  const removeGuardian = (index) => {
+    updateFormData({
+      guardians: guardians.filter((_, i) => i !== index)
+    });
   };
 
   return (
-    <Card title="Guardians" collapsible defaultOpen={false}>
-      <div className="space-y-6">
-        <p className="text-sm text-gray-600">
-          Designate guardians for any minor children. Guardians will have custody and care
-          of minor children if both parents are deceased. List them in order of preference.
-        </p>
+    <Card>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800">Guardians for Minor Children</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Designate guardians to care for minor children
+            </p>
+          </div>
+          <Button variant="primary" onClick={addGuardian}>
+            + Add Guardian
+          </Button>
+        </div>
 
         {guardians.length === 0 ? (
-          <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-            <p className="text-gray-500 mb-4">No guardians added yet</p>
-            <Button onClick={handleAddGuardian} variant="primary">
-              Add First Guardian
-            </Button>
+          <div className="text-center py-8 bg-gray-50 rounded-lg">
+            <p className="text-gray-500">No guardians added yet.</p>
           </div>
         ) : (
           <div className="space-y-4">
             {guardians.map((guardian, index) => (
-              <div
-                key={index}
-                className="p-4 bg-white border-2 border-orange-300 rounded-lg shadow-sm"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h4 className="text-md font-semibold text-gray-800">
-                      Guardian #{index + 1}
-                    </h4>
-                    <p className="text-xs text-gray-500">
-                      {index === 0
-                        ? 'First choice'
-                        : `${index + 1}${
-                            index === 1 ? 'nd' : index === 2 ? 'rd' : 'th'
-                          } choice`}
-                    </p>
-                  </div>
+              <div key={index} className="p-4 border border-gray-200 rounded-lg space-y-3">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-semibold text-gray-700">
+                    Guardian {index + 1} {index === 0 ? '(Primary)' : ''}
+                  </h4>
                   <Button
-                    variant="danger"
+                    variant="outline"
                     size="sm"
-                    onClick={() => handleRemoveGuardian(index)}
+                    onClick={() => removeGuardian(index)}
                   >
                     Remove
                   </Button>
                 </div>
 
-                <div className="space-y-4">
-                  <Autocomplete
-                    label="Name"
-                    value={guardian.name}
-                    onChange={(e) => handleGuardianChange(index, 'name', e.target.value)}
-                    onSelect={(value) => handleGuardianChange(index, 'name', value)}
-                    onBlur={(e) => addNameSuggestion(e.target.value)}
-                    suggestions={getNameSuggestions()}
-                    placeholder="Enter guardian's full name"
-                    required
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <Input
+                    label="First Name"
+                    value={guardian.firstName || ''}
+                    onChange={(e) => updateGuardian(index, 'firstName', e.target.value)}
                   />
-
-                  <Autocomplete
-                    label="Address"
-                    value={guardian.address}
-                    onChange={(e) =>
-                      handleGuardianChange(index, 'address', e.target.value)
-                    }
-                    onSelect={(value) => handleGuardianChange(index, 'address', value)}
-                    onBlur={(e) => addAddressSuggestion(e.target.value)}
-                    suggestions={getAddressSuggestions()}
-                    placeholder="Enter guardian's address"
-                    required
+                  <Input
+                    label="Last Name"
+                    value={guardian.lastName || ''}
+                    onChange={(e) => updateGuardian(index, 'lastName', e.target.value)}
                   />
-
-                  <Autocomplete
-                    label="Phone Number"
-                    value={guardian.phone}
-                    onChange={(e) => handleGuardianChange(index, 'phone', e.target.value)}
-                    onSelect={(value) => handleGuardianChange(index, 'phone', value)}
-                    onBlur={(e) => addPhoneSuggestion(e.target.value)}
-                    suggestions={getPhoneSuggestions()}
-                    placeholder="(XXX) XXX-XXXX"
-                    maxLength={14}
-                    required
-                  />
-
-                  <Checkbox
-                    label="Jointly (Check if this guardian must serve jointly with the next guardian)"
-                    checked={guardian.jointly}
-                    onChange={(e) =>
-                      handleGuardianChange(index, 'jointly', e.target.checked)
-                    }
-                    helperText="If checked, this guardian and the next one must serve together"
+                  <Input
+                    label="Relationship"
+                    value={guardian.relationship || ''}
+                    onChange={(e) => updateGuardian(index, 'relationship', e.target.value)}
+                    placeholder="e.g., Sister, Brother, Friend"
                   />
                 </div>
               </div>
             ))}
-          </div>
-        )}
-
-        {guardians.length > 0 && (
-          <div className="flex justify-center mt-4">
-            <Button onClick={handleAddGuardian} variant="outline">
-              + Add Another Guardian
-            </Button>
-          </div>
-        )}
-
-        {guardians.length > 0 && (
-          <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-            <p className="text-sm text-orange-800">
-              <strong>Total Guardians:</strong> {guardians.length}
-            </p>
           </div>
         )}
       </div>

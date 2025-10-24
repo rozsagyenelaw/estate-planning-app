@@ -1,204 +1,254 @@
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, DatePicker, Radio, Select, Autocomplete } from '../../common';
-import { MARITAL_STATUS, SEX_OPTIONS } from '../../../utils/constants';
-import { formatPhoneNumber, formatSSN, formatZipCode } from '../../../utils/formatters';
-import {
-  getNameSuggestions,
-  addNameSuggestion,
-  getAddressSuggestions,
-  addAddressSuggestion,
-  getPhoneSuggestions,
-  addPhoneSuggestion,
-  getCitySuggestions,
-  addCitySuggestion,
-  getCountySuggestions,
-  addCountySuggestion,
-} from '../../../services/autocompleteService';
+import { Card, Input, Select } from '../../common';
 
 const ClientInfoSection = () => {
-  const { formData, updateClientData, updateSpouseData } = useFormContext();
+  const { formData, updateFormData } = useFormContext();
+  const isJoint = formData.isJoint || formData.trustType === 'joint';
 
   const handleClientChange = (field, value) => {
-    // Apply formatting for specific fields
-    if (field === 'phone') {
-      value = formatPhoneNumber(value);
-    } else if (field === 'ssn') {
-      value = formatSSN(value);
-    } else if (field === 'zipCode') {
-      value = formatZipCode(value);
-    }
-
-    updateClientData(field, value);
+    updateFormData({
+      client: {
+        ...formData.client,
+        [field]: value
+      }
+    });
   };
 
   const handleSpouseChange = (field, value) => {
-    // Apply formatting for specific fields
-    if (field === 'phone') {
-      value = formatPhoneNumber(value);
-    } else if (field === 'ssn') {
-      value = formatSSN(value);
-    } else if (field === 'zipCode') {
-      value = formatZipCode(value);
-    }
-
-    updateSpouseData(field, value);
+    updateFormData({
+      spouse: {
+        ...formData.spouse,
+        [field]: value
+      }
+    });
   };
 
-  const renderClientFields = (person, handleChange, label = 'Client') => (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">{label} Information</h3>
-
-      <DatePicker
-        label="Notary Date"
-        value={person.notaryDate}
-        onChange={(e) => handleChange('notaryDate', e.target.value)}
-        required
-      />
-
-      <Autocomplete
-        label="First Name"
-        value={person.firstName}
-        onChange={(e) => handleChange('firstName', e.target.value)}
-        onSelect={(value) => handleChange('firstName', value)}
-        onBlur={(e) => addNameSuggestion(e.target.value)}
-        suggestions={getNameSuggestions()}
-        placeholder="Enter first name"
-        required
-      />
-
-      <Autocomplete
-        label="Middle Name"
-        value={person.middleName}
-        onChange={(e) => handleChange('middleName', e.target.value)}
-        onSelect={(value) => handleChange('middleName', value)}
-        onBlur={(e) => addNameSuggestion(e.target.value)}
-        suggestions={getNameSuggestions()}
-        placeholder="Enter middle name (optional)"
-      />
-
-      <Autocomplete
-        label="Last Name"
-        value={person.lastName}
-        onChange={(e) => handleChange('lastName', e.target.value)}
-        onSelect={(value) => handleChange('lastName', value)}
-        onBlur={(e) => addNameSuggestion(e.target.value)}
-        suggestions={getNameSuggestions()}
-        placeholder="Enter last name"
-        required
-      />
-
-      <DatePicker
-        label="Date of Birth"
-        value={person.dateOfBirth}
-        onChange={(e) => handleChange('dateOfBirth', e.target.value)}
-        required
-      />
-
-      <Radio
-        label="Sex"
-        name={`sex-${label}`}
-        options={SEX_OPTIONS}
-        value={person.sex}
-        onChange={(e) => handleChange('sex', e.target.value)}
-        required
-      />
-
-      <Input
-        label="Social Security Number"
-        value={person.ssn}
-        onChange={(e) => handleChange('ssn', e.target.value)}
-        placeholder="XXX-XX-XXXX"
-        maxLength={11}
-        required
-        helperText="Format: XXX-XX-XXXX"
-      />
-
-      <Select
-        label="Marital Status"
-        options={MARITAL_STATUS}
-        value={person.maritalStatus}
-        onChange={(e) => handleChange('maritalStatus', e.target.value)}
-        required
-      />
-
-      <Input
-        label="Email"
-        type="email"
-        value={person.email}
-        onChange={(e) => handleChange('email', e.target.value)}
-        placeholder="email@example.com"
-        required
-      />
-
-      <Autocomplete
-        label="Phone Number"
-        value={person.phone}
-        onChange={(e) => handleChange('phone', e.target.value)}
-        onSelect={(value) => handleChange('phone', value)}
-        onBlur={(e) => addPhoneSuggestion(e.target.value)}
-        suggestions={getPhoneSuggestions()}
-        placeholder="(XXX) XXX-XXXX"
-        maxLength={14}
-        required
-        helperText="Format: (XXX) XXX-XXXX"
-      />
-
-      <Autocomplete
-        label="Address"
-        value={person.address}
-        onChange={(e) => handleChange('address', e.target.value)}
-        onSelect={(value) => handleChange('address', value)}
-        onBlur={(e) => addAddressSuggestion(e.target.value)}
-        suggestions={getAddressSuggestions()}
-        placeholder="Enter street address"
-        required
-      />
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Autocomplete
-          label="City"
-          value={person.city}
-          onChange={(e) => handleChange('city', e.target.value)}
-          onSelect={(value) => handleChange('city', value)}
-          onBlur={(e) => addCitySuggestion(e.target.value)}
-          suggestions={getCitySuggestions()}
-          placeholder="City"
-          required
-        />
-
-        <Input
-          label="Zip Code"
-          value={person.zip}
-          onChange={(e) => handleChange('zip', e.target.value)}
-          placeholder="12345"
-          maxLength={5}
-          required
-        />
-
-        <Autocomplete
-          label="County"
-          value={person.county}
-          onChange={(e) => handleChange('county', e.target.value)}
-          onSelect={(value) => handleChange('county', value)}
-          onBlur={(e) => addCountySuggestion(e.target.value)}
-          suggestions={getCountySuggestions()}
-          placeholder="County"
-          required
-        />
-      </div>
-    </div>
-  );
-
   return (
-    <Card title="Client Information" collapsible defaultOpen={true}>
-      {renderClientFields(formData.client, handleClientChange, 'Client')}
+    <>
+      {/* Client Information */}
+      <Card>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800">
+              {isJoint ? 'Client 1 Information' : 'Client Information'}
+            </h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Enter the grantor/settlor information
+            </p>
+          </div>
 
-      {formData.isJoint && formData.spouse && (
-        <div className="mt-8 pt-8 border-t border-gray-200">
-          {renderClientFields(formData.spouse, handleSpouseChange, 'Spouse')}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input
+              label="First Name"
+              name="clientFirstName"
+              value={formData.client?.firstName || ''}
+              onChange={(e) => handleClientChange('firstName', e.target.value)}
+              required
+            />
+            <Input
+              label="Middle Name"
+              name="clientMiddleName"
+              value={formData.client?.middleName || ''}
+              onChange={(e) => handleClientChange('middleName', e.target.value)}
+            />
+            <Input
+              label="Last Name"
+              name="clientLastName"
+              value={formData.client?.lastName || ''}
+              onChange={(e) => handleClientChange('lastName', e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Date of Birth"
+              name="clientDOB"
+              type="date"
+              value={formData.client?.dateOfBirth || ''}
+              onChange={(e) => handleClientChange('dateOfBirth', e.target.value)}
+            />
+            <Select
+              label="Sex"
+              name="clientSex"
+              value={formData.client?.sex || ''}
+              onChange={(e) => handleClientChange('sex', e.target.value)}
+              options={[
+                { value: '', label: 'Select...' },
+                { value: 'Male', label: 'Male' },
+                { value: 'Female', label: 'Female' }
+              ]}
+            />
+          </div>
+
+          <Input
+            label="Address"
+            name="clientAddress"
+            value={formData.client?.address || ''}
+            onChange={(e) => handleClientChange('address', e.target.value)}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input
+              label="City"
+              name="clientCity"
+              value={formData.client?.city || ''}
+              onChange={(e) => handleClientChange('city', e.target.value)}
+            />
+            <Input
+              label="State"
+              name="clientState"
+              value={formData.client?.state || 'California'}
+              onChange={(e) => handleClientChange('state', e.target.value)}
+            />
+            <Input
+              label="ZIP Code"
+              name="clientZip"
+              value={formData.client?.zip || ''}
+              onChange={(e) => handleClientChange('zip', e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="County"
+              name="clientCounty"
+              value={formData.client?.county || ''}
+              onChange={(e) => handleClientChange('county', e.target.value)}
+            />
+            <Input
+              label="Phone"
+              name="clientPhone"
+              type="tel"
+              value={formData.client?.phone || ''}
+              onChange={(e) => handleClientChange('phone', e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Email"
+              name="clientEmail"
+              type="email"
+              value={formData.client?.email || ''}
+              onChange={(e) => handleClientChange('email', e.target.value)}
+            />
+            <Input
+              label="SSN (Optional)"
+              name="clientSSN"
+              value={formData.client?.ssn || ''}
+              onChange={(e) => handleClientChange('ssn', e.target.value)}
+              placeholder="XXX-XX-XXXX"
+            />
+          </div>
+
+          <Select
+            label="Marital Status"
+            name="clientMaritalStatus"
+            value={formData.client?.maritalStatus || ''}
+            onChange={(e) => handleClientChange('maritalStatus', e.target.value)}
+            options={[
+              { value: '', label: 'Select...' },
+              { value: 'Single', label: 'Single' },
+              { value: 'Married', label: 'Married' },
+              { value: 'Divorced', label: 'Divorced' },
+              { value: 'Widowed', label: 'Widowed' }
+            ]}
+          />
         </div>
+      </Card>
+
+      {/* Spouse Information (for Joint Trusts) */}
+      {isJoint && (
+        <Card>
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">Client 2 (Spouse) Information</h3>
+              <p className="text-sm text-gray-600 mt-1">
+                Enter the second grantor/settlor information
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Input
+                label="First Name"
+                name="spouseFirstName"
+                value={formData.spouse?.firstName || ''}
+                onChange={(e) => handleSpouseChange('firstName', e.target.value)}
+                required
+              />
+              <Input
+                label="Middle Name"
+                name="spouseMiddleName"
+                value={formData.spouse?.middleName || ''}
+                onChange={(e) => handleSpouseChange('middleName', e.target.value)}
+              />
+              <Input
+                label="Last Name"
+                name="spouseLastName"
+                value={formData.spouse?.lastName || ''}
+                onChange={(e) => handleSpouseChange('lastName', e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                label="Date of Birth"
+                name="spouseDOB"
+                type="date"
+                value={formData.spouse?.dateOfBirth || ''}
+                onChange={(e) => handleSpouseChange('dateOfBirth', e.target.value)}
+              />
+              <Select
+                label="Sex"
+                name="spouseSex"
+                value={formData.spouse?.sex || ''}
+                onChange={(e) => handleSpouseChange('sex', e.target.value)}
+                options={[
+                  { value: '', label: 'Select...' },
+                  { value: 'Male', label: 'Male' },
+                  { value: 'Female', label: 'Female' }
+                ]}
+              />
+            </div>
+
+            <Input
+              label="Address (if different)"
+              name="spouseAddress"
+              value={formData.spouse?.address || ''}
+              onChange={(e) => handleSpouseChange('address', e.target.value)}
+              placeholder="Leave blank if same as Client 1"
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                label="Phone"
+                name="spousePhone"
+                type="tel"
+                value={formData.spouse?.phone || ''}
+                onChange={(e) => handleSpouseChange('phone', e.target.value)}
+              />
+              <Input
+                label="Email"
+                name="spouseEmail"
+                type="email"
+                value={formData.spouse?.email || ''}
+                onChange={(e) => handleSpouseChange('email', e.target.value)}
+              />
+            </div>
+
+            <Input
+              label="SSN (Optional)"
+              name="spouseSSN"
+              value={formData.spouse?.ssn || ''}
+              onChange={(e) => handleSpouseChange('ssn', e.target.value)}
+              placeholder="XXX-XX-XXXX"
+            />
+          </div>
+        </Card>
       )}
-    </Card>
+    </>
   );
 };
 
