@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useFormContext } from '../../context/FormContext';
 import { Button, Card } from '../common';
-import { generateLivingTrust, generateCompleteEstatePlanningPackage, downloadDocument } from '../../services/documentGenerator';
+import { generateLivingTrust, generateLivingTrustWord, generateAllDocuments, generateCompleteEstatePlanningPackage, generateCompleteEstatePlanningPackageWord, downloadDocument } from '../../services/documentGenerator';
+import { sampleFormData } from '../../utils/testDocumentGeneration';
 import { saveFormDraft } from '../../services/autocompleteService';
 import { saveClientWithDocuments, saveClientWithLivingTrust } from '../../services/clientDocumentService';
 
@@ -52,7 +53,7 @@ const EstatePlanningForm = () => {
     setLoading(true);
     setStatus('Generating Living Trust Word document...');
     try {
-      const blob = await generateLivingTrust(formData);
+      const blob = await generateLivingTrustWord(formData);
       const filename = `${formData.trustName || 'Living_Trust'}_${new Date().toISOString().split('T')[0]}.docx`;
 
       // Create download link for Blob
@@ -99,7 +100,7 @@ const EstatePlanningForm = () => {
     setLoading(true);
     setStatus('Generating complete estate planning package (Word)...');
     try {
-      const blob = await generateCompleteEstatePlanningPackage(formData);
+      const blob = await generateCompleteEstatePlanningPackageWord(formData);
       const clientName = formData.client.firstName + '_' + formData.client.lastName;
       const filename = `${clientName}_Complete_Estate_Planning_Package.docx`;
 
