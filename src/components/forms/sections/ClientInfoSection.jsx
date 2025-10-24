@@ -1,27 +1,29 @@
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, Select } from '../../common';
+import { Card, Input, Select, Autocomplete } from '../../common';
+import {
+  getAddressSuggestions,
+  getPhoneSuggestions,
+  getCitySuggestions,
+  getCountySuggestions,
+} from '../../../services/autocompleteService';
 
 const ClientInfoSection = () => {
-  const { formData, updateFormData } = useFormContext();
+  const { formData, updateFormData, updateClientData, updateSpouseData } = useFormContext();
   const isJoint = formData.isJoint || formData.trustType === 'joint';
 
   const handleClientChange = (field, value) => {
-    updateFormData({
-      client: {
-        ...formData.client,
-        [field]: value
-      }
-    });
+    updateClientData(field, value);
   };
 
   const handleSpouseChange = (field, value) => {
-    updateFormData({
-      spouse: {
-        ...formData.spouse,
-        [field]: value
-      }
-    });
+    updateSpouseData(field, value);
   };
+
+  // Get autocomplete suggestions
+  const addressSuggestions = getAddressSuggestions();
+  const phoneSuggestions = getPhoneSuggestions();
+  const citySuggestions = getCitySuggestions();
+  const countySuggestions = getCountySuggestions();
 
   return (
     <>
@@ -81,19 +83,23 @@ const ClientInfoSection = () => {
             />
           </div>
 
-          <Input
+          <Autocomplete
             label="Address"
             name="clientAddress"
             value={formData.client?.address || ''}
             onChange={(e) => handleClientChange('address', e.target.value)}
+            onSelect={(value) => handleClientChange('address', value)}
+            suggestions={addressSuggestions}
           />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Input
+            <Autocomplete
               label="City"
               name="clientCity"
               value={formData.client?.city || ''}
               onChange={(e) => handleClientChange('city', e.target.value)}
+              onSelect={(value) => handleClientChange('city', value)}
+              suggestions={citySuggestions}
             />
             <Input
               label="State"
@@ -110,18 +116,22 @@ const ClientInfoSection = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
+            <Autocomplete
               label="County"
               name="clientCounty"
               value={formData.client?.county || ''}
               onChange={(e) => handleClientChange('county', e.target.value)}
+              onSelect={(value) => handleClientChange('county', value)}
+              suggestions={countySuggestions}
             />
-            <Input
+            <Autocomplete
               label="Phone"
               name="clientPhone"
               type="tel"
               value={formData.client?.phone || ''}
               onChange={(e) => handleClientChange('phone', e.target.value)}
+              onSelect={(value) => handleClientChange('phone', value)}
+              suggestions={phoneSuggestions}
             />
           </div>
 
@@ -213,21 +223,25 @@ const ClientInfoSection = () => {
               />
             </div>
 
-            <Input
+            <Autocomplete
               label="Address (if different)"
               name="spouseAddress"
               value={formData.spouse?.address || ''}
               onChange={(e) => handleSpouseChange('address', e.target.value)}
+              onSelect={(value) => handleSpouseChange('address', value)}
+              suggestions={addressSuggestions}
               placeholder="Leave blank if same as Client 1"
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input
+              <Autocomplete
                 label="Phone"
                 name="spousePhone"
                 type="tel"
                 value={formData.spouse?.phone || ''}
                 onChange={(e) => handleSpouseChange('phone', e.target.value)}
+                onSelect={(value) => handleSpouseChange('phone', value)}
+                suggestions={phoneSuggestions}
               />
               <Input
                 label="Email"

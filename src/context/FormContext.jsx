@@ -63,9 +63,9 @@ export const FormProvider = ({ children }) => {
     charitableDistributions: [],
 
     // Pour Over Will Representatives
-    pourOverRepresentatives: {
-      client: [],
-      spouse: [],
+    pourOverWill: {
+      client: { personalRepresentatives: [] },
+      spouse: { personalRepresentatives: [] },
     },
 
     // Guardians
@@ -129,6 +129,7 @@ export const FormProvider = ({ children }) => {
     }));
 
     // Add to autocomplete suggestions
+    if ((field === 'firstName' || field === 'middleName' || field === 'lastName') && value) addNameSuggestion(value);
     if (field === 'address' && value) addAddressSuggestion(value);
     if (field === 'phone' && value) addPhoneSuggestion(value);
     if (field === 'city' && value) addCitySuggestion(value);
@@ -146,6 +147,7 @@ export const FormProvider = ({ children }) => {
     }));
 
     // Add to autocomplete suggestions
+    if ((field === 'firstName' || field === 'middleName' || field === 'lastName') && value) addNameSuggestion(value);
     if (field === 'address' && value) addAddressSuggestion(value);
     if (field === 'phone' && value) addPhoneSuggestion(value);
     if (field === 'city' && value) addCitySuggestion(value);
@@ -223,7 +225,10 @@ export const FormProvider = ({ children }) => {
       residuaryDistributionType: 'descendants',
       generalNeedsTrusts: [],
       charitableDistributions: [],
-      pourOverRepresentatives: { client: [], spouse: [] },
+      pourOverWill: {
+        client: { personalRepresentatives: [] },
+        spouse: { personalRepresentatives: [] },
+      },
       guardians: [],
       durablePOA: { client: [], spouse: [] },
       healthcarePOA: { client: [], spouse: [] },

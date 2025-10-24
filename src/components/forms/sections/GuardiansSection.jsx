@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, Button } from '../../common';
+import { Card, Input, Button, Autocomplete } from '../../common';
+import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
 
 const GuardiansSection = () => {
   const { formData, updateFormData } = useFormContext();
   const guardians = formData.guardians || [];
+  const nameSuggestions = getNameSuggestions();
 
   const addGuardian = () => {
     updateFormData({
@@ -19,6 +21,11 @@ const GuardiansSection = () => {
     const updatedGuardians = [...guardians];
     updatedGuardians[index] = { ...updatedGuardians[index], [field]: value };
     updateFormData({ guardians: updatedGuardians });
+
+    // Add to autocomplete suggestions
+    if ((field === 'firstName' || field === 'lastName') && value) {
+      addNameSuggestion(value);
+    }
   };
 
   const removeGuardian = (index) => {
@@ -64,15 +71,19 @@ const GuardiansSection = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <Input
+                  <Autocomplete
                     label="First Name"
                     value={guardian.firstName || ''}
                     onChange={(e) => updateGuardian(index, 'firstName', e.target.value)}
+                    onSelect={(value) => updateGuardian(index, 'firstName', value)}
+                    suggestions={nameSuggestions}
                   />
-                  <Input
+                  <Autocomplete
                     label="Last Name"
                     value={guardian.lastName || ''}
                     onChange={(e) => updateGuardian(index, 'lastName', e.target.value)}
+                    onSelect={(value) => updateGuardian(index, 'lastName', value)}
+                    suggestions={nameSuggestions}
                   />
                   <Input
                     label="Relationship"

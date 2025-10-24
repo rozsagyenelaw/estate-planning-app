@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, Button } from '../../common';
+import { Card, Input, Button, Autocomplete } from '../../common';
+import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
 
 const SuccessorTrusteesSection = () => {
   const { formData, updateFormData } = useFormContext();
   const trustees = formData.successorTrustees || [];
+  const nameSuggestions = getNameSuggestions();
 
   const addTrustee = () => {
     updateFormData({
@@ -19,6 +21,11 @@ const SuccessorTrusteesSection = () => {
     const updatedTrustees = [...trustees];
     updatedTrustees[index] = { ...updatedTrustees[index], [field]: value };
     updateFormData({ successorTrustees: updatedTrustees });
+
+    // Add to autocomplete suggestions
+    if ((field === 'firstName' || field === 'lastName') && value) {
+      addNameSuggestion(value);
+    }
   };
 
   const removeTrustee = (index) => {
@@ -64,15 +71,19 @@ const SuccessorTrusteesSection = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <Input
+                  <Autocomplete
                     label="First Name"
                     value={trustee.firstName || ''}
                     onChange={(e) => updateTrustee(index, 'firstName', e.target.value)}
+                    onSelect={(value) => updateTrustee(index, 'firstName', value)}
+                    suggestions={nameSuggestions}
                   />
-                  <Input
+                  <Autocomplete
                     label="Last Name"
                     value={trustee.lastName || ''}
                     onChange={(e) => updateTrustee(index, 'lastName', e.target.value)}
+                    onSelect={(value) => updateTrustee(index, 'lastName', value)}
+                    suggestions={nameSuggestions}
                   />
                   <Input
                     label="Relationship"

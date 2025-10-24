@@ -7,12 +7,11 @@ import jsPDF from 'jspdf';
 import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel } from 'docx';
 import { formatDate, formatPhoneNumber } from '../utils/formatters';
 import { DOCUMENT_TYPES } from '../utils/constants';
-import { processTemplate, prepareTemplateData } from './templateEngine';
+// Removed old template engine import - no longer used
 import { getTemplatePath, getTemplateName } from './pdfTemplateConfig';
 import { templateExists, generateFromPDFTemplate } from './pdfTemplateService';
 import { getDOCXTemplatePath, getDOCXTemplateName } from './docxTemplateConfig';
 import { docxTemplateExists, generateFromDOCXTemplate } from './docxTemplateService';
-
 
 /**
  * Add a professional cover page to the PDF

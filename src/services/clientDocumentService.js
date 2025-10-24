@@ -37,6 +37,13 @@ export const saveClientWithLivingTrust = async (formData, onProgress = null) => 
 
     // Step 3: Generate Living Trust document (DOCX)
     updateProgress(onProgress, 40, 'Generating Living Trust document...');
+    console.log('===  FORM DATA BEING PASSED TO DOCUMENT GENERATOR ===');
+    console.log('Client:', formData.client);
+    console.log('Trust Type:', formData.trustType);
+    console.log('Is Joint:', formData.isJoint);
+    console.log('Children:', formData.children);
+    console.log('Trustees:', formData.successorTrustees);
+    console.log('Full formData keys:', Object.keys(formData));
     const docxDoc = await generateLivingTrust(formData);
 
     // Handle both jsPDF objects and Blobs (for backward compatibility)
@@ -130,6 +137,11 @@ export const saveClientWithDocuments = async (formData, onProgress = null) => {
 
     // Step 3: Generate complete estate plan document (DOCX)
     updateProgress(onProgress, 40, 'Generating complete estate plan document...');
+    console.log('=== COMPLETE PLAN FORM DATA ===');
+    console.log('Client:', formData.client);
+    console.log('Trust Type:', formData.trustType);
+    console.log('Children:', formData.children);
+    console.log('Full formData keys:', Object.keys(formData));
     const docxBlob = await generateCompleteEstatePlanningPackage(formData);
 
     // Step 4: Upload document to Firebase Storage
@@ -363,6 +375,24 @@ function updateProgress(callback, percent, message) {
     callback({ percent, message });
   }
 }
+
+/**
+ * Load client by ID (wrapper for loadClientWithDocuments)
+ * @param {string} clientId - Client identifier
+ * @returns {Promise<Object>} - Client data
+ */
+export const loadClientById = async (clientId) => {
+  return await loadClientWithDocuments(clientId);
+};
+
+/**
+ * Get all clients (wrapper for searchClients)
+ * @returns {Promise<Array>} - Array of all clients
+ */
+export const getAllClients = async () => {
+  const result = await searchClients('', 1000); // Empty search returns all
+  return result.success ? result.data : [];
+};
 
 /**
  * Export individual services for advanced use cases
