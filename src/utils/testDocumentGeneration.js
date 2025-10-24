@@ -1,6 +1,6 @@
 /**
- * Test Document Generation
- * Creates sample form data and tests the document generation system
+ * Sample Form Data for Testing
+ * Provides sample data that can be used to test document generation
  */
 
 /**
@@ -213,66 +213,6 @@ export const sampleFormData = {
 };
 
 /**
- * Test the document generation system
- */
-export const testDocumentGeneration = () => {
-  console.log('=== Testing Document Generation System ===\n');
-
-  try {
-    // Step 1: Prepare template data
-    console.log('Step 1: Preparing template data...');
-    const templateData = prepareTemplateData(sampleFormData);
-    console.log('✓ Template data prepared successfully');
-    console.log('Sample data keys:', Object.keys(templateData).slice(0, 10).join(', '), '...\n');
-
-    // Step 2: Process template (call as function for old system)
-    console.log('Step 2: Processing template with data...');
-    const processedContent = singleLivingTrustTemplate(sampleFormData);
-    console.log('✓ Template processed successfully');
-    console.log('Generated content length:', processedContent.length, 'characters\n');
-
-    // Step 3: Display sample of processed content
-    console.log('\nStep 3: Sample of processed content:');
-    console.log('-----------------------------------');
-    const sampleContent = processedContent.substring(0, 1000);
-    console.log(sampleContent);
-    console.log('...\n');
-
-    // Step 4: Check for key content
-    console.log('Step 4: Verifying key content...');
-    const checks = [
-      { name: 'Trust Name', content: 'JOHN' },
-      { name: 'Client Last Name', content: 'SMITH' },
-      { name: 'Children Section', content: 'Sarah Elizabeth Smith' },
-      { name: 'Trustees Section', content: 'Robert Johnson' }
-    ];
-
-    checks.forEach(check => {
-      if (processedContent.includes(check.content)) {
-        console.log(`✓ ${check.name} found`);
-      } else {
-        console.log(`✗ ${check.name} NOT found`);
-      }
-    });
-
-    console.log('\n=== Document Generation Test Complete ===');
-    console.log('\nNext step: Click "Generate Living Trust" button in the UI to create the PDF');
-
-    return {
-      success: true,
-      processedContent
-    };
-
-  } catch (error) {
-    console.error('✗ Error during testing:', error);
-    return {
-      success: false,
-      error: error.message
-    };
-  }
-};
-
-/**
  * Sample form data for testing - JOINT TRUST
  */
 export const sampleJointTrustData = {
@@ -451,5 +391,3 @@ export const sampleJointTrustData = {
     spouse: 'any_purpose'
   }
 };
-
-export default testDocumentGeneration;

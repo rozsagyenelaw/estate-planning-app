@@ -341,32 +341,6 @@ export const updateClientWithDocuments = async (
 };
 
 /**
- * Load client by ID (alias for getClientData for backward compatibility)
- * @param {string} clientId - Client identifier
- * @returns {Promise<Object>} - Client data
- */
-export const loadClientById = async (clientId) => {
-  return await getClientData(clientId);
-};
-
-/**
- * Get all clients (wrapper for searchClients with empty search term)
- * @returns {Promise<Array>} - Array of all clients
- */
-export const getAllClients = async () => {
-  try {
-    const result = await searchClients('', 100); // Empty search returns all, limit to 100
-    if (!result.success) {
-      return [];
-    }
-    return result.data || [];
-  } catch (error) {
-    console.error('Error getting all clients:', error);
-    return [];
-  }
-};
-
-/**
  * Helper function to update progress
  * @private
  */
