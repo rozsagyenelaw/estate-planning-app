@@ -118,7 +118,7 @@ const sampleFormData = {
   }
 };
 
-const templatePath = '/templates/single_estate_planning_template.docx';
+const templatePath = './public/templates/single_estate_planning_template.docx';
 
 console.log('📄 Loading template:', templatePath);
 console.log('📝 Sample data includes:');
