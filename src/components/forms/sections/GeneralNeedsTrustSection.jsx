@@ -90,6 +90,7 @@ const GeneralNeedsTrustSection = () => {
                 </div>
 
                 <Input
+                  key={`beneficiary-${trustIndex}-${trust.beneficiaryName || ''}`}
                   label="Beneficiary Name"
                   value={trust.beneficiaryName || ''}
                   onChange={(e) => handleUpdate(trustIndex, 'beneficiaryName', e.target.value)}
