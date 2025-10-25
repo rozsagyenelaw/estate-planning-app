@@ -141,7 +141,17 @@ export const sampleFormData = {
   ],
 
   // General Needs Trust
-  generalNeedsTrusts: [],
+  generalNeedsTrusts: [
+    {
+      beneficiaryName: 'Emily Grace Smith',
+      distributions: [
+        { age: '25', percentage: '33', description: 'Education and living expenses' },
+        { age: '30', percentage: '33', description: 'Business or home purchase' },
+        { age: '35', percentage: '34', description: 'Final distribution' }
+      ],
+      specialInstructions: 'Trustee may distribute additional amounts for health, education, and maintenance needs at their discretion.'
+    }
+  ],
 
   // Charitable Distribution
   charitableDistribution: {
@@ -378,7 +388,17 @@ export const sampleJointTrustData = {
   ],
 
   // General Needs Trust
-  generalNeedsTrusts: [],
+  generalNeedsTrusts: [
+    {
+      beneficiaryName: 'Emily Grace Smith',
+      distributions: [
+        { age: '25', percentage: '33', description: 'Education and living expenses' },
+        { age: '30', percentage: '33', description: 'Business or home purchase' },
+        { age: '35', percentage: '34', description: 'Final distribution' }
+      ],
+      specialInstructions: 'Trustee may distribute additional amounts for health, education, and maintenance needs at their discretion.'
+    }
+  ],
 
   // Charitable Distribution
   charitableDistribution: {
