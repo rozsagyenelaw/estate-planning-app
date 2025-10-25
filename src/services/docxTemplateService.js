@@ -308,9 +308,24 @@ const prepareTemplateData = (formData) => {
 
     // ===== FLAT PLACEHOLDERS FOR TEMPLATES =====
     // These match the placeholders in the DOCX templates exactly
+
+    // Trust/Document basics
     trustName: formData.trustName || '',
     trustDate: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    documentDate: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+
+    // Client name variations (different templates use different names)
     grantorFullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
+    clientFullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
+
+    // Client address fields
+    clientStreetAddress: formData.client?.address || '',
+    city: formData.client?.city || '',
+    state: formData.client?.state || '',
+    clientZipCode: formData.client?.zip || '',
+    county: formData.client?.county || '',
+
+    // Marital status
     maritalStatus: getMaritalStatusStatement(formData.client?.maritalStatus),
 
     // Children placeholders
@@ -348,6 +363,98 @@ const prepareTemplateData = (formData) => {
 
     // Assets (placeholder for future use)
     assets: 'All property transferred to this trust',
+
+    // ==== ESTATE PLANNING TEMPLATE PLACEHOLDERS ====
+    // POA Agents
+    poaAgentPrimary: formData.durablePOA?.client && formData.durablePOA.client.length > 0
+      ? formData.durablePOA.client[0].name || `${formData.durablePOA.client[0].firstName || ''} ${formData.durablePOA.client[0].lastName || ''}`.trim()
+      : '',
+
+    poaAgentSuccessor: formData.durablePOA?.client && formData.durablePOA.client.length > 1
+      ? formData.durablePOA.client[1].name || `${formData.durablePOA.client[1].firstName || ''} ${formData.durablePOA.client[1].lastName || ''}`.trim()
+      : '',
+
+    poaSuccessorAgentsList: (formData.durablePOA?.client || []).slice(1).map((agent, i) =>
+      `${i + 1}. ${agent.name || `${agent.firstName || ''} ${agent.lastName || ''}`.trim()}`
+    ).join('\n'),
+
+    // Healthcare Agents
+    healthCareAgentPrimary: formData.healthcarePOA?.client && formData.healthcarePOA.client.length > 0
+      ? formData.healthcarePOA.client[0].name || `${formData.healthcarePOA.client[0].firstName || ''} ${formData.healthcarePOA.client[0].lastName || ''}`.trim()
+      : '',
+
+    healthCareAgentAlternate: formData.healthcarePOA?.client && formData.healthcarePOA.client.length > 1
+      ? formData.healthcarePOA.client[1].name || `${formData.healthcarePOA.client[1].firstName || ''} ${formData.healthcarePOA.client[1].lastName || ''}`.trim()
+      : '',
+
+    healthCareSuccessorAgentsList: (formData.healthcarePOA?.client || []).slice(1).map((agent, i) =>
+      `${i + 1}. ${agent.name || `${agent.firstName || ''} ${agent.lastName || ''}`.trim()}`
+    ).join('\n'),
+
+    // HIPAA Authorized Recipients (same as healthcare agents)
+    hipaaAuthorizedRecipients: (formData.healthcarePOA?.client || []).map(agent =>
+      agent.name || `${agent.firstName || ''} ${agent.lastName || ''}`.trim()
+    ).join(', '),
+
+    // Guardian Nomination
+    guardianNomination: formData.guardians && formData.guardians.length > 0
+      ? formData.guardians[0].name || `${formData.guardians[0].firstName || ''} ${formData.guardians[0].lastName || ''}`.trim()
+      : '',
+
+    // Executor/Personal Representative (from Pour Over Will)
+    executorNomination: formData.pourOverWill?.client && formData.pourOverWill.client.length > 0
+      ? formData.pourOverWill.client[0].name || `${formData.pourOverWill.client[0].firstName || ''} ${formData.pourOverWill.client[0].lastName || ''}`.trim()
+      : '',
+
+    // Primary and Secondary Successors (from residuary beneficiaries)
+    primarySuccessor: formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 0
+      ? formData.residuaryBeneficiaries[0].name
+      : '',
+
+    secondarySuccessor: formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 1
+      ? formData.residuaryBeneficiaries[1].name
+      : '',
+
+    // ==== JOINT TRUST PLACEHOLDERS ====
+    jointTrustName: formData.trustName || '',
+    jointStreetAddress: formData.client?.address || '',
+    jointZipCode: formData.client?.zip || '',
+
+    // Spouse 1 and Spouse 2 (for joint trusts)
+    spouse1FullName: formData.client ? `${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''}`.trim() : '',
+    spouse1DateOfBirth: formData.client?.dateOfBirth || '',
+
+    spouse2FullName: formData.spouse ? `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim() : '',
+    spouse2DateOfBirth: formData.spouse?.dateOfBirth || '',
+
+    // Specific Distributions (formatted for template)
+    specificDistributions: (formData.specificDistributions || []).map((dist, i) => {
+      const distType = dist.distributionType === 'outright'
+        ? 'outright distribution'
+        : dist.distributionType === 'age-based'
+          ? `distribution in stages: ${(dist.ageDistributions || []).map(age => `${age.percentage}% at age ${age.age}`).join(', ')}`
+          : dist.distributionType;
+      return `${i + 1}. To ${dist.beneficiaryName}: ${dist.description} (${distType})`;
+    }).join('\n'),
+
+    // Beneficiary distribution guidelines
+    beneficiaryDistributionGuidelines: formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 0
+      ? (formData.residuaryBeneficiaries || []).map(b =>
+          `${b.name} shall receive ${b.share}% of the trust estate${b.distributionType === 'guardian' ? ', to be held in trust until age of majority' : ''}`
+        ).join('. ')
+      : 'The trust estate shall be distributed equally among all living children.',
+
+    // Beneficiary trust distribution details
+    beneficiaryTrustDistribution: (formData.residuaryBeneficiaries || [])
+      .filter(b => b.distributionType === 'guardian' || b.distributionType === 'age-based')
+      .map(b => `${b.name}'s share shall be held in trust and distributed according to the terms herein`)
+      .join('. '),
+
+    // If beneficiary deceased
+    beneficiaryIfDeceased: 'If any beneficiary is deceased, their share shall be distributed to their living descendants, per stirpes. If there are no living descendants, the share shall be distributed equally among the surviving beneficiaries.',
+
+    // Power of appointment
+    beneficiaryPowerOfAppointment: 'Each beneficiary shall have a limited power of appointment over their share of the trust estate.',
   };
 
   return data;
