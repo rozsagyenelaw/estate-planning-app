@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useFormContext } from '../../context/FormContext';
 import { Button, Card } from '../common';
 import { generateLivingTrust, generateLivingTrustWord, generateAllDocuments, generateCompleteEstatePlanningPackage, generateCompleteEstatePlanningPackageWord, downloadDocument } from '../../services/documentGenerator';
+import { sampleFormData } from '../../utils/testDocumentGeneration';
 import { saveFormDraft } from '../../services/autocompleteService';
 import { saveClientWithDocuments, saveClientWithLivingTrust } from '../../services/clientDocumentService';
 
@@ -29,6 +30,13 @@ const EstatePlanningForm = () => {
   const [savedLivingTrust, setSavedLivingTrust] = useState(null);
   const [savedCompletePlan, setSavedCompletePlan] = useState(null);
   const [saveProgress, setSaveProgress] = useState({ percent: 0, message: '' });
+
+  // Load sample data for testing
+  const loadSampleData = () => {
+    setFormData(sampleFormData);
+    setStatus('Sample data loaded successfully!');
+    setTimeout(() => setStatus(''), 3000);
+  };
 
   const handleGenerateTrust = async () => {
     setLoading(true);
@@ -208,6 +216,21 @@ const EstatePlanningForm = () => {
       <div className="space-y-6">
         {/* Load Existing Client */}
         <LoadClientSection />
+
+        {/* Load Sample Data for Testing */}
+        <Card>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">Testing</h3>
+              <p className="text-sm text-gray-600 mt-1">
+                Load sample form data for testing purposes
+              </p>
+            </div>
+            <Button variant="outline" onClick={loadSampleData}>
+              Load Sample Data
+            </Button>
+          </div>
+        </Card>
 
         {/* Trust Type Selection */}
         <TrustTypeSection />
