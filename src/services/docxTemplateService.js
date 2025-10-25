@@ -305,6 +305,49 @@ const prepareTemplateData = (formData) => {
       client: formData.anatomicalGifts?.client || 'none',
       spouse: formData.anatomicalGifts?.spouse || 'none',
     },
+
+    // ===== FLAT PLACEHOLDERS FOR TEMPLATES =====
+    // These match the placeholders in the DOCX templates exactly
+    trustName: formData.trustName || '',
+    trustDate: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    grantorFullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
+    maritalStatus: getMaritalStatusStatement(formData.client?.maritalStatus),
+
+    // Children placeholders
+    childrenStatement: formData.children && formData.children.length > 0
+      ? formData.children.length === 1
+        ? `I have one child, ${formData.children[0].name || (formData.children[0].firstName + ' ' + formData.children[0].lastName)}, born ${formData.children[0].birthday || formData.children[0].dateOfBirth}.`
+        : `I have ${formData.children.length} children.`
+      : 'I have no children.',
+
+    childrenTable: (formData.children || []).map((c, i) =>
+      `${i + 1}. ${c.name || (c.firstName + ' ' + c.lastName)}, born ${c.birthday || c.dateOfBirth}`
+    ).join('\n'),
+
+    childrenReferences: (formData.children || []).map(c =>
+      c.name || `${c.firstName || ''} ${c.lastName || ''}`.trim()
+    ).join(', '),
+
+    // Trustees placeholders
+    successorTrusteesList: (formData.successorTrustees || []).map((t, i) =>
+      `${i + 1}. ${t.name || `${t.firstName || ''} ${t.lastName || ''}`.trim()}`
+    ).join('\n'),
+
+    successorTrusteesDuringIncapacity: (formData.successorTrustees || []).map(t =>
+      t.name || `${t.firstName || ''} ${t.lastName || ''}`.trim()
+    ).join(', '),
+
+    successorTrusteesAfterDeath: (formData.successorTrustees || []).map(t =>
+      t.name || `${t.firstName || ''} ${t.lastName || ''}`.trim()
+    ).join(', '),
+
+    // Beneficiary distribution
+    beneficiaryDistribution: (formData.residuaryBeneficiaries || []).map(b =>
+      `${b.name}: ${b.share}%`
+    ).join(', '),
+
+    // Assets (placeholder for future use)
+    assets: 'All property transferred to this trust',
   };
 
   return data;

@@ -40,12 +40,22 @@ const EstatePlanningForm = () => {
 
   const handleGenerateTrust = async () => {
     setLoading(true);
-    setStatus('Generating Living Trust PDF...');
+    setStatus('Generating Living Trust document...');
     try {
-      const doc = await generateLivingTrust(formData);
-      const filename = `${formData.trustName || 'Living_Trust'}_${new Date().toISOString().split('T')[0]}.pdf`;
-      downloadDocument(doc, filename);
-      setStatus('Living Trust PDF generated successfully!');
+      const blob = await generateLivingTrust(formData);
+      const filename = `${formData.trustName || 'Living_Trust'}_${new Date().toISOString().split('T')[0]}.docx`;
+
+      // Create download link for Blob
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      setStatus('Living Trust document generated successfully!');
       setTimeout(() => setStatus(''), 3000);
     } catch (error) {
       console.error('Error generating trust:', error);
@@ -318,16 +328,7 @@ const EstatePlanningForm = () => {
                 loading={loading}
                 disabled={loading}
               >
-                Generate PDF (Preview)
-              </Button>
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={handleGenerateTrustWord}
-                loading={loading}
-                disabled={loading}
-              >
-                Generate Word (Preview)
+                Generate Living Trust
               </Button>
               <Button
                 variant="secondary"
