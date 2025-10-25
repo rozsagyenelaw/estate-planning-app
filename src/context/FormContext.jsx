@@ -182,7 +182,7 @@ export const FormProvider = ({ children }) => {
   const addArrayItem = (field, item) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: [...prev[field], item],
+      [field]: [...(prev[field] || []), item],
     }));
   };
 
@@ -190,7 +190,7 @@ export const FormProvider = ({ children }) => {
   const updateArrayItem = (field, index, updates) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: prev[field].map((item, i) =>
+      [field]: (prev[field] || []).map((item, i) =>
         i === index ? { ...item, ...updates } : item
       ),
     }));
@@ -200,7 +200,7 @@ export const FormProvider = ({ children }) => {
   const removeArrayItem = (field, index) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: prev[field].filter((_, i) => i !== index),
+      [field]: (prev[field] || []).filter((_, i) => i !== index),
     }));
   };
 

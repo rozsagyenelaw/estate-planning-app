@@ -141,11 +141,7 @@ export const sampleFormData = {
   ],
 
   // General Needs Trust
-  generalNeedsTrust: {
-    enabled: false,
-    beneficiaryName: '',
-    specialProvisions: ''
-  },
+  generalNeedsTrusts: [],
 
   // Charitable Distribution
   charitableDistribution: {
@@ -382,11 +378,7 @@ export const sampleJointTrustData = {
   ],
 
   // General Needs Trust
-  generalNeedsTrust: {
-    enabled: false,
-    beneficiaryName: '',
-    specialProvisions: ''
-  },
+  generalNeedsTrusts: [],
 
   // Charitable Distribution
   charitableDistribution: {
