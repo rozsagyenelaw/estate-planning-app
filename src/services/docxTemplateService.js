@@ -585,6 +585,36 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
     // Load the template
     const zip = new PizZip(templateBuffer);
 
+    // Fix split template tags in document.xml
+    // Word often splits template tags across multiple <w:t> elements, breaking them
+    let documentXml = zip.file('word/document.xml').asText();
+
+    // Merge tags split across XML elements
+    // Pattern: { ... (with possible XML in between) ... }
+    const tagPattern = /\{([^{}]*?(?:<[^>]+>[^{}]*?)*?)\}/gs;
+    documentXml = documentXml.replace(tagPattern, (match, content) => {
+      // If there's no XML in the content, return as-is
+      if (!content.includes('<')) {
+        return match;
+      }
+      // Extract text content only
+      const textOnly = content.replace(/<[^>]+>/g, '');
+      return '{' + textOnly + '}';
+    });
+
+    // Handle double-brace tags {{  }}
+    const doubleBracePattern = /\{\{([^{}]*?(?:<[^>]+>[^{}]*?)*?)\}\}/gs;
+    documentXml = documentXml.replace(doubleBracePattern, (match, content) => {
+      if (!content.includes('<')) {
+        return match;
+      }
+      const textOnly = content.replace(/<[^>]+>/g, '');
+      return '{{' + textOnly + '}}';
+    });
+
+    // Update the ZIP with merged XML
+    zip.file('word/document.xml', documentXml);
+
     // Configure angular-expressions parser for conditionals and loops
     expressions.filters.not = function(input) {
       return !input;
@@ -623,11 +653,13 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
             for (let i = 0, len = num + 1; i < len; i++) {
               obj = Object.assign(obj, scopeList[i]);
             }
-            // Add loop helper
+            // Add loop helper - get the array length from the parent scope
+            const currentArray = num > 0 ? scopeList[num - 1] : [];
+            const arrayLength = Array.isArray(currentArray) ? currentArray.length : 0;
             obj.loop = {
               index: context.num,
               first: context.num === 0,
-              last: context.num === (scopeList[num - 1] || []).length - 1,
+              last: arrayLength > 0 && context.num === arrayLength - 1,
             };
             return expr(obj);
           }
