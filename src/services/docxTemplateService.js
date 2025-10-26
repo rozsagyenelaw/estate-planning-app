@@ -37,6 +37,32 @@ const getPronounPossessive = (sex) => {
 };
 
 /**
+ * Get objective pronoun based on sex
+ */
+const getPronounObjective = (sex) => {
+  const gender = (sex || '').toLowerCase();
+  if (gender === 'male' || gender === 'm') {
+    return 'him';
+  } else if (gender === 'female' || gender === 'f') {
+    return 'her';
+  }
+  return 'them';
+};
+
+/**
+ * Get reflexive pronoun based on sex
+ */
+const getPronounReflexive = (sex) => {
+  const gender = (sex || '').toLowerCase();
+  if (gender === 'male' || gender === 'm') {
+    return 'himself';
+  } else if (gender === 'female' || gender === 'f') {
+    return 'herself';
+  }
+  return 'themselves';
+};
+
+/**
  * Load a DOCX template from the public folder
  * @param {string} templatePath - Path to template (e.g., '/templates/single_living_trust_template.docx')
  * @returns {Promise<ArrayBuffer>} - Template as ArrayBuffer
@@ -314,6 +340,11 @@ const prepareTemplateData = (formData) => {
     trustDate: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
     documentDate: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
 
+    // Restatement information
+    isRestatement: formData.isRestatement || false,
+    originalTrustName: formData.originalTrustName || '',
+    originalTrustDate: formData.originalTrustDate || '',
+
     // Client name variations (different templates use different names)
     grantorFullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
     clientFullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
@@ -331,34 +362,118 @@ const prepareTemplateData = (formData) => {
     // Children placeholders
     childrenStatement: formData.children && formData.children.length > 0
       ? formData.children.length === 1
-        ? `I have one child, ${formData.children[0].name || (formData.children[0].firstName + ' ' + formData.children[0].lastName)}, born ${formData.children[0].birthday || formData.children[0].dateOfBirth}.`
-        : `I have ${formData.children.length} children.`
+        ? `I have one child: ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formData.children[0].dateOfBirth}.`
+        : formData.children.length === 2
+          ? `I have two children: ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formData.children[0].dateOfBirth}, and ${formData.children[1].firstName} ${formData.children[1].lastName}, born ${formData.children[1].dateOfBirth}.`
+          : `I have ${formData.children.length} children: ` + (formData.children || []).map((c, i) => 
+              i === formData.children.length - 1 
+                ? `and ${c.firstName} ${c.lastName}, born ${c.dateOfBirth}`
+                : `${c.firstName} ${c.lastName}, born ${c.dateOfBirth}`
+            ).join('; ') + '.'
       : 'I have no children.',
 
-    childrenTable: (formData.children || []).map((c, i) =>
-      `${i + 1}. ${c.name || (c.firstName + ' ' + c.lastName)}, born ${c.birthday || c.dateOfBirth}`
-    ).join('\n'),
-
     childrenReferences: (formData.children || []).map(c =>
-      c.name || `${c.firstName || ''} ${c.lastName || ''}`.trim()
-    ).join(', '),
+      `${c.firstName || ''} ${c.lastName || ''}`.trim()
+    ).join(' and '),
 
-    // Trustees placeholders
-    successorTrusteesList: (formData.successorTrustees || []).map((t, i) =>
-      `${i + 1}. ${t.name || `${t.firstName || ''} ${t.lastName || ''}`.trim()}`
-    ).join('\n'),
+    // Trustees placeholders - formatted for docxtemplater
+    successorTrusteesList: (formData.successorTrustees || []).map(t =>
+      `${t.firstName || ''} ${t.lastName || ''}`.trim()
+    ).join(', then '),
 
-    successorTrusteesDuringIncapacity: (formData.successorTrustees || []).map(t =>
-      t.name || `${t.firstName || ''} ${t.lastName || ''}`.trim()
-    ).join(', '),
+    successorTrusteesDuringIncapacityFormatted: (formData.successorTrustees || []).map(t =>
+      `${t.firstName || ''} ${t.lastName || ''}`.trim()
+    ).join(', then '),
 
-    successorTrusteesAfterDeath: (formData.successorTrustees || []).map(t =>
-      t.name || `${t.firstName || ''} ${t.lastName || ''}`.trim()
-    ).join(', '),
+    successorTrusteesAfterDeathFormatted: (formData.successorTrustees || []).map(t =>
+      `${t.firstName || ''} ${t.lastName || ''}`.trim()
+    ).join(', then '),
 
-    // Beneficiary distribution
+    // ===== BENEFICIARIES - COMPLETE DATA STRUCTURE FOR DOCXTEMPLATER =====
+    // This is the array that will be looped over in the template
+    beneficiaries: (formData.residuaryBeneficiaries || []).map((beneficiary, index) => {
+      // Calculate section number (01, 02, 03, etc.)
+      const sectionNumber = String(index + 1).padStart(2, '0');
+      
+      // Get pronouns based on sex
+      const sex = beneficiary.sex || '';
+      const pronounPossessive = getPronounPossessive(sex);
+      const pronounObjective = getPronounObjective(sex);
+      const pronounReflexive = getPronounReflexive(sex);
+      
+      // Full name
+      const fullName = beneficiary.name || `${beneficiary.firstName || ''} ${beneficiary.lastName || ''}`.trim();
+      
+      // Determine distribution type flags
+      let distributeOutright = false;
+      let hasAgeDistribution = false;
+      let hasGeneralNeedsTrust = false;
+      
+      if (beneficiary.distributionType === 'outright' || !beneficiary.distributionType) {
+        distributeOutright = true;
+      } else if (beneficiary.distributionType === 'age-based' || beneficiary.distributionType === 'ageDistribution') {
+        hasAgeDistribution = true;
+      } else if (beneficiary.distributionType === 'general-needs' || beneficiary.distributionType === 'guardian') {
+        hasGeneralNeedsTrust = true;
+      }
+      
+      // Process age distribution rules if they exist
+      const ageDistributionRules = (beneficiary.ageDistributions || beneficiary.ageDistributionRules || []).map((rule, ruleIndex) => ({
+        sectionNumber: String(ruleIndex + 1).padStart(2, '0'),
+        percentage: rule.percentage || 0,
+        timing: rule.timing || `when ${pronounObjective} reaches age ${rule.age || 0}`,
+        age: rule.age || 0,
+      }));
+      
+      return {
+        sectionNumber: sectionNumber,
+        fullName: fullName,
+        firstName: beneficiary.firstName || '',
+        lastName: beneficiary.lastName || '',
+        relationship: beneficiary.relationship || 'beneficiary',
+        dateOfBirth: beneficiary.dateOfBirth || beneficiary.birthday || '',
+        percentage: beneficiary.share || beneficiary.percentage || 0,
+        pronounPossessive: pronounPossessive,
+        pronounObjective: pronounObjective,
+        pronounReflexive: pronounReflexive,
+        
+        // Distribution type flags (only ONE should be true)
+        distributeOutright: distributeOutright,
+        hasAgeDistribution: hasAgeDistribution,
+        hasGeneralNeedsTrust: hasGeneralNeedsTrust,
+        
+        // Age distribution rules (for hasAgeDistribution)
+        ageDistributionRules: ageDistributionRules,
+        
+        // General needs trust termination age
+        trustTerminationAge: beneficiary.trustTerminationAge || beneficiary.terminationAge || 25,
+        
+        // Power of appointment limits (for age-based distributions)
+        limitedSharePercentage: beneficiary.limitedSharePercentage || '5%',
+        limitedShareAmount: beneficiary.limitedShareAmount || '$5,000',
+        limitedShareAmountWords: beneficiary.limitedShareAmountWords || 'Five Thousand Dollars',
+      };
+    }),
+
+    // Power of appointment default values (if not provided per beneficiary)
+    limitedSharePercentage: '5%',
+    limitedShareAmount: '$5,000',
+    limitedShareAmountWords: 'Five Thousand Dollars',
+
+    // Specific Distributions flag and array
+    hasSpecificDistributions: formData.specificDistributions && formData.specificDistributions.length > 0,
+    specificDistributions: (formData.specificDistributions || []).map((dist, index) => ({
+      sectionNumber: String(index + 1).padStart(2, '0'),
+      beneficiaryName: dist.beneficiaryName || dist.name || '',
+      propertyDescription: dist.description || dist.propertyDescription || '',
+      hasAgeCondition: dist.hasAgeCondition || false,
+      conditionAge: dist.conditionAge || dist.age || '',
+      conditionPerson: dist.conditionPerson || dist.beneficiaryName || '',
+    })),
+
+    // Beneficiary distribution (formatted for simple templates)
     beneficiaryDistribution: (formData.residuaryBeneficiaries || []).map(b =>
-      `${b.name}: ${b.share}%`
+      `${b.name || `${b.firstName} ${b.lastName}`}: ${b.share || b.percentage}%`
     ).join(', '),
 
     // Assets (placeholder for future use)
@@ -408,11 +523,11 @@ const prepareTemplateData = (formData) => {
 
     // Primary and Secondary Successors (from residuary beneficiaries)
     primarySuccessor: formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 0
-      ? formData.residuaryBeneficiaries[0].name
+      ? formData.residuaryBeneficiaries[0].name || `${formData.residuaryBeneficiaries[0].firstName || ''} ${formData.residuaryBeneficiaries[0].lastName || ''}`.trim()
       : '',
 
     secondarySuccessor: formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 1
-      ? formData.residuaryBeneficiaries[1].name
+      ? formData.residuaryBeneficiaries[1].name || `${formData.residuaryBeneficiaries[1].firstName || ''} ${formData.residuaryBeneficiaries[1].lastName || ''}`.trim()
       : '',
 
     // ==== JOINT TRUST PLACEHOLDERS ====
@@ -427,27 +542,17 @@ const prepareTemplateData = (formData) => {
     spouse2FullName: formData.spouse ? `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim() : '',
     spouse2DateOfBirth: formData.spouse?.dateOfBirth || '',
 
-    // Specific Distributions (formatted for template)
-    specificDistributions: (formData.specificDistributions || []).map((dist, i) => {
-      const distType = dist.distributionType === 'outright'
-        ? 'outright distribution'
-        : dist.distributionType === 'age-based'
-          ? `distribution in stages: ${(dist.ageDistributions || []).map(age => `${age.percentage}% at age ${age.age}`).join(', ')}`
-          : dist.distributionType;
-      return `${i + 1}. To ${dist.beneficiaryName}: ${dist.description} (${distType})`;
-    }).join('\n'),
-
     // Beneficiary distribution guidelines
     beneficiaryDistributionGuidelines: formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 0
       ? (formData.residuaryBeneficiaries || []).map(b =>
-          `${b.name} shall receive ${b.share}% of the trust estate${b.distributionType === 'guardian' ? ', to be held in trust until age of majority' : ''}`
+          `${b.name || `${b.firstName} ${b.lastName}`} shall receive ${b.share || b.percentage}% of the trust estate${b.distributionType === 'guardian' ? ', to be held in trust until age of majority' : ''}`
         ).join('. ')
       : 'The trust estate shall be distributed equally among all living children.',
 
     // Beneficiary trust distribution details
     beneficiaryTrustDistribution: (formData.residuaryBeneficiaries || [])
       .filter(b => b.distributionType === 'guardian' || b.distributionType === 'age-based')
-      .map(b => `${b.name}'s share shall be held in trust and distributed according to the terms herein`)
+      .map(b => `${b.name || `${b.firstName} ${b.lastName}`}'s share shall be held in trust and distributed according to the terms herein`)
       .join('. '),
 
     // If beneficiary deceased
@@ -515,6 +620,10 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
     const data = prepareTemplateData(formData);
 
     console.log('Filling DOCX template with data:', Object.keys(data));
+    console.log('Number of beneficiaries:', data.beneficiaries?.length || 0);
+    if (data.beneficiaries && data.beneficiaries.length > 0) {
+      console.log('First beneficiary:', data.beneficiaries[0]);
+    }
 
     // Fill the template
     doc.render(data);
