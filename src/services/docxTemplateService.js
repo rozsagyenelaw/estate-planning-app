@@ -89,6 +89,13 @@ export const loadDOCXTemplate = async (templatePath) => {
  * @returns {Object} - Flattened data object
  */
 const prepareTemplateData = (formData) => {
+  // Calculate tpp_section_num first so we can use it for sequential numbering
+  const tppSectionNum = formData.specificDistributions && formData.specificDistributions.length > 0
+    ? String(formData.specificDistributions.length + 1).padStart(2, '0')
+    : '01';
+  
+  const tppNum = parseInt(tppSectionNum);
+
   const data = {
     // Client information
     client: {
@@ -480,9 +487,11 @@ const prepareTemplateData = (formData) => {
     // Section numbering helpers
     sectionNumber: '01',
     nextSectionNumber: '02',
-    tpp_section_num: formData.specificDistributions && formData.specificDistributions.length > 0
-      ? String(formData.specificDistributions.length + 1).padStart(2, '0')
-      : '01',
+    tpp_section_num: tppSectionNum,
+    tpp_section_num_plus_1: String(tppNum + 1).padStart(2, '0'),
+    tpp_section_num_plus_2: String(tppNum + 2).padStart(2, '0'),
+    tpp_section_num_plus_3: String(tppNum + 3).padStart(2, '0'),
+    tpp_section_num_plus_4: String(tppNum + 4).padStart(2, '0'),
 
     // Beneficiary distribution (formatted for simple templates)
     beneficiaryDistribution: (formData.residuaryBeneficiaries || []).map(b =>
