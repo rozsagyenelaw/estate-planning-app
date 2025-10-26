@@ -89,12 +89,72 @@ export const loadDOCXTemplate = async (templatePath) => {
  * @returns {Object} - Flattened data object
  */
 const prepareTemplateData = (formData) => {
-  // Calculate tpp_section_num first so we can use it for sequential numbering
-  const tppSectionNum = formData.specificDistributions && formData.specificDistributions.length > 0
-    ? String(formData.specificDistributions.length + 1).padStart(2, '0')
+  console.log('=== PREPARING TEMPLATE DATA ===');
+  console.log('Input formData keys:', Object.keys(formData));
+  
+  // ============================================================================
+  // CRITICAL FIX: Clean specificDistributions and beneficiaries arrays
+  // ============================================================================
+  
+  // Clean specificDistributions - remove empty objects
+  let cleanedSpecificDistributions = [];
+  if (formData.specificDistributions && Array.isArray(formData.specificDistributions)) {
+    console.log('Original specificDistributions:', formData.specificDistributions);
+    cleanedSpecificDistributions = formData.specificDistributions.filter(dist => {
+      // Keep only distributions that have meaningful data
+      const hasData = dist && 
+                      dist.beneficiaryName && 
+                      dist.beneficiaryName.trim() !== '' &&
+                      dist.propertyDescription &&
+                      dist.propertyDescription.trim() !== '';
+      if (!hasData && dist) {
+        console.log('Removing empty distribution:', dist);
+      }
+      return hasData;
+    });
+    console.log('Cleaned specificDistributions:', cleanedSpecificDistributions);
+  }
+  
+  // Add section numbers to specificDistributions
+  const specificDistributionsWithSections = cleanedSpecificDistributions.map((dist, index) => ({
+    sectionNumber: String(index + 1).padStart(2, '0'),
+    beneficiaryName: dist.beneficiaryName || '',
+    propertyDescription: dist.propertyDescription || dist.description || dist.property || '',
+    property: dist.propertyDescription || dist.description || dist.property || '',
+    hasAgeCondition: dist.hasAgeCondition || false,
+    conditionAge: dist.conditionAge || dist.age || '',
+    conditionPerson: dist.conditionPerson || dist.beneficiaryName || '',
+  }));
+  
+  // Calculate tpp_section_num based on cleaned array
+  const tppSectionNum = specificDistributionsWithSections.length > 0
+    ? String(specificDistributionsWithSections.length + 1).padStart(2, '0')
     : '01';
   
   const tppNum = parseInt(tppSectionNum);
+  
+  console.log('TPP section numbers:', {
+    tpp_section_num: tppSectionNum,
+    numSpecificDistributions: specificDistributionsWithSections.length,
+  });
+  
+  // Clean residuary beneficiaries - remove empty objects
+  let cleanedBeneficiaries = [];
+  if (formData.residuaryBeneficiaries && Array.isArray(formData.residuaryBeneficiaries)) {
+    console.log('Original residuaryBeneficiaries:', formData.residuaryBeneficiaries);
+    cleanedBeneficiaries = formData.residuaryBeneficiaries.filter(ben => {
+      // Keep only beneficiaries that have meaningful data
+      const hasData = ben && 
+                      (ben.name || ben.firstName || ben.fullName) &&
+                      (ben.name?.trim() !== '' || ben.firstName?.trim() !== '' || ben.fullName?.trim() !== '') &&
+                      (typeof ben.share !== 'undefined' || typeof ben.percentage !== 'undefined');
+      if (!hasData && ben) {
+        console.log('Removing empty beneficiary:', ben);
+      }
+      return hasData;
+    });
+    console.log('Cleaned beneficiaries count:', cleanedBeneficiaries.length);
+  }
 
   const data = {
     // Client information
@@ -410,9 +470,10 @@ const prepareTemplateData = (formData) => {
 
     // ===== BENEFICIARIES - COMPLETE DATA STRUCTURE FOR DOCXTEMPLATER =====
     // This is the array that will be looped over in the template
-    beneficiaries: (formData.residuaryBeneficiaries || []).map((beneficiary, index, array) => {
-      // Calculate section number (01, 02, 03, etc.)
-      const sectionNumber = String(index + 1).padStart(2, '0');
+    // CRITICAL: Uses cleanedBeneficiaries to avoid empty objects
+    beneficiaries: cleanedBeneficiaries.map((beneficiary, index, array) => {
+      // Calculate section number (02, 03, 04, etc. - starts at 02 because 01 is division)
+      const sectionNumber = String(index + 2).padStart(2, '0');
       const isNotLast = index < array.length - 1;  // Helper for {{#if isNotLast}}
       
       // Get pronouns based on sex
@@ -482,16 +543,10 @@ const prepareTemplateData = (formData) => {
     limitedShareAmountWords: 'Five Thousand Dollars',
 
     // Specific Distributions flag and array
-    hasSpecificDistributions: formData.specificDistributions && formData.specificDistributions.length > 0,
-    notHasSpecificDistributions: !(formData.specificDistributions && formData.specificDistributions.length > 0),  // Helper for {{#if notHasSpecificDistributions}}
-    specificDistributions: (formData.specificDistributions || []).map((dist, index) => ({
-      sectionNumber: String(index + 1).padStart(2, '0'),
-      beneficiaryName: dist.beneficiaryName || dist.name || '',
-      property: dist.description || dist.propertyDescription || dist.property || '',
-      hasAgeCondition: dist.hasAgeCondition || false,
-      conditionAge: dist.conditionAge || dist.age || '',
-      conditionPerson: dist.conditionPerson || dist.beneficiaryName || '',
-    })),
+    // CRITICAL: Uses specificDistributionsWithSections (cleaned array)
+    hasSpecificDistributions: specificDistributionsWithSections.length > 0,
+    notHasSpecificDistributions: specificDistributionsWithSections.length === 0,  // Helper for {{#if notHasSpecificDistributions}}
+    specificDistributions: specificDistributionsWithSections,
 
     // General Needs Trusts flag and array
     hasGeneralNeeds: formData.generalNeeds && formData.generalNeeds.length > 0,
@@ -513,7 +568,7 @@ const prepareTemplateData = (formData) => {
     tpp_section_num_plus_4: String(tppNum + 4).padStart(2, '0'),
 
     // Beneficiary distribution (formatted for simple templates)
-    beneficiaryDistribution: (formData.residuaryBeneficiaries || []).map(b =>
+    beneficiaryDistribution: cleanedBeneficiaries.map(b =>
       `${b.name || `${b.firstName} ${b.lastName}`}: ${b.share || b.percentage}%`
     ).join(', '),
 
@@ -563,12 +618,12 @@ const prepareTemplateData = (formData) => {
       : '',
 
     // Primary and Secondary Successors (from residuary beneficiaries)
-    primarySuccessor: formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 0
-      ? formData.residuaryBeneficiaries[0].name || `${formData.residuaryBeneficiaries[0].firstName || ''} ${formData.residuaryBeneficiaries[0].lastName || ''}`.trim()
+    primarySuccessor: cleanedBeneficiaries.length > 0
+      ? cleanedBeneficiaries[0].name || `${cleanedBeneficiaries[0].firstName || ''} ${cleanedBeneficiaries[0].lastName || ''}`.trim()
       : '',
 
-    secondarySuccessor: formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 1
-      ? formData.residuaryBeneficiaries[1].name || `${formData.residuaryBeneficiaries[1].firstName || ''} ${formData.residuaryBeneficiaries[1].lastName || ''}`.trim()
+    secondarySuccessor: cleanedBeneficiaries.length > 1
+      ? cleanedBeneficiaries[1].name || `${cleanedBeneficiaries[1].firstName || ''} ${cleanedBeneficiaries[1].lastName || ''}`.trim()
       : '',
 
     // ==== JOINT TRUST PLACEHOLDERS ====
@@ -584,14 +639,14 @@ const prepareTemplateData = (formData) => {
     spouse2DateOfBirth: formData.spouse?.dateOfBirth || '',
 
     // Beneficiary distribution guidelines
-    beneficiaryDistributionGuidelines: formData.residuaryBeneficiaries && formData.residuaryBeneficiaries.length > 0
-      ? (formData.residuaryBeneficiaries || []).map(b =>
+    beneficiaryDistributionGuidelines: cleanedBeneficiaries.length > 0
+      ? cleanedBeneficiaries.map(b =>
           `${b.name || `${b.firstName} ${b.lastName}`} shall receive ${b.share || b.percentage}% of the trust estate${b.distributionType === 'guardian' ? ', to be held in trust until age of majority' : ''}`
         ).join('. ')
       : 'The trust estate shall be distributed equally among all living children.',
 
     // Beneficiary trust distribution details
-    beneficiaryTrustDistribution: (formData.residuaryBeneficiaries || [])
+    beneficiaryTrustDistribution: cleanedBeneficiaries
       .filter(b => b.distributionType === 'guardian' || b.distributionType === 'age-based')
       .map(b => `${b.name || `${b.firstName} ${b.lastName}`}'s share shall be held in trust and distributed according to the terms herein`)
       .join('. '),
@@ -602,6 +657,19 @@ const prepareTemplateData = (formData) => {
     // Power of appointment
     beneficiaryPowerOfAppointment: 'Each beneficiary shall have a limited power of appointment over their share of the trust estate.',
   };
+
+  console.log('=== PREPARED DATA SUMMARY ===');
+  console.log('specificDistributions:', data.specificDistributions.length, 'items');
+  console.log('hasSpecificDistributions:', data.hasSpecificDistributions);
+  console.log('beneficiaries:', data.beneficiaries.length, 'items');
+  console.log('tpp_section_num:', data.tpp_section_num);
+  if (data.specificDistributions.length > 0) {
+    console.log('First specific distribution:', data.specificDistributions[0]);
+  }
+  if (data.beneficiaries.length > 0) {
+    console.log('First beneficiary:', data.beneficiaries[0]);
+  }
+  console.log('=== END DATA PREPARATION ===');
 
   return data;
 };
@@ -698,14 +766,8 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
     // Prepare data
     const data = prepareTemplateData(formData);
 
-    console.log('Filling DOCX template with data:', Object.keys(data));
-    console.log('isRestatement:', data.isRestatement);
-    console.log('hasSpecificDistributions:', data.hasSpecificDistributions);
-    console.log('Number of specificDistributions:', data.specificDistributions?.length || 0);
-    console.log('Number of beneficiaries:', data.beneficiaries?.length || 0);
-    if (data.beneficiaries && data.beneficiaries.length > 0) {
-      console.log('First beneficiary:', data.beneficiaries[0]);
-    }
+    console.log('Filling DOCX template with data...');
+    console.log('Template data keys:', Object.keys(data).length);
 
     // Fill the template
     console.log('Rendering template with docxtemplater...');
