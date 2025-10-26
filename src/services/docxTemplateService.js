@@ -5,6 +5,7 @@
 
 import Docxtemplater from 'docxtemplater';
 import PizZip from 'pizzip';
+import expressions from 'angular-expressions';
 
 /**
  * Get marital status statement
@@ -348,6 +349,7 @@ const prepareTemplateData = (formData) => {
     // Client name variations (different templates use different names)
     grantorFullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
     clientFullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
+    fullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
 
     // Client address fields
     clientStreetAddress: formData.client?.address || '',
@@ -471,6 +473,13 @@ const prepareTemplateData = (formData) => {
       conditionPerson: dist.conditionPerson || dist.beneficiaryName || '',
     })),
 
+    // Section numbering helpers
+    sectionNumber: '01',
+    nextSectionNumber: '02',
+    tpp_section_num: formData.specificDistributions && formData.specificDistributions.length > 0
+      ? String(formData.specificDistributions.length + 1).padStart(2, '0')
+      : '01',
+
     // Beneficiary distribution (formatted for simple templates)
     beneficiaryDistribution: (formData.residuaryBeneficiaries || []).map(b =>
       `${b.name || `${b.firstName} ${b.lastName}`}: ${b.share || b.percentage}%`
@@ -576,40 +585,61 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
     // Load the template
     const zip = new PizZip(templateBuffer);
 
-    // Fix split tags in the ZIP
-    // When Word formats text, it often splits {placeholders} across multiple XML elements
-    // We need to merge these back together
-    let documentXml = zip.file('word/document.xml').asText();
+    // Configure angular-expressions parser for conditionals and loops
+    expressions.filters.not = function(input) {
+      return !input;
+    };
 
-    // Multiple passes to merge split placeholders
-    // Pass 1: Merge simple splits like {</w:t><w:t>text</w:t><w:t>}
-    for (let i = 0; i < 5; i++) {  // Multiple passes to handle nested splits
-      documentXml = documentXml.replace(
-        /\{([^<>{}]*?)<\/w:t>([\s\S]*?)<w:t([^>]*)>([^<>{}]*?)\}/g,
-        function(match, before, middle, attrs, after) {
-          // Extract just the text content from middle section
-          const middleText = middle.replace(/<w:t[^>]*>/g, '').replace(/<\/w:t>/g, '').replace(/<[^>]+>/g, '');
-          return `{${before}${middleText}${after}}`;
-        }
-      );
-    }
-
-    // Pass 2: Remove any remaining XML tags between { and }
-    documentXml = documentXml.replace(
-      /\{([^{}]*)\}/g,
-      function(match, content) {
-        // Remove all XML tags from within placeholders
-        const cleanContent = content.replace(/<[^>]+>/g, '');
-        return `{${cleanContent}}`;
+    function angularParser(tag) {
+      // Handle empty tag for {{^}} else syntax - just return true
+      if (tag === '' || tag === '^') {
+        return {
+          get: function() {
+            return true;
+          }
+        };
       }
-    );
 
-    // Update the zip with merged content
-    zip.file('word/document.xml', documentXml);
+      // Handle "not " prefix - convert to logical not for angular-expressions
+      let cleanTag = tag;
+      if (cleanTag.startsWith('not ')) {
+        cleanTag = '!(' + cleanTag.substring(4) + ')';
+      }
+
+      try {
+        const expr = expressions.compile(cleanTag);
+        return {
+          get: function(scope, context) {
+            let obj = {};
+            const scopeList = context.scopeList;
+            const num = context.num;
+            for (let i = 0, len = num + 1; i < len; i++) {
+              obj = Object.assign(obj, scopeList[i]);
+            }
+            // Add loop helper
+            obj.loop = {
+              index: context.num,
+              first: context.num === 0,
+              last: context.num === (scopeList[num - 1] || []).length - 1,
+            };
+            return expr(obj);
+          }
+        };
+      } catch (e) {
+        console.error('Error parsing tag:', tag, e);
+        // Return empty string for unparseable tags
+        return {
+          get: function() {
+            return '';
+          }
+        };
+      }
+    }
 
     const doc = new Docxtemplater(zip, {
       paragraphLoop: true,
       linebreaks: true,
+      parser: angularParser,
       nullGetter: function(part) {
         // Return empty string for undefined values instead of throwing error
         return '';
@@ -620,13 +650,18 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
     const data = prepareTemplateData(formData);
 
     console.log('Filling DOCX template with data:', Object.keys(data));
+    console.log('isRestatement:', data.isRestatement);
+    console.log('hasSpecificDistributions:', data.hasSpecificDistributions);
+    console.log('Number of specificDistributions:', data.specificDistributions?.length || 0);
     console.log('Number of beneficiaries:', data.beneficiaries?.length || 0);
     if (data.beneficiaries && data.beneficiaries.length > 0) {
       console.log('First beneficiary:', data.beneficiaries[0]);
     }
 
     // Fill the template
+    console.log('Rendering template with docxtemplater...');
     doc.render(data);
+    console.log('Template rendered successfully');
 
     // Generate the filled document
     const output = doc.getZip().generate({
@@ -639,18 +674,34 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
 
   } catch (error) {
     console.error('Error filling DOCX template:', error);
-    if (error.properties && error.properties.errors) {
-      console.error('Template errors:', error.properties.errors);
-      console.error('=== DETAILED ERROR INFO ===');
-      error.properties.errors.forEach((err, i) => {
-        console.error(`\nError ${i + 1}:`);
-        console.error('  Message:', err.message);
-        console.error('  Tag:', err.properties?.xtag || 'N/A');
-        console.error('  Context:', err.properties?.context?.substring(0, 150) || 'N/A');
-        console.error('  Explanation:', err.properties?.explanation || 'N/A');
-        console.error('  File:', err.properties?.file || 'N/A');
-      });
-      console.error('=========================');
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+
+    if (error.properties) {
+      console.error('Error properties:', error.properties);
+
+      if (error.properties.errors) {
+        console.error('=== DETAILED ERROR INFO ===');
+        console.error(`Found ${error.properties.errors.length} errors:`);
+        error.properties.errors.forEach((err, i) => {
+          console.error(`\n--- Error ${i + 1} ---`);
+          console.error('  Message:', err.message);
+          console.error('  Name:', err.name);
+          console.error('  Tag:', err.properties?.xtag || 'N/A');
+          console.error('  Context:', err.properties?.context?.substring(0, 200) || 'N/A');
+          console.error('  Explanation:', err.properties?.explanation || 'N/A');
+          console.error('  File:', err.properties?.file || 'N/A');
+          console.error('  Offset:', err.properties?.offset || 'N/A');
+          if (err.stack) {
+            console.error('  Stack:', err.stack.substring(0, 300));
+          }
+        });
+        console.error('=========================');
+      }
+
+      if (error.properties.id) {
+        console.error('Error ID:', error.properties.id);
+      }
     }
     throw error;
   }

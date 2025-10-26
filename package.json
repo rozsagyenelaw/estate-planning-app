@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "angular-expressions": "^1.5.1",
     "date-fns": "^4.1.0",
     "docxtemplater": "^3.67.0",
     "file-saver": "^2.0.5",
