@@ -474,21 +474,33 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
     // Fix split tags in the ZIP
     // When Word formats text, it often splits {placeholders} across multiple XML elements
     // We need to merge these back together
-    const documentXml = zip.file('word/document.xml').asText();
+    let documentXml = zip.file('word/document.xml').asText();
 
-    // Simple regex to merge split placeholders
-    // Match: {</w:t>...<w:t>text</w:t>...<w:t>}
-    const mergedXml = documentXml.replace(
-      /\{([^}]*?)<\/w:t>([\s\S]*?)<w:t>([^}]*?)\}/g,
-      function(match, before, middle, after) {
-        // Extract just the text content from middle section
-        const middleText = middle.replace(/<[^>]+>/g, '');
-        return `{${before}${middleText}${after}}`;
+    // Multiple passes to merge split placeholders
+    // Pass 1: Merge simple splits like {</w:t><w:t>text</w:t><w:t>}
+    for (let i = 0; i < 5; i++) {  // Multiple passes to handle nested splits
+      documentXml = documentXml.replace(
+        /\{([^<>{}]*?)<\/w:t>([\s\S]*?)<w:t([^>]*)>([^<>{}]*?)\}/g,
+        function(match, before, middle, attrs, after) {
+          // Extract just the text content from middle section
+          const middleText = middle.replace(/<w:t[^>]*>/g, '').replace(/<\/w:t>/g, '').replace(/<[^>]+>/g, '');
+          return `{${before}${middleText}${after}}`;
+        }
+      );
+    }
+
+    // Pass 2: Remove any remaining XML tags between { and }
+    documentXml = documentXml.replace(
+      /\{([^{}]*)\}/g,
+      function(match, content) {
+        // Remove all XML tags from within placeholders
+        const cleanContent = content.replace(/<[^>]+>/g, '');
+        return `{${cleanContent}}`;
       }
     );
 
     // Update the zip with merged content
-    zip.file('word/document.xml', mergedXml);
+    zip.file('word/document.xml', documentXml);
 
     const doc = new Docxtemplater(zip, {
       paragraphLoop: true,
