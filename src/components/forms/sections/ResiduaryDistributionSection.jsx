@@ -1,8 +1,13 @@
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, Select, Button } from '../../common';
+import { Card, Input, Select, Button, Autocomplete } from '../../common';
 
 const ResiduaryDistributionSection = () => {
   const { formData, updateFormData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
+
+  // Generate suggestions from children
+  const childrenSuggestions = (formData.children || []).map(child =>
+    `${child.firstName} ${child.lastName}`.trim()
+  ).filter(name => name.length > 0);
 
   const handleTypeChange = (value) => {
     updateFormData({ residuaryDistributionType: value });
@@ -28,14 +33,37 @@ const ResiduaryDistributionSection = () => {
     removeArrayItem('residuaryBeneficiaries', index);
   };
 
+  const autofillFromChildren = () => {
+    // Populate beneficiaries from children with equal shares
+    if (formData.children && formData.children.length > 0) {
+      const sharePerChild = Math.floor(100 / formData.children.length);
+      const beneficiaries = formData.children.map((child) => ({
+        name: `${child.firstName} ${child.lastName}`.trim(),
+        firstName: child.firstName || '',
+        lastName: child.lastName || '',
+        relationship: 'child',
+        dateOfBirth: child.dateOfBirth || '',
+        percentage: sharePerChild,
+      }));
+      updateFormData({ residuaryBeneficiaries: beneficiaries });
+    }
+  };
+
   return (
     <Card>
       <div className="space-y-4">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-800">Residuary Distribution</h3>
-          <p className="text-sm text-gray-600 mt-1">
-            Specify how the remainder of your estate should be distributed after specific bequests
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800">Residuary Distribution</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Specify how the remainder of your estate should be distributed after specific bequests
+            </p>
+          </div>
+          {formData.children && formData.children.length > 0 && formData.residuaryDistributionType === 'individuals' && (
+            <Button variant="outline" onClick={autofillFromChildren}>
+              Autofill from Children
+            </Button>
+          )}
         </div>
 
         <Select
@@ -80,10 +108,12 @@ const ResiduaryDistributionSection = () => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <Input
+                      <Autocomplete
                         label="Name"
                         value={ben.name || ''}
                         onChange={(e) => handleUpdateBeneficiary(index, 'name', e.target.value)}
+                        onSelect={(value) => handleUpdateBeneficiary(index, 'name', value)}
+                        suggestions={childrenSuggestions}
                         placeholder="Beneficiary name"
                       />
                       <Input

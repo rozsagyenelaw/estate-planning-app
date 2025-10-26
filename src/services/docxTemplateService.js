@@ -386,6 +386,15 @@ const prepareTemplateData = (formData) => {
       `${c.firstName || ''} ${c.lastName || ''}`.trim()
     ).join(' and '),
 
+    // Children array for template loops
+    children: (formData.children || []).map(child => ({
+      fullName: `${child.firstName || ''} ${child.middleName || ''} ${child.lastName || ''}`.trim(),
+      firstName: child.firstName || '',
+      middleName: child.middleName || '',
+      lastName: child.lastName || '',
+      dateOfBirth: child.dateOfBirth || child.birthday || '',
+    })),
+
     // Trustees placeholders - formatted for docxtemplater
     successorTrusteesList: (formData.successorTrustees || []).map(t =>
       `${t.firstName || ''} ${t.lastName || ''}`.trim()
@@ -478,10 +487,20 @@ const prepareTemplateData = (formData) => {
     specificDistributions: (formData.specificDistributions || []).map((dist, index) => ({
       sectionNumber: String(index + 1).padStart(2, '0'),
       beneficiaryName: dist.beneficiaryName || dist.name || '',
-      propertyDescription: dist.description || dist.propertyDescription || '',
+      property: dist.description || dist.propertyDescription || dist.property || '',
       hasAgeCondition: dist.hasAgeCondition || false,
       conditionAge: dist.conditionAge || dist.age || '',
       conditionPerson: dist.conditionPerson || dist.beneficiaryName || '',
+    })),
+
+    // General Needs Trusts flag and array
+    hasGeneralNeeds: formData.generalNeeds && formData.generalNeeds.length > 0,
+    notHasGeneralNeeds: !(formData.generalNeeds && formData.generalNeeds.length > 0),
+    generalNeeds: (formData.generalNeeds || []).map((gn, index) => ({
+      sectionNumber: `6.${index + 1}`,
+      beneficiaryName: gn.beneficiaryName || gn.name || '',
+      hasAgeCondition: gn.hasAgeCondition || gn.terminationAge > 0 || false,
+      terminationAge: gn.terminationAge || gn.age || '',
     })),
 
     // Section numbering helpers

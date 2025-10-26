@@ -49,6 +49,42 @@ const SuccessorTrusteesSection = () => {
           </Button>
         </div>
 
+        {trustees.length > 1 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <label className="block text-sm font-semibold text-gray-800 mb-3">
+              How should successor trustees serve?
+            </label>
+            <div className="space-y-2">
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="trusteesServeType"
+                  value="together"
+                  checked={formData.trusteesServeType === 'together'}
+                  onChange={(e) => updateFormData({ trusteesServeType: e.target.value })}
+                  className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">
+                  <strong>Together (Co-Trustees)</strong> - All trustees serve jointly and must agree on decisions
+                </span>
+              </label>
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="trusteesServeType"
+                  value="sequential"
+                  checked={formData.trusteesServeType === 'sequential'}
+                  onChange={(e) => updateFormData({ trusteesServeType: e.target.value })}
+                  className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">
+                  <strong>After Each Other (Sequential)</strong> - Trustees serve one at a time in the order listed
+                </span>
+              </label>
+            </div>
+          </div>
+        )}
+
         {trustees.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg">
             <p className="text-gray-500">No successor trustees added yet.</p>

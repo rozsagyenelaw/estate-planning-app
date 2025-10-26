@@ -47,6 +47,7 @@ export const FormProvider = ({ children }) => {
 
     // Successor Trustees
     successorTrustees: [],
+    trusteesServeType: 'sequential', // 'sequential' or 'together'
 
     // Specific Distribution
     specificDistributions: [],
@@ -219,6 +220,7 @@ export const FormProvider = ({ children }) => {
       trustName: '',
       children: [],
       successorTrustees: [],
+      trusteesServeType: 'sequential',
       specificDistributions: [],
       residuaryBeneficiaries: [],
       residuaryEvenSplit: false,

@@ -356,16 +356,38 @@ function updateProgress(callback, percent, message) {
  * @returns {Promise<Object>} - Client data
  */
 export const loadClientById = async (clientId) => {
-  return await loadClientWithDocuments(clientId);
+  const result = await loadClientWithDocuments(clientId);
+  // Transform to match expected format: result.formData
+  if (result.success) {
+    return {
+      success: true,
+      formData: result.client, // The loaded data IS the formData
+      documents: result.documents,
+      message: result.message
+    };
+  }
+  return result;
 };
 
 /**
  * Get all clients (wrapper for searchClients)
- * @returns {Promise<Array>} - Array of all clients
+ * @param {number} limitCount - Maximum number of clients to return
+ * @returns {Promise<Object>} - Result object with success flag and clients array
  */
-export const getAllClients = async () => {
-  const result = await searchClients('', 1000); // Empty search returns all
-  return result.success ? result.data : [];
+export const getAllClients = async (limitCount = 100) => {
+  const result = await searchClients('', limitCount);
+  // Transform to match expected format: result.clients
+  if (result.success) {
+    return {
+      success: true,
+      clients: result.data
+    };
+  }
+  return {
+    success: false,
+    clients: [],
+    error: result.error
+  };
 };
 
 /**

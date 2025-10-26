@@ -1,8 +1,13 @@
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, Button } from '../../common';
+import { Card, Input, Button, Autocomplete } from '../../common';
 
 const GeneralNeedsTrustSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
+
+  // Generate suggestions from children
+  const childrenSuggestions = (formData.children || []).map(child =>
+    `${child.firstName} ${child.lastName}`.trim()
+  ).filter(name => name.length > 0);
 
   const handleAdd = () => {
     addArrayItem('generalNeedsTrusts', {
@@ -89,11 +94,12 @@ const GeneralNeedsTrustSection = () => {
                   </button>
                 </div>
 
-                <Input
-                  key={`beneficiary-${trustIndex}-${trust.beneficiaryName || ''}`}
+                <Autocomplete
                   label="Beneficiary Name"
                   value={trust.beneficiaryName || ''}
                   onChange={(e) => handleUpdate(trustIndex, 'beneficiaryName', e.target.value)}
+                  onSelect={(value) => handleUpdate(trustIndex, 'beneficiaryName', value)}
+                  suggestions={childrenSuggestions}
                   placeholder="Enter beneficiary name"
                   required
                 />
