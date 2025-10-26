@@ -600,8 +600,15 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
         };
       }
 
-      // Handle "not " prefix - convert to logical not for angular-expressions
+      // Handle control flow keywords that docxtemplater passes to parser
       let cleanTag = tag;
+
+      // Handle "if " prefix - just remove it
+      if (cleanTag.startsWith('if ')) {
+        cleanTag = cleanTag.substring(3);
+      }
+
+      // Handle "not " prefix - convert to logical not for angular-expressions
       if (cleanTag.startsWith('not ')) {
         cleanTag = '!(' + cleanTag.substring(4) + ')';
       }
