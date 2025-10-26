@@ -343,6 +343,7 @@ const prepareTemplateData = (formData) => {
 
     // Restatement information
     isRestatement: formData.isRestatement || false,
+    notIsRestatement: !(formData.isRestatement || false),  // Helper for {{#if notIsRestatement}}
     originalTrustName: formData.originalTrustName || '',
     originalTrustDate: formData.originalTrustDate || '',
 
@@ -393,9 +394,10 @@ const prepareTemplateData = (formData) => {
 
     // ===== BENEFICIARIES - COMPLETE DATA STRUCTURE FOR DOCXTEMPLATER =====
     // This is the array that will be looped over in the template
-    beneficiaries: (formData.residuaryBeneficiaries || []).map((beneficiary, index) => {
+    beneficiaries: (formData.residuaryBeneficiaries || []).map((beneficiary, index, array) => {
       // Calculate section number (01, 02, 03, etc.)
       const sectionNumber = String(index + 1).padStart(2, '0');
+      const isNotLast = index < array.length - 1;  // Helper for {{#if isNotLast}}
       
       // Get pronouns based on sex
       const sex = beneficiary.sex || '';
@@ -435,6 +437,7 @@ const prepareTemplateData = (formData) => {
         relationship: beneficiary.relationship || 'beneficiary',
         dateOfBirth: beneficiary.dateOfBirth || beneficiary.birthday || '',
         percentage: beneficiary.share || beneficiary.percentage || 0,
+        isNotLast: isNotLast,  // Helper for punctuation: {{#if isNotLast}}; and{{/if}}
         pronounPossessive: pronounPossessive,
         pronounObjective: pronounObjective,
         pronounReflexive: pronounReflexive,
@@ -464,6 +467,7 @@ const prepareTemplateData = (formData) => {
 
     // Specific Distributions flag and array
     hasSpecificDistributions: formData.specificDistributions && formData.specificDistributions.length > 0,
+    notHasSpecificDistributions: !(formData.specificDistributions && formData.specificDistributions.length > 0),  // Helper for {{#if notHasSpecificDistributions}}
     specificDistributions: (formData.specificDistributions || []).map((dist, index) => ({
       sectionNumber: String(index + 1).padStart(2, '0'),
       beneficiaryName: dist.beneficiaryName || dist.name || '',
@@ -621,30 +625,8 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
     };
 
     function angularParser(tag) {
-      // Handle empty tag for {{^}} else syntax - just return true
-      if (tag === '' || tag === '^') {
-        return {
-          get: function() {
-            return true;
-          }
-        };
-      }
-
-      // Handle control flow keywords that docxtemplater passes to parser
-      let cleanTag = tag;
-
-      // Handle "if " prefix - just remove it
-      if (cleanTag.startsWith('if ')) {
-        cleanTag = cleanTag.substring(3);
-      }
-
-      // Handle "not " prefix - convert to logical not for angular-expressions
-      if (cleanTag.startsWith('not ')) {
-        cleanTag = '!(' + cleanTag.substring(4) + ')';
-      }
-
       try {
-        const expr = expressions.compile(cleanTag);
+        const expr = expressions.compile(tag);
         return {
           get: function(scope, context) {
             let obj = {};
@@ -653,7 +635,7 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
             for (let i = 0, len = num + 1; i < len; i++) {
               obj = Object.assign(obj, scopeList[i]);
             }
-            // Add loop helper - get the array length from the parent scope
+            // Add loop helper for backward compatibility (though we now use isNotLast in data)
             const currentArray = num > 0 ? scopeList[num - 1] : [];
             const arrayLength = Array.isArray(currentArray) ? currentArray.length : 0;
             obj.loop = {
