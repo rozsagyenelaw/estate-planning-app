@@ -623,14 +623,24 @@ const prepareTemplateData = (formData) => {
 
       // CRITICAL FIX: Check if this beneficiary has a matching general needs trust
       const generalNeedsTrusts = formData.generalNeedsTrusts || [];
+      console.log('  All general needs trusts:', generalNeedsTrusts);
+      console.log('  Looking for match with fullName:', fullName);
+
       const matchingTrust = generalNeedsTrusts.find(trust =>
         (trust.beneficiaryName || '').trim().toLowerCase() === fullName.toLowerCase()
       );
 
       if (matchingTrust) {
-        console.log('  Found matching general needs trust for:', fullName);
-        console.log('  Trust distributions:', matchingTrust.distributions);
+        console.log('  ✓ Found matching general needs trust for:', fullName);
+        console.log('  Trust distributions:', JSON.stringify(matchingTrust.distributions, null, 2));
+      } else {
+        console.log('  ✗ No matching general needs trust found for:', fullName);
       }
+
+      // Debug beneficiary's own distribution settings
+      console.log('  beneficiary.distributionType:', beneficiary.distributionType);
+      console.log('  beneficiary.ageDistributions:', beneficiary.ageDistributions);
+      console.log('  beneficiary.ageDistributionRules:', beneficiary.ageDistributionRules);
 
       // Determine distribution type flags
       let distributeOutright = false;
@@ -640,6 +650,7 @@ const prepareTemplateData = (formData) => {
 
       if (matchingTrust && matchingTrust.distributions && matchingTrust.distributions.length > 0) {
         // If there's a matching general needs trust with distributions, use it
+        console.log('  → Taking PATH 1: Using general needs trust distributions');
         hasGeneralNeedsTrust = true;
         hasAgeDistribution = true; // General needs trust uses age distributions
 
@@ -656,12 +667,15 @@ const prepareTemplateData = (formData) => {
             }
           };
         });
-        console.log('  Final ageDistributionRules:', ageDistributionRules);
+        console.log('  Final ageDistributionRules from general needs trust:', JSON.stringify(ageDistributionRules, null, 2));
       } else if (beneficiary.distributionType === 'age-based' || beneficiary.distributionType === 'ageDistribution') {
+        console.log('  → Taking PATH 2: Using beneficiary age-based distributions');
         hasAgeDistribution = true;
 
         // Process age distribution rules from beneficiary if they exist
-        ageDistributionRules = (beneficiary.ageDistributions || beneficiary.ageDistributionRules || []).map((rule, ruleIndex) => ({
+        const beneficiaryAgeRules = beneficiary.ageDistributions || beneficiary.ageDistributionRules || [];
+        console.log('    beneficiaryAgeRules:', JSON.stringify(beneficiaryAgeRules, null, 2));
+        ageDistributionRules = beneficiaryAgeRules.map((rule, ruleIndex) => ({
           ageRule: {
             sectionNumber: String(ruleIndex + 1).padStart(2, '0'),
             percentage: parsePercentage(rule.percentage),
@@ -669,9 +683,12 @@ const prepareTemplateData = (formData) => {
             age: rule.age || 0,
           }
         }));
+        console.log('  Final ageDistributionRules from beneficiary:', JSON.stringify(ageDistributionRules, null, 2));
       } else if (beneficiary.distributionType === 'general-needs' || beneficiary.distributionType === 'guardian') {
+        console.log('  → Taking PATH 3: General needs trust (no age rules populated)');
         hasGeneralNeedsTrust = true;
       } else {
+        console.log('  → Taking PATH 4: Distribute outright (default)');
         // Default to outright distribution
         distributeOutright = true;
       }
