@@ -180,7 +180,7 @@ const LoadClientSection = () => {
                         <div className="text-xs text-gray-500">
                           {client.formData?.isJoint ? 'Joint Trust' : 'Single Trust'}
                           {' • '}
-                          Created: {new Date(client.createdAt).toLocaleDateString()}
+                          Created: {new Date(client.createdAt).toLocaleDateString('en-US')}
                         </div>
                       </div>
                       <div className="text-blue-600 font-semibold text-sm">

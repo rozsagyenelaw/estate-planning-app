@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Autofill Test</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        button { padding: 8px 16px; margin: 5px; cursor: pointer; }
+        .child, .beneficiary { padding: 10px; margin: 5px; background: #f0f0f0; }
+        input { padding: 5px; margin: 5px; }
+        select { padding: 5px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        function AutofillTest() {
+            const [children, setChildren] = useState([]);
+            const [beneficiaries, setBeneficiaries] = useState([]);
+            const [distributionType, setDistributionType] = useState('descendants');
+            const [generalNeedsTrusts, setGeneralNeedsTrusts] = useState([]);
+
+            const addChild = () => {
+                setChildren([...children, { firstName: '', lastName: '' }]);
+            };
+
+            const updateChild = (index, field, value) => {
+                const updated = [...children];
+                updated[index] = { ...updated[index], [field]: value };
+                setChildren(updated);
+            };
+
+            const autofillBeneficiaries = () => {
+                if (children && children.length > 0) {
+                    const sharePerChild = Math.floor(100 / children.length);
+                    const newBeneficiaries = children.map((child) => ({
+                        name: `${child.firstName} ${child.lastName}`.trim(),
+                        firstName: child.firstName || '',
+                        lastName: child.lastName || '',
+                        relationship: 'child',
+                        percentage: sharePerChild,
+                    }));
+                    setBeneficiaries(newBeneficiaries);
+                    alert('Beneficiaries autofilled successfully!');
+                }
+            };
+
+            const addGeneralNeedsTrust = () => {
+                setGeneralNeedsTrusts([...generalNeedsTrusts, { beneficiaryName: '' }]);
+            };
+
+            const updateTrust = (index, value) => {
+                const updated = [...generalNeedsTrusts];
+                updated[index] = { ...updated[index], beneficiaryName: value };
+                setGeneralNeedsTrusts(updated);
+            };
+
+            return (
+                <div>
+                    <h1>Autofill Functionality Test</h1>
+
+                    {/* Children Section */}
+                    <div className="section">
+                        <h2>Children Section</h2>
+                        <button onClick={addChild}>+ Add Child</button>
+                        {children.map((child, index) => (
+                            <div key={index} className="child">
+                                <input
+                                    placeholder="First Name"
+                                    value={child.firstName}
+                                    onChange={(e) => updateChild(index, 'firstName', e.target.value)}
+                                />
+                                <input
+                                    placeholder="Last Name"
+                                    value={child.lastName}
+                                    onChange={(e) => updateChild(index, 'lastName', e.target.value)}
+                                />
+                            </div>
+                        ))}
+                        <p>Total children: {children.length}</p>
+                    </div>
+
+                    {/* Residuary Distribution Section */}
+                    <div className="section">
+                        <h2>Residuary Distribution Section</h2>
+                        <select value={distributionType} onChange={(e) => setDistributionType(e.target.value)}>
+                            <option value="descendants">To my descendants per stirpes</option>
+                            <option value="individuals">To specific individuals</option>
+                            <option value="other">Other distribution</option>
+                        </select>
+
+                        {children.length > 0 && distributionType === 'individuals' && (
+                            <div>
+                                <button onClick={autofillBeneficiaries} style={{background: '#4CAF50', color: 'white'}}>
+                                    Autofill from Children
+                                </button>
+                            </div>
+                        )}
+
+                        {distributionType === 'individuals' && (
+                            <div>
+                                <h3>Beneficiaries: {beneficiaries.length}</h3>
+                                {beneficiaries.map((ben, index) => (
+                                    <div key={index} className="beneficiary">
+                                        Name: {ben.name} | Percentage: {ben.percentage}%
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* General Needs Trust Section */}
+                    <div className="section">
+                        <h2>General Needs Trust Section</h2>
+                        <button onClick={addGeneralNeedsTrust}>+ Add General Needs Trust</button>
+                        {generalNeedsTrusts.map((trust, index) => (
+                            <div key={index} className="child">
+                                <input
+                                    placeholder="Beneficiary Name"
+                                    value={trust.beneficiaryName}
+                                    onChange={(e) => updateTrust(index, e.target.value)}
+                                />
+                                {children.length > 0 && (
+                                    <select onChange={(e) => e.target.value && updateTrust(index, e.target.value)} value="">
+                                        <option value="">Select from children...</option>
+                                        {children.map((child, idx) => (
+                                            <option key={idx} value={`${child.firstName} ${child.lastName}`.trim()}>
+                                                {child.firstName} {child.lastName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Debug Info */}
+                    <div className="section">
+                        <h2>Debug Info</h2>
+                        <pre>{JSON.stringify({ children, beneficiaries, distributionType, generalNeedsTrusts }, null, 2)}</pre>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<AutofillTest />, document.getElementById('root'));
+    </script>
+</body>
+</html>

@@ -212,7 +212,7 @@ const prepareTemplateData = (formData) => {
       isRestatement: formData.isRestatement ? 'Yes' : 'No',
       originalTrustName: formData.originalTrustName || '',
       originalTrustDate: formData.originalTrustDate || '',
-      currentDate: formData.currentDate || new Date().toLocaleDateString(),
+      currentDate: formData.currentDate || new Date().toLocaleDateString('en-US'),
     },
 
     // Children
