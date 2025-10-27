@@ -529,11 +529,21 @@ const prepareTemplateData = (formData) => {
       // Full name
       const fullName = beneficiary.name || `${beneficiary.firstName || ''} ${beneficiary.lastName || ''}`.trim();
 
+      // Debug: Log beneficiary data
+      console.log('Processing beneficiary:', fullName);
+      console.log('  Raw percentage value:', beneficiary.percentage || beneficiary.share);
+      console.log('  Parsed percentage:', parsePercentage(beneficiary.share || beneficiary.percentage));
+
       // CRITICAL FIX: Check if this beneficiary has a matching general needs trust
       const generalNeedsTrusts = formData.generalNeedsTrusts || [];
       const matchingTrust = generalNeedsTrusts.find(trust =>
         (trust.beneficiaryName || '').trim().toLowerCase() === fullName.toLowerCase()
       );
+
+      if (matchingTrust) {
+        console.log('  Found matching general needs trust for:', fullName);
+        console.log('  Trust distributions:', matchingTrust.distributions);
+      }
 
       // Determine distribution type flags
       let distributeOutright = false;
@@ -547,12 +557,17 @@ const prepareTemplateData = (formData) => {
         hasAgeDistribution = true; // General needs trust uses age distributions
 
         // Map the distributions from the general needs trust
-        ageDistributionRules = matchingTrust.distributions.map((rule, ruleIndex) => ({
-          sectionNumber: String(ruleIndex + 1).padStart(2, '0'),
-          percentage: parsePercentage(rule.percentage),
-          timing: rule.timing || `when ${pronounObjective} reaches age ${rule.age || 0}`,
-          age: rule.age || 0,
-        }));
+        ageDistributionRules = matchingTrust.distributions.map((rule, ruleIndex) => {
+          const parsedPercentage = parsePercentage(rule.percentage);
+          console.log(`    Distribution ${ruleIndex + 1}: age=${rule.age}, raw%=${rule.percentage}, parsed%=${parsedPercentage}`);
+          return {
+            sectionNumber: String(ruleIndex + 1).padStart(2, '0'),
+            percentage: parsedPercentage,
+            timing: rule.timing || `when ${pronounObjective} reaches age ${rule.age || 0}`,
+            age: rule.age || 0,
+          };
+        });
+        console.log('  Final ageDistributionRules:', ageDistributionRules);
       } else if (beneficiary.distributionType === 'age-based' || beneficiary.distributionType === 'ageDistribution') {
         hasAgeDistribution = true;
 
