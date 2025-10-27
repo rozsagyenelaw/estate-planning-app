@@ -300,9 +300,26 @@ const prepareTemplateData = (formData) => {
     // Successor Trustees
     successorTrustees: formData.successorTrustees || [],
     numTrustees: formData.successorTrustees?.length || 0,
-    trusteesList: (formData.successorTrustees || []).map((t, i) =>
-      `${i + 1}. ${t.firstName} ${t.lastName}`
-    ).join('\n'),
+    trusteesServeType: formData.trusteesServeType || 'sequential',
+    trusteesList: (() => {
+      const trustees = formData.successorTrustees || [];
+      if (trustees.length === 0) return '';
+
+      const names = trustees.map(t => `${t.firstName || ''} ${t.lastName || ''}`.trim());
+      const serveType = formData.trusteesServeType || 'sequential';
+
+      if (serveType === 'together') {
+        // Format: "Name1 and Name2, jointly or the survivor of them"
+        if (names.length === 1) return names[0];
+        if (names.length === 2) return `${names[0]} and ${names[1]}, jointly or the survivor of them`;
+        // For 3+: "Name1, Name2, and Name3, jointly or the survivor of them"
+        const lastTwo = `${names[names.length - 2]}, and ${names[names.length - 1]}`;
+        return `${names.slice(0, -2).join(', ')}, ${lastTwo}, jointly or the survivor of them`;
+      } else {
+        // Format: "Name1, then Name2" (sequential)
+        return names.join(',\nthen ');
+      }
+    })(),
 
     // Guardians
     guardians: formData.guardians || [],
@@ -500,17 +517,56 @@ const prepareTemplateData = (formData) => {
     })),
 
     // Trustees placeholders - formatted for docxtemplater
-    successorTrusteesList: (formData.successorTrustees || []).map(t =>
-      `${t.firstName || ''} ${t.lastName || ''}`.trim()
-    ).join(', then '),
+    successorTrusteesList: (() => {
+      const trustees = formData.successorTrustees || [];
+      if (trustees.length === 0) return '';
 
-    successorTrusteesDuringIncapacityFormatted: (formData.successorTrustees || []).map(t =>
-      `${t.firstName || ''} ${t.lastName || ''}`.trim()
-    ).join(', then '),
+      const names = trustees.map(t => `${t.firstName || ''} ${t.lastName || ''}`.trim());
+      const serveType = formData.trusteesServeType || 'sequential';
 
-    successorTrusteesAfterDeathFormatted: (formData.successorTrustees || []).map(t =>
-      `${t.firstName || ''} ${t.lastName || ''}`.trim()
-    ).join(', then '),
+      if (serveType === 'together') {
+        if (names.length === 1) return names[0];
+        if (names.length === 2) return `${names[0]} and ${names[1]}, jointly or the survivor of them`;
+        const lastTwo = `${names[names.length - 2]}, and ${names[names.length - 1]}`;
+        return `${names.slice(0, -2).join(', ')}, ${lastTwo}, jointly or the survivor of them`;
+      } else {
+        return names.join(', then ');
+      }
+    })(),
+
+    successorTrusteesDuringIncapacityFormatted: (() => {
+      const trustees = formData.successorTrustees || [];
+      if (trustees.length === 0) return '';
+
+      const names = trustees.map(t => `${t.firstName || ''} ${t.lastName || ''}`.trim());
+      const serveType = formData.trusteesServeType || 'sequential';
+
+      if (serveType === 'together') {
+        if (names.length === 1) return names[0];
+        if (names.length === 2) return `${names[0]} and ${names[1]}, jointly or the survivor of them`;
+        const lastTwo = `${names[names.length - 2]}, and ${names[names.length - 1]}`;
+        return `${names.slice(0, -2).join(', ')}, ${lastTwo}, jointly or the survivor of them`;
+      } else {
+        return names.join(', then ');
+      }
+    })(),
+
+    successorTrusteesAfterDeathFormatted: (() => {
+      const trustees = formData.successorTrustees || [];
+      if (trustees.length === 0) return '';
+
+      const names = trustees.map(t => `${t.firstName || ''} ${t.lastName || ''}`.trim());
+      const serveType = formData.trusteesServeType || 'sequential';
+
+      if (serveType === 'together') {
+        if (names.length === 1) return names[0];
+        if (names.length === 2) return `${names[0]} and ${names[1]}, jointly or the survivor of them`;
+        const lastTwo = `${names[names.length - 2]}, and ${names[names.length - 1]}`;
+        return `${names.slice(0, -2).join(', ')}, ${lastTwo}, jointly or the survivor of them`;
+      } else {
+        return names.join(', then ');
+      }
+    })(),
 
     // ===== BENEFICIARIES - COMPLETE DATA STRUCTURE FOR DOCXTEMPLATER =====
     // This is the array that will be looped over in the template
