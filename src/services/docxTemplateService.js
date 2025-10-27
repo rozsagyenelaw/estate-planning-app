@@ -531,8 +531,11 @@ const prepareTemplateData = (formData) => {
 
       // Debug: Log beneficiary data
       console.log('Processing beneficiary:', fullName);
+      console.log('  beneficiary.share:', beneficiary.share);
+      console.log('  beneficiary.percentage:', beneficiary.percentage);
       console.log('  Raw percentage value:', beneficiary.percentage || beneficiary.share);
       console.log('  Parsed percentage:', parsePercentage(beneficiary.share || beneficiary.percentage));
+      console.log('  Direct parse test of "50%":', parsePercentage("50%"));
 
       // CRITICAL FIX: Check if this beneficiary has a matching general needs trust
       const generalNeedsTrusts = formData.generalNeedsTrusts || [];
