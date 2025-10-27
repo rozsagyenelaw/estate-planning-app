@@ -472,7 +472,28 @@ const prepareTemplateData = (formData) => {
     // These match the placeholders in the DOCX templates exactly
 
     // Trust/Document basics
-    trustName: formData.trustName || '',
+    trustName: (() => {
+      // Auto-generate trust name for joint trusts if not provided
+      if (formData.isJoint && formData.client && formData.spouse) {
+        const grantor1 = `${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''}`.trim();
+        const grantor2 = `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim();
+
+        // Use provided trust name only if it clearly indicates both spouses (contains "and" or "&")
+        // This prevents incomplete names like "John Smith Living Trust" from being used for joint trusts
+        if (formData.trustName &&
+            (formData.trustName.includes(' and ') || formData.trustName.includes(' & ')) &&
+            formData.trustName.includes(formData.client.lastName)) {
+          return formData.trustName;
+        }
+
+        return `The ${grantor1} and ${grantor2} Living Trust`;
+      }
+
+      // For single trusts, use provided name or generate from client name
+      return formData.trustName || (formData.client
+        ? `The ${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''} Living Trust`.trim()
+        : '');
+    })(),
     trustDate: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
     documentDate: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
 
