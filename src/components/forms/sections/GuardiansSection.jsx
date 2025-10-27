@@ -49,6 +49,42 @@ const GuardiansSection = () => {
           </Button>
         </div>
 
+        {guardians.length > 1 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <label className="block text-sm font-semibold text-gray-800 mb-3">
+              How should guardians serve?
+            </label>
+            <div className="space-y-2">
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="guardiansServeType"
+                  value="together"
+                  checked={formData.guardiansServeType === 'together'}
+                  onChange={(e) => updateFormData({ guardiansServeType: e.target.value })}
+                  className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">
+                  <strong>Together (Co-Guardians)</strong> - All guardians serve jointly
+                </span>
+              </label>
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="guardiansServeType"
+                  value="sequential"
+                  checked={formData.guardiansServeType === 'sequential'}
+                  onChange={(e) => updateFormData({ guardiansServeType: e.target.value })}
+                  className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">
+                  <strong>In Order (Sequential)</strong> - Guardians serve one at a time in the order listed
+                </span>
+              </label>
+            </div>
+          </div>
+        )}
+
         {guardians.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg">
             <p className="text-gray-500">No guardians added yet.</p>

@@ -71,18 +71,27 @@ export const FormProvider = ({ children }) => {
 
     // Guardians
     guardians: [],
+    guardiansServeType: 'sequential', // 'sequential' or 'together'
+
+    // Pour Over Will Executors
+    executorsServeType: 'sequential', // 'sequential' or 'together'
+    executorsSpouseServeType: 'sequential', // 'sequential' or 'together'
 
     // Durable Power of Attorney
     durablePOA: {
       client: [],
       spouse: [],
     },
+    durablePOAClientServeType: 'sequential', // 'sequential' or 'together'
+    durablePOASpouseServeType: 'sequential', // 'sequential' or 'together'
 
     // Healthcare Power of Attorney
     healthcarePOA: {
       client: [],
       spouse: [],
     },
+    healthcarePOAClientServeType: 'sequential', // 'sequential' or 'together'
+    healthcarePOASpouseServeType: 'sequential', // 'sequential' or 'together'
 
     // Anatomical Gifts
     anatomicalGifts: {
@@ -231,9 +240,16 @@ export const FormProvider = ({ children }) => {
         client: { personalRepresentatives: [] },
         spouse: { personalRepresentatives: [] },
       },
+      executorsServeType: 'sequential',
+      executorsSpouseServeType: 'sequential',
       guardians: [],
+      guardiansServeType: 'sequential',
       durablePOA: { client: [], spouse: [] },
+      durablePOAClientServeType: 'sequential',
+      durablePOASpouseServeType: 'sequential',
       healthcarePOA: { client: [], spouse: [] },
+      healthcarePOAClientServeType: 'sequential',
+      healthcarePOASpouseServeType: 'sequential',
       anatomicalGifts: { client: 'none', spouse: 'none' },
     });
     setIsDraft(false);

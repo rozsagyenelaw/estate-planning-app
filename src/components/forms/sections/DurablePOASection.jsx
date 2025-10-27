@@ -114,6 +114,42 @@ const DurablePOASection = () => {
             </p>
           </div>
 
+          {clientAgents.length > 1 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <label className="block text-sm font-semibold text-gray-800 mb-3">
+                How should agents serve?
+              </label>
+              <div className="space-y-2">
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="durablePOAClientServeType"
+                    value="together"
+                    checked={formData.durablePOAClientServeType === 'together'}
+                    onChange={(e) => updateFormData({ durablePOAClientServeType: e.target.value })}
+                    className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-gray-700">
+                    <strong>Together (Co-Agents)</strong> - All agents serve jointly and must agree on decisions
+                  </span>
+                </label>
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="durablePOAClientServeType"
+                    value="sequential"
+                    checked={formData.durablePOAClientServeType === 'sequential'}
+                    onChange={(e) => updateFormData({ durablePOAClientServeType: e.target.value })}
+                    className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-gray-700">
+                    <strong>In Order (Sequential)</strong> - Agents serve one at a time in the order listed
+                  </span>
+                </label>
+              </div>
+            </div>
+          )}
+
           {clientAgents.length > 0 ? (
             <div className="space-y-4">
               {clientAgents.map((agent, index) => (
@@ -208,6 +244,42 @@ const DurablePOASection = () => {
                 Designate agents for spouse's financial and legal matters
               </p>
             </div>
+
+            {spouseAgents.length > 1 && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <label className="block text-sm font-semibold text-gray-800 mb-3">
+                  How should agents serve?
+                </label>
+                <div className="space-y-2">
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="durablePOASpouseServeType"
+                      value="together"
+                      checked={formData.durablePOASpouseServeType === 'together'}
+                      onChange={(e) => updateFormData({ durablePOASpouseServeType: e.target.value })}
+                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700">
+                      <strong>Together (Co-Agents)</strong> - All agents serve jointly and must agree on decisions
+                    </span>
+                  </label>
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="durablePOASpouseServeType"
+                      value="sequential"
+                      checked={formData.durablePOASpouseServeType === 'sequential'}
+                      onChange={(e) => updateFormData({ durablePOASpouseServeType: e.target.value })}
+                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700">
+                      <strong>In Order (Sequential)</strong> - Agents serve one at a time in the order listed
+                    </span>
+                  </label>
+                </div>
+              </div>
+            )}
 
             {spouseAgents.length > 0 ? (
               <div className="space-y-4">

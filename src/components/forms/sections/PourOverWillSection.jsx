@@ -120,6 +120,42 @@ const PourOverWillSection = () => {
             </p>
           </div>
 
+          {clientReps.length > 1 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <label className="block text-sm font-semibold text-gray-800 mb-3">
+                How should personal representatives serve?
+              </label>
+              <div className="space-y-2">
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="executorsServeType"
+                    value="together"
+                    checked={formData.executorsServeType === 'together'}
+                    onChange={(e) => updateFormData({ executorsServeType: e.target.value })}
+                    className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-gray-700">
+                    <strong>Together (Co-Executors)</strong> - All representatives serve jointly and must agree on decisions
+                  </span>
+                </label>
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="executorsServeType"
+                    value="sequential"
+                    checked={formData.executorsServeType === 'sequential'}
+                    onChange={(e) => updateFormData({ executorsServeType: e.target.value })}
+                    className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-gray-700">
+                    <strong>In Order (Sequential)</strong> - Representatives serve one at a time in the order listed
+                  </span>
+                </label>
+              </div>
+            </div>
+          )}
+
           {clientReps.length > 0 ? (
             <div className="space-y-4">
               {clientReps.map((rep, index) => (
@@ -194,6 +230,42 @@ const PourOverWillSection = () => {
                 Designate personal representatives for spouse's pour-over will
               </p>
             </div>
+
+            {spouseReps.length > 1 && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <label className="block text-sm font-semibold text-gray-800 mb-3">
+                  How should personal representatives serve?
+                </label>
+                <div className="space-y-2">
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="executorsSpouseServeType"
+                      value="together"
+                      checked={formData.executorsSpouseServeType === 'together'}
+                      onChange={(e) => updateFormData({ executorsSpouseServeType: e.target.value })}
+                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700">
+                      <strong>Together (Co-Executors)</strong> - All representatives serve jointly and must agree on decisions
+                    </span>
+                  </label>
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="executorsSpouseServeType"
+                      value="sequential"
+                      checked={formData.executorsSpouseServeType === 'sequential'}
+                      onChange={(e) => updateFormData({ executorsSpouseServeType: e.target.value })}
+                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700">
+                      <strong>In Order (Sequential)</strong> - Representatives serve one at a time in the order listed
+                    </span>
+                  </label>
+                </div>
+              </div>
+            )}
 
             {spouseReps.length > 0 ? (
               <div className="space-y-4">
