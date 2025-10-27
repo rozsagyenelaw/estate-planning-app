@@ -29,6 +29,23 @@ const formatDateToUS = (dateString) => {
 };
 
 /**
+ * Parse percentage value to a number
+ * Handles: "50%", "50", 50 -> returns 50
+ */
+const parsePercentage = (value) => {
+  if (!value && value !== 0) return 0;
+
+  // If already a number, return it
+  if (typeof value === 'number') return value;
+
+  // If string, remove % symbol and parse
+  const str = String(value).trim();
+  const num = parseFloat(str.replace('%', ''));
+
+  return isNaN(num) ? 0 : num;
+};
+
+/**
  * Get marital status statement
  */
 const getMaritalStatusStatement = (maritalStatus) => {
@@ -502,36 +519,56 @@ const prepareTemplateData = (formData) => {
       // Calculate section number (02, 03, 04, etc. - starts at 02 because 01 is division)
       const sectionNumber = String(index + 2).padStart(2, '0');
       const isNotLast = index < array.length - 1;  // Helper for {{#if isNotLast}}
-      
+
       // Get pronouns based on sex
       const sex = beneficiary.sex || '';
       const pronounPossessive = getPronounPossessive(sex);
       const pronounObjective = getPronounObjective(sex);
       const pronounReflexive = getPronounReflexive(sex);
-      
+
       // Full name
       const fullName = beneficiary.name || `${beneficiary.firstName || ''} ${beneficiary.lastName || ''}`.trim();
-      
+
+      // CRITICAL FIX: Check if this beneficiary has a matching general needs trust
+      const generalNeedsTrusts = formData.generalNeedsTrusts || [];
+      const matchingTrust = generalNeedsTrusts.find(trust =>
+        (trust.beneficiaryName || '').trim().toLowerCase() === fullName.toLowerCase()
+      );
+
       // Determine distribution type flags
       let distributeOutright = false;
       let hasAgeDistribution = false;
       let hasGeneralNeedsTrust = false;
-      
-      if (beneficiary.distributionType === 'outright' || !beneficiary.distributionType) {
-        distributeOutright = true;
+      let ageDistributionRules = [];
+
+      if (matchingTrust && matchingTrust.distributions && matchingTrust.distributions.length > 0) {
+        // If there's a matching general needs trust with distributions, use it
+        hasGeneralNeedsTrust = true;
+        hasAgeDistribution = true; // General needs trust uses age distributions
+
+        // Map the distributions from the general needs trust
+        ageDistributionRules = matchingTrust.distributions.map((rule, ruleIndex) => ({
+          sectionNumber: String(ruleIndex + 1).padStart(2, '0'),
+          percentage: parsePercentage(rule.percentage),
+          timing: rule.timing || `when ${pronounObjective} reaches age ${rule.age || 0}`,
+          age: rule.age || 0,
+        }));
       } else if (beneficiary.distributionType === 'age-based' || beneficiary.distributionType === 'ageDistribution') {
         hasAgeDistribution = true;
+
+        // Process age distribution rules from beneficiary if they exist
+        ageDistributionRules = (beneficiary.ageDistributions || beneficiary.ageDistributionRules || []).map((rule, ruleIndex) => ({
+          sectionNumber: String(ruleIndex + 1).padStart(2, '0'),
+          percentage: parsePercentage(rule.percentage),
+          timing: rule.timing || `when ${pronounObjective} reaches age ${rule.age || 0}`,
+          age: rule.age || 0,
+        }));
       } else if (beneficiary.distributionType === 'general-needs' || beneficiary.distributionType === 'guardian') {
         hasGeneralNeedsTrust = true;
+      } else {
+        // Default to outright distribution
+        distributeOutright = true;
       }
-      
-      // Process age distribution rules if they exist
-      const ageDistributionRules = (beneficiary.ageDistributions || beneficiary.ageDistributionRules || []).map((rule, ruleIndex) => ({
-        sectionNumber: String(ruleIndex + 1).padStart(2, '0'),
-        percentage: rule.percentage || 0,
-        timing: rule.timing || `when ${pronounObjective} reaches age ${rule.age || 0}`,
-        age: rule.age || 0,
-      }));
       
       return {
         beneficiary: {
@@ -541,7 +578,7 @@ const prepareTemplateData = (formData) => {
           lastName: beneficiary.lastName || '',
           relationship: beneficiary.relationship || 'beneficiary',
           dateOfBirth: formatDateToUS(beneficiary.dateOfBirth || beneficiary.birthday) || '',
-          percentage: beneficiary.share || beneficiary.percentage || 0,
+          percentage: parsePercentage(beneficiary.share || beneficiary.percentage),
           isNotLast: isNotLast,  // Helper for punctuation: {{#if isNotLast}}; and{{/if}}
           pronounPossessive: pronounPossessive,
           pronounObjective: pronounObjective,
