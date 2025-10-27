@@ -531,11 +531,11 @@ const prepareTemplateData = (formData) => {
 
       // Debug: Log beneficiary data
       console.log('Processing beneficiary:', fullName);
+      console.log('  Full beneficiary object:', beneficiary);
       console.log('  beneficiary.share:', beneficiary.share);
       console.log('  beneficiary.percentage:', beneficiary.percentage);
-      console.log('  Raw percentage value:', beneficiary.percentage || beneficiary.share);
-      console.log('  Parsed percentage:', parsePercentage(beneficiary.share || beneficiary.percentage));
-      console.log('  Direct parse test of "50%":', parsePercentage("50%"));
+      console.log('  Using percentage field (preferred):', beneficiary.percentage || beneficiary.share);
+      console.log('  Parsed percentage:', parsePercentage(beneficiary.percentage || beneficiary.share));
 
       // CRITICAL FIX: Check if this beneficiary has a matching general needs trust
       const generalNeedsTrusts = formData.generalNeedsTrusts || [];
@@ -596,7 +596,7 @@ const prepareTemplateData = (formData) => {
           lastName: beneficiary.lastName || '',
           relationship: beneficiary.relationship || 'beneficiary',
           dateOfBirth: formatDateToUS(beneficiary.dateOfBirth || beneficiary.birthday) || '',
-          percentage: parsePercentage(beneficiary.share || beneficiary.percentage),
+          percentage: parsePercentage(beneficiary.percentage || beneficiary.share),
           isNotLast: isNotLast,  // Helper for punctuation: {{#if isNotLast}}; and{{/if}}
           pronounPossessive: pronounPossessive,
           pronounObjective: pronounObjective,
