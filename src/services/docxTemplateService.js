@@ -564,10 +564,12 @@ const prepareTemplateData = (formData) => {
           const parsedPercentage = parsePercentage(rule.percentage);
           console.log(`    Distribution ${ruleIndex + 1}: age=${rule.age}, raw%=${rule.percentage}, parsed%=${parsedPercentage}`);
           return {
-            sectionNumber: String(ruleIndex + 1).padStart(2, '0'),
-            percentage: parsedPercentage,
-            timing: rule.timing || `when ${pronounObjective} reaches age ${rule.age || 0}`,
-            age: rule.age || 0,
+            ageRule: {
+              sectionNumber: String(ruleIndex + 1).padStart(2, '0'),
+              percentage: parsedPercentage,
+              timing: rule.timing || `when ${pronounObjective} reaches age ${rule.age || 0}`,
+              age: rule.age || 0,
+            }
           };
         });
         console.log('  Final ageDistributionRules:', ageDistributionRules);
@@ -576,10 +578,12 @@ const prepareTemplateData = (formData) => {
 
         // Process age distribution rules from beneficiary if they exist
         ageDistributionRules = (beneficiary.ageDistributions || beneficiary.ageDistributionRules || []).map((rule, ruleIndex) => ({
-          sectionNumber: String(ruleIndex + 1).padStart(2, '0'),
-          percentage: parsePercentage(rule.percentage),
-          timing: rule.timing || `when ${pronounObjective} reaches age ${rule.age || 0}`,
-          age: rule.age || 0,
+          ageRule: {
+            sectionNumber: String(ruleIndex + 1).padStart(2, '0'),
+            percentage: parsePercentage(rule.percentage),
+            timing: rule.timing || `when ${pronounObjective} reaches age ${rule.age || 0}`,
+            age: rule.age || 0,
+          }
         }));
       } else if (beneficiary.distributionType === 'general-needs' || beneficiary.distributionType === 'guardian') {
         hasGeneralNeedsTrust = true;
@@ -588,7 +592,7 @@ const prepareTemplateData = (formData) => {
         distributeOutright = true;
       }
       
-      return {
+      const result = {
         beneficiary: {
           sectionNumber: sectionNumber,
           fullName: fullName,
@@ -619,6 +623,10 @@ const prepareTemplateData = (formData) => {
           limitedShareAmountWords: beneficiary.limitedShareAmountWords || 'Five Thousand Dollars',
         }
       };
+
+      console.log('  Final beneficiary data structure:', JSON.stringify(result, null, 2));
+
+      return result;
     }),
 
     // Power of appointment default values (if not provided per beneficiary)
