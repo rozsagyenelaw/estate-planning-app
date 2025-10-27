@@ -267,6 +267,13 @@ const prepareTemplateData = (formData) => {
         : `I have ${formData.children.length} children.`
       : 'I have no children.',
 
+    // Children table (formatted for Word table placeholders)
+    childrenTable: formData.children && formData.children.length > 0
+      ? formData.children.map(c =>
+          `${c.firstName || ''} ${c.lastName || ''}, born ${formatDateToUS(c.dateOfBirth) || 'N/A'}`
+        ).join('; ')
+      : 'None',
+
     // First child info (for templates that reference first child specifically)
     firstChild: formData.children && formData.children.length > 0 ? {
       firstName: formData.children[0].firstName || '',
@@ -785,6 +792,10 @@ const prepareTemplateData = (formData) => {
 
     spouse2FullName: formData.spouse ? `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim() : '',
     spouse2DateOfBirth: formatDateToUS(formData.spouse?.dateOfBirth) || '',
+
+    // Grantor names (aliases for joint trust template compatibility)
+    grantor1FullName: formData.client ? `${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''}`.trim() : '',
+    grantor2FullName: formData.spouse ? `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim() : '',
 
     // Beneficiary distribution guidelines
     beneficiaryDistributionGuidelines: cleanedBeneficiaries.length > 0
