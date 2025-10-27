@@ -102,11 +102,14 @@ const prepareTemplateData = (formData) => {
     console.log('Original specificDistributions:', formData.specificDistributions);
     cleanedSpecificDistributions = formData.specificDistributions.filter(dist => {
       // Keep only distributions that have meaningful data
-      const hasData = dist && 
-                      dist.beneficiaryName && 
-                      dist.beneficiaryName.trim() !== '' &&
-                      dist.propertyDescription &&
-                      dist.propertyDescription.trim() !== '';
+      // Form uses 'beneficiary' and 'description' field names
+      const beneficiaryName = dist.beneficiaryName || dist.beneficiary;
+      const propertyDesc = dist.propertyDescription || dist.description || dist.property;
+      const hasData = dist &&
+                      beneficiaryName &&
+                      beneficiaryName.trim() !== '' &&
+                      propertyDesc &&
+                      propertyDesc.trim() !== '';
       if (!hasData && dist) {
         console.log('Removing empty distribution:', dist);
       }
@@ -117,13 +120,16 @@ const prepareTemplateData = (formData) => {
   
   // Add section numbers to specificDistributions
   const specificDistributionsWithSections = cleanedSpecificDistributions.map((dist, index) => ({
-    sectionNumber: String(index + 1).padStart(2, '0'),
-    beneficiaryName: dist.beneficiaryName || '',
-    propertyDescription: dist.propertyDescription || dist.description || dist.property || '',
-    property: dist.propertyDescription || dist.description || dist.property || '',
-    hasAgeCondition: dist.hasAgeCondition || false,
-    conditionAge: dist.conditionAge || dist.age || '',
-    conditionPerson: dist.conditionPerson || dist.beneficiaryName || '',
+    distribution: {
+      sectionNumber: String(index + 1).padStart(2, '0'),
+      beneficiaryName: dist.beneficiaryName || dist.beneficiary || '',
+      propertyDescription: dist.propertyDescription || dist.description || dist.property || '',
+      property: dist.propertyDescription || dist.description || dist.property || '',
+      percentage: dist.percentage || '',
+      hasAgeCondition: dist.hasAgeCondition || false,
+      conditionAge: dist.conditionAge || dist.age || '',
+      conditionPerson: dist.conditionPerson || dist.beneficiaryName || dist.beneficiary || '',
+    }
   }));
   
   // Calculate tpp_section_num based on cleaned array
@@ -507,33 +513,35 @@ const prepareTemplateData = (formData) => {
       }));
       
       return {
-        sectionNumber: sectionNumber,
-        fullName: fullName,
-        firstName: beneficiary.firstName || '',
-        lastName: beneficiary.lastName || '',
-        relationship: beneficiary.relationship || 'beneficiary',
-        dateOfBirth: beneficiary.dateOfBirth || beneficiary.birthday || '',
-        percentage: beneficiary.share || beneficiary.percentage || 0,
-        isNotLast: isNotLast,  // Helper for punctuation: {{#if isNotLast}}; and{{/if}}
-        pronounPossessive: pronounPossessive,
-        pronounObjective: pronounObjective,
-        pronounReflexive: pronounReflexive,
-        
-        // Distribution type flags (only ONE should be true)
-        distributeOutright: distributeOutright,
-        hasAgeDistribution: hasAgeDistribution,
-        hasGeneralNeedsTrust: hasGeneralNeedsTrust,
-        
-        // Age distribution rules (for hasAgeDistribution)
-        ageDistributionRules: ageDistributionRules,
-        
-        // General needs trust termination age
-        trustTerminationAge: beneficiary.trustTerminationAge || beneficiary.terminationAge || 25,
-        
-        // Power of appointment limits (for age-based distributions)
-        limitedSharePercentage: beneficiary.limitedSharePercentage || '5%',
-        limitedShareAmount: beneficiary.limitedShareAmount || '$5,000',
-        limitedShareAmountWords: beneficiary.limitedShareAmountWords || 'Five Thousand Dollars',
+        beneficiary: {
+          sectionNumber: sectionNumber,
+          fullName: fullName,
+          firstName: beneficiary.firstName || '',
+          lastName: beneficiary.lastName || '',
+          relationship: beneficiary.relationship || 'beneficiary',
+          dateOfBirth: beneficiary.dateOfBirth || beneficiary.birthday || '',
+          percentage: beneficiary.share || beneficiary.percentage || 0,
+          isNotLast: isNotLast,  // Helper for punctuation: {{#if isNotLast}}; and{{/if}}
+          pronounPossessive: pronounPossessive,
+          pronounObjective: pronounObjective,
+          pronounReflexive: pronounReflexive,
+
+          // Distribution type flags (only ONE should be true)
+          distributeOutright: distributeOutright,
+          hasAgeDistribution: hasAgeDistribution,
+          hasGeneralNeedsTrust: hasGeneralNeedsTrust,
+
+          // Age distribution rules (for hasAgeDistribution)
+          ageDistributionRules: ageDistributionRules,
+
+          // General needs trust termination age
+          trustTerminationAge: beneficiary.trustTerminationAge || beneficiary.terminationAge || 25,
+
+          // Power of appointment limits (for age-based distributions)
+          limitedSharePercentage: beneficiary.limitedSharePercentage || '5%',
+          limitedShareAmount: beneficiary.limitedShareAmount || '$5,000',
+          limitedShareAmountWords: beneficiary.limitedShareAmountWords || 'Five Thousand Dollars',
+        }
       };
     }),
 
