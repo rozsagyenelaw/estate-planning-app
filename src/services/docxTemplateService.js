@@ -8,6 +8,27 @@ import PizZip from 'pizzip';
 import expressions from 'angular-expressions';
 
 /**
+ * Format date to US format (MM/DD/YYYY)
+ * Handles YYYY-MM-DD, ISO dates, and Date objects
+ */
+const formatDateToUS = (dateString) => {
+  if (!dateString) return '';
+
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString; // Return original if invalid
+
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${month}/${day}/${year}`;
+  } catch (e) {
+    return dateString; // Return original if error
+  }
+};
+
+/**
  * Get marital status statement
  */
 const getMaritalStatusStatement = (maritalStatus) => {
@@ -177,7 +198,7 @@ const prepareTemplateData = (formData) => {
       phone: formData.client?.phone || '',
       email: formData.client?.email || '',
       ssn: formData.client?.ssn || '',
-      dateOfBirth: formData.client?.dateOfBirth || '',
+      dateOfBirth: formatDateToUS(formData.client?.dateOfBirth) || '',
       sex: formData.client?.sex || '',
       maritalStatus: formData.client?.maritalStatus || '',
       maritalStatusStatement: getMaritalStatusStatement(formData.client?.maritalStatus),
@@ -198,7 +219,7 @@ const prepareTemplateData = (formData) => {
       phone: formData.spouse.phone || '',
       email: formData.spouse.email || '',
       ssn: formData.spouse.ssn || '',
-      dateOfBirth: formData.spouse.dateOfBirth || '',
+      dateOfBirth: formatDateToUS(formData.spouse.dateOfBirth) || '',
       sex: formData.spouse.sex || '',
       notaryDate: formData.spouse.notaryDate || '',
     } : {},
@@ -219,13 +240,13 @@ const prepareTemplateData = (formData) => {
     children: formData.children || [],
     numChildren: formData.children?.length || 0,
     childrenList: (formData.children || []).map((c, i) =>
-      `${i + 1}. ${c.firstName} ${c.lastName}, born ${c.dateOfBirth}`
+      `${i + 1}. ${c.firstName} ${c.lastName}, born ${formatDateToUS(c.dateOfBirth)}`
     ).join('\n'),
 
     // Children statement (for templates)
     childrenStatement: formData.children && formData.children.length > 0
       ? formData.children.length === 1
-        ? `I have one child, ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formData.children[0].dateOfBirth}.`
+        ? `I have one child, ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formatDateToUS(formData.children[0].dateOfBirth)}.`
         : `I have ${formData.children.length} children.`
       : 'I have no children.',
 
@@ -233,7 +254,7 @@ const prepareTemplateData = (formData) => {
     firstChild: formData.children && formData.children.length > 0 ? {
       firstName: formData.children[0].firstName || '',
       lastName: formData.children[0].lastName || '',
-      dateOfBirth: formData.children[0].dateOfBirth || '',
+      dateOfBirth: formatDateToUS(formData.children[0].dateOfBirth) || '',
       fullName: `${formData.children[0].firstName || ''} ${formData.children[0].lastName || ''}`.trim(),
       relation: formData.children[0].relation || 'child',
     } : {
@@ -248,7 +269,7 @@ const prepareTemplateData = (formData) => {
     exampleChild: formData.children && formData.children.length > 0 ? {
       firstName: formData.children[0].firstName || '',
       lastName: formData.children[0].lastName || '',
-      dateOfBirth: formData.children[0].dateOfBirth || '',
+      dateOfBirth: formatDateToUS(formData.children[0].dateOfBirth) || '',
       fullName: `${formData.children[0].firstName || ''} ${formData.children[0].lastName || ''}`.trim(),
       relation: formData.children[0].relation || 'child',
     } : {
@@ -438,13 +459,13 @@ const prepareTemplateData = (formData) => {
     // Children placeholders
     childrenStatement: formData.children && formData.children.length > 0
       ? formData.children.length === 1
-        ? `I have one child: ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formData.children[0].dateOfBirth}.`
+        ? `I have one child: ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formatDateToUS(formData.children[0].dateOfBirth)}.`
         : formData.children.length === 2
-          ? `I have two children: ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formData.children[0].dateOfBirth}, and ${formData.children[1].firstName} ${formData.children[1].lastName}, born ${formData.children[1].dateOfBirth}.`
-          : `I have ${formData.children.length} children: ` + (formData.children || []).map((c, i) => 
-              i === formData.children.length - 1 
-                ? `and ${c.firstName} ${c.lastName}, born ${c.dateOfBirth}`
-                : `${c.firstName} ${c.lastName}, born ${c.dateOfBirth}`
+          ? `I have two children: ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formatDateToUS(formData.children[0].dateOfBirth)}, and ${formData.children[1].firstName} ${formData.children[1].lastName}, born ${formatDateToUS(formData.children[1].dateOfBirth)}.`
+          : `I have ${formData.children.length} children: ` + (formData.children || []).map((c, i) =>
+              i === formData.children.length - 1
+                ? `and ${c.firstName} ${c.lastName}, born ${formatDateToUS(c.dateOfBirth)}`
+                : `${c.firstName} ${c.lastName}, born ${formatDateToUS(c.dateOfBirth)}`
             ).join('; ') + '.'
       : 'I have no children.',
 
@@ -458,7 +479,7 @@ const prepareTemplateData = (formData) => {
       firstName: child.firstName || '',
       middleName: child.middleName || '',
       lastName: child.lastName || '',
-      dateOfBirth: child.dateOfBirth || child.birthday || '',
+      dateOfBirth: formatDateToUS(child.dateOfBirth || child.birthday) || '',
     })),
 
     // Trustees placeholders - formatted for docxtemplater
@@ -519,7 +540,7 @@ const prepareTemplateData = (formData) => {
           firstName: beneficiary.firstName || '',
           lastName: beneficiary.lastName || '',
           relationship: beneficiary.relationship || 'beneficiary',
-          dateOfBirth: beneficiary.dateOfBirth || beneficiary.birthday || '',
+          dateOfBirth: formatDateToUS(beneficiary.dateOfBirth || beneficiary.birthday) || '',
           percentage: beneficiary.share || beneficiary.percentage || 0,
           isNotLast: isNotLast,  // Helper for punctuation: {{#if isNotLast}}; and{{/if}}
           pronounPossessive: pronounPossessive,
@@ -641,10 +662,10 @@ const prepareTemplateData = (formData) => {
 
     // Spouse 1 and Spouse 2 (for joint trusts)
     spouse1FullName: formData.client ? `${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''}`.trim() : '',
-    spouse1DateOfBirth: formData.client?.dateOfBirth || '',
+    spouse1DateOfBirth: formatDateToUS(formData.client?.dateOfBirth) || '',
 
     spouse2FullName: formData.spouse ? `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim() : '',
-    spouse2DateOfBirth: formData.spouse?.dateOfBirth || '',
+    spouse2DateOfBirth: formatDateToUS(formData.spouse?.dateOfBirth) || '',
 
     // Beneficiary distribution guidelines
     beneficiaryDistributionGuidelines: cleanedBeneficiaries.length > 0
