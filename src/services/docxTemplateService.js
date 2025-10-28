@@ -505,6 +505,7 @@ export const prepareTemplateData = (formData) => {
 
     // Client name variations (different templates use different names)
     grantorFullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
+    grantorDateOfBirth: formatDateToUS(formData.client?.dateOfBirth) || '',
     clientFullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
     fullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
 
