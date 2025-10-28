@@ -1049,14 +1049,34 @@ export const fillDOCXTemplate = async (templateBuffer, formData) => {
             for (let i = 0, len = num + 1; i < len; i++) {
               obj = Object.assign(obj, scopeList[i]);
             }
-            // Add loop helper for backward compatibility (though we now use isNotLast in data)
-            const currentArray = num > 0 ? scopeList[num - 1] : [];
+
+            // Add angular-expressions iteration variables ($first, $last, $index)
+            // These are used in the template with syntax like {#$first}...{/$first}
+            const scopePath = context.scopePath;
+            const scopePathItem = context.scopePathItem;
+            const currentArray = scopePath.length > 0 ? scopeList[scopePath.length - 1] : [];
             const arrayLength = Array.isArray(currentArray) ? currentArray.length : 0;
+
+            // Standard angular iteration variables
+            obj.$index = num;
+            obj.$first = num === 0;
+            obj.$last = arrayLength > 0 && num === arrayLength - 1;
+            obj.$middle = !obj.$first && !obj.$last;
+            obj.$even = num % 2 === 0;
+            obj.$odd = num % 2 === 1;
+
+            // Debug: log when processing $first
+            if (tag.includes('$first') && obj.fullName) {
+              console.log(`[DEBUG] $first check: num=${num}, $first=${obj.$first}, fullName=${obj.fullName}`);
+            }
+
+            // Add loop helper for backward compatibility
             obj.loop = {
-              index: context.num,
-              first: context.num === 0,
-              last: arrayLength > 0 && context.num === arrayLength - 1,
+              index: num,
+              first: obj.$first,
+              last: obj.$last,
             };
+
             return expr(obj);
           }
         };

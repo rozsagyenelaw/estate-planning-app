@@ -14,12 +14,32 @@ function angularParser(tag) {
         return {
             get: function(scope, context) {
                 let obj = {};
-                Object.keys(context.scopePathItem).forEach(function(key) {
-                    obj[key] = context.scopePathItem[key];
-                });
-                Object.keys(scope).forEach(function(key) {
-                    obj[key] = scope[key];
-                });
+                const scopeList = context.scopeList;
+                const num = context.num;
+                for (let i = 0, len = num + 1; i < len; i++) {
+                    obj = Object.assign(obj, scopeList[i]);
+                }
+
+                // Add angular-expressions iteration variables ($first, $last, $index)
+                const scopePath = context.scopePath;
+                const currentArray = scopePath.length > 0 ? scopeList[scopePath.length - 1] : [];
+                const arrayLength = Array.isArray(currentArray) ? currentArray.length : 0;
+
+                // Standard angular iteration variables
+                obj.$index = num;
+                obj.$first = num === 0;
+                obj.$last = arrayLength > 0 && num === arrayLength - 1;
+                obj.$middle = !obj.$first && !obj.$last;
+                obj.$even = num % 2 === 0;
+                obj.$odd = num % 2 === 1;
+
+                // Add loop helper for backward compatibility
+                obj.loop = {
+                    index: num,
+                    first: obj.$first,
+                    last: obj.$last,
+                };
+
                 return expr(obj);
             }
         };
@@ -35,6 +55,24 @@ function angularParser(tag) {
 // Load the template
 const content = fs.readFileSync('public/templates/single_estate_planning_template.docx', 'binary');
 const zip = new PizZip(content);
+
+// Fix split template tags in document.xml (same as in docxTemplateService.js)
+let documentXml = zip.file('word/document.xml').asText();
+
+// Merge tags split across XML elements
+const tagPattern = /\{([^{}]*?(?:<[^>]+>[^{}]*?)*?)\}/gs;
+documentXml = documentXml.replace(tagPattern, (match, content) => {
+    if (!content.includes('<')) {
+        return match;
+    }
+    const textOnly = content.replace(/<[^>]+>/g, '');
+    return '{' + textOnly + '}';
+});
+
+// Update the ZIP with merged XML
+zip.file('word/document.xml', documentXml);
+
+console.log('✅ Template tags merged');
 
 let doc;
 try {
