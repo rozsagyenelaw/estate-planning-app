@@ -955,6 +955,11 @@ export const prepareTemplateData = (formData) => {
       firstName: agent.firstName || '',
       lastName: agent.lastName || '',
       fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+      address: agent.address || '',
+      city: agent.city || '',
+      state: agent.state || '',
+      zip: agent.zip || '',
+      phone: agent.phone || '',
       relationship: agent.relationship || 'healthcare agent',
     })),
 
@@ -994,6 +999,45 @@ export const prepareTemplateData = (formData) => {
       lastName: agent.lastName || '',
       fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
       relationship: agent.relationship || 'attorney-in-fact',
+    })),
+
+    // First Healthcare Agent (for simpler template access)
+    firstHealthcareAgent: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      if (agents.length === 0) return '';
+      const agent = agents[0];
+      return `${agent.firstName || ''} ${agent.lastName || ''}`.trim();
+    })(),
+    firstHealthcareAgentAddress: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      if (agents.length === 0) return '';
+      return agents[0].address || '';
+    })(),
+    firstHealthcareAgentCity: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      if (agents.length === 0) return '';
+      return agents[0].city || '';
+    })(),
+    firstHealthcareAgentState: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      if (agents.length === 0) return '';
+      return agents[0].state || '';
+    })(),
+    firstHealthcareAgentZip: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      if (agents.length === 0) return '';
+      return agents[0].zip || '';
+    })(),
+    firstHealthcareAgentPhone: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      if (agents.length === 0) return '';
+      return agents[0].phone || '';
+    })(),
+    successorHealthcareAgents: (formData.healthcarePOA?.client || []).slice(1).map(agent => ({
+      firstName: agent.firstName || '',
+      lastName: agent.lastName || '',
+      fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+      relationship: agent.relationship || 'healthcare agent',
     })),
 
     // Pluralization helper
