@@ -126,7 +126,7 @@ export const loadDOCXTemplate = async (templatePath) => {
  * @param {Object} formData - Form data
  * @returns {Object} - Flattened data object
  */
-const prepareTemplateData = (formData) => {
+export const prepareTemplateData = (formData) => {
   console.log('=== PREPARING TEMPLATE DATA ===');
   console.log('Input formData keys:', Object.keys(formData));
   
@@ -895,25 +895,66 @@ const prepareTemplateData = (formData) => {
       }
     }),
 
+    // Override children array to ensure fullName and formatted birthdate
+    children: (formData.children || []).map(child => ({
+      fullName: `${child.firstName || ''} ${child.middleName || ''} ${child.lastName || ''}`.trim(),
+      firstName: child.firstName || '',
+      middleName: child.middleName || '',
+      lastName: child.lastName || '',
+      birthdate: formatDateToUS(child.dateOfBirth || child.birthday) || '',
+      dateOfBirth: formatDateToUS(child.dateOfBirth || child.birthday) || '',
+      relationship: child.relationship || 'child',
+    })),
+
+    // Override guardians array to ensure fullName
+    guardians: (formData.guardians || []).map(guardian => ({
+      fullName: `${guardian.firstName || ''} ${guardian.lastName || ''}`.trim(),
+      firstName: guardian.firstName || '',
+      lastName: guardian.lastName || '',
+      relationship: guardian.relationship || 'guardian',
+    })),
+
     // Successor trustees as 'successors' (for portfolio template)
     successors: (formData.successorTrustees || []).map(trustee => ({
       firstName: trustee.firstName || '',
       lastName: trustee.lastName || '',
       fullName: `${trustee.firstName || ''} ${trustee.lastName || ''}`.trim(),
+      relationship: trustee.relationship || 'successor trustee',
     })),
 
-    // POA Agents (for portfolio template loop)
-    poaAgents: (formData.durablePOA?.client || []).map(agent => ({
-      firstName: agent.firstName || '',
-      lastName: agent.lastName || '',
-      fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
-    })),
+    // POA Agents (for portfolio template loop) - add age field
+    poaAgents: (formData.durablePOA?.client || []).map(agent => {
+      let age = '';
+      if (agent.dateOfBirth) {
+        try {
+          const birthDate = new Date(agent.dateOfBirth);
+          const today = new Date();
+          let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+          const monthDiff = today.getMonth() - birthDate.getMonth();
+          if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            calculatedAge--;
+          }
+          age = calculatedAge.toString();
+        } catch (e) {
+          age = '';
+        }
+      }
+
+      return {
+        firstName: agent.firstName || '',
+        lastName: agent.lastName || '',
+        fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+        age: age,
+        relationship: agent.relationship || 'attorney-in-fact',
+      };
+    }),
 
     // Healthcare Agents (for portfolio template loop)
     healthcareAgents: (formData.healthcarePOA?.client || []).map(agent => ({
       firstName: agent.firstName || '',
       lastName: agent.lastName || '',
       fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+      relationship: agent.relationship || 'healthcare agent',
     })),
 
     // HIPAA Agents (for portfolio template loop)
@@ -921,6 +962,7 @@ const prepareTemplateData = (formData) => {
       firstName: agent.firstName || '',
       lastName: agent.lastName || '',
       fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+      relationship: agent.relationship || 'HIPAA representative',
     })),
 
     // Pluralization helper
