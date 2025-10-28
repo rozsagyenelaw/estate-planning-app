@@ -965,6 +965,36 @@ export const prepareTemplateData = (formData) => {
       relationship: agent.relationship || 'HIPAA representative',
     })),
 
+    // First POA Agent (for simpler template access)
+    firstPoaAgent: (() => {
+      const agents = formData.durablePOA?.client || [];
+      if (agents.length === 0) return '';
+      const agent = agents[0];
+      return `${agent.firstName || ''} ${agent.lastName || ''}`.trim();
+    })(),
+    firstPoaAgentAge: (() => {
+      const agents = formData.durablePOA?.client || [];
+      if (agents.length === 0 || !agents[0].dateOfBirth) return '';
+      try {
+        const birthDate = new Date(agents[0].dateOfBirth);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        return age.toString();
+      } catch (e) {
+        return '';
+      }
+    })(),
+    successorPoaAgents: (formData.durablePOA?.client || []).slice(1).map(agent => ({
+      firstName: agent.firstName || '',
+      lastName: agent.lastName || '',
+      fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+      relationship: agent.relationship || 'attorney-in-fact',
+    })),
+
     // Pluralization helper
     isPlural: (formData.children || []).length > 1,
 
