@@ -925,6 +925,13 @@ const prepareTemplateData = (formData) => {
 
     // Pluralization helper
     isPlural: (formData.children || []).length > 1,
+
+    // Boolean flags for conditionals (for template conditionals)
+    hasMultipleSuccessors: (formData.successorTrustees || []).length > 1,
+    hasMultipleGuardians: (formData.guardians || []).length > 1,
+    hasMultiplePoaAgents: (formData.durablePOA?.client || []).length > 1,
+    hasMultipleHealthcareAgents: (formData.healthcarePOA?.client || []).length > 1,
+    hasMultipleHipaaAgents: (formData.healthcarePOA?.client || []).length > 1,
   };
 
   console.log('=== PREPARED DATA SUMMARY ===');
