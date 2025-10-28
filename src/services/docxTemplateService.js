@@ -1037,6 +1037,11 @@ export const prepareTemplateData = (formData) => {
       firstName: agent.firstName || '',
       lastName: agent.lastName || '',
       fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+      address: agent.address || '',
+      city: agent.city || '',
+      state: agent.state || '',
+      zip: agent.zip || '',
+      phone: agent.phone || '',
       relationship: agent.relationship || 'healthcare agent',
     })),
 
