@@ -853,6 +853,78 @@ const prepareTemplateData = (formData) => {
 
     // Power of appointment
     beneficiaryPowerOfAppointment: 'Each beneficiary shall have a limited power of appointment over their share of the trust estate.',
+
+    // ==== ESTATE PLANNING PORTFOLIO PLACEHOLDERS ====
+    // These match the single_estate_planning_template.docx placeholders
+
+    // Client info (flat fields for portfolio template)
+    address: formData.client?.address || '',
+    zipCode: formData.client?.zip || '',
+    birthdate: formatDateToUS(formData.client?.dateOfBirth) || '',
+    age: (() => {
+      if (!formData.client?.dateOfBirth) return '';
+      try {
+        const birthDate = new Date(formData.client.dateOfBirth);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        return age.toString();
+      } catch (e) {
+        return '';
+      }
+    })(),
+
+    // Children count and minor children check
+    childrenCount: (formData.children || []).length,
+    hasMinorChildren: (formData.children || []).some(child => {
+      if (!child.dateOfBirth) return false;
+      try {
+        const birthDate = new Date(child.dateOfBirth);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        return age < 18;
+      } catch (e) {
+        return false;
+      }
+    }),
+
+    // Successor trustees as 'successors' (for portfolio template)
+    successors: (formData.successorTrustees || []).map(trustee => ({
+      firstName: trustee.firstName || '',
+      lastName: trustee.lastName || '',
+      fullName: `${trustee.firstName || ''} ${trustee.lastName || ''}`.trim(),
+    })),
+
+    // POA Agents (for portfolio template loop)
+    poaAgents: (formData.durablePOA?.client || []).map(agent => ({
+      firstName: agent.firstName || '',
+      lastName: agent.lastName || '',
+      fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+    })),
+
+    // Healthcare Agents (for portfolio template loop)
+    healthcareAgents: (formData.healthcarePOA?.client || []).map(agent => ({
+      firstName: agent.firstName || '',
+      lastName: agent.lastName || '',
+      fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+    })),
+
+    // HIPAA Agents (for portfolio template loop)
+    hipaaAgents: (formData.healthcarePOA?.client || []).map(agent => ({
+      firstName: agent.firstName || '',
+      lastName: agent.lastName || '',
+      fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+    })),
+
+    // Pluralization helper
+    isPlural: (formData.children || []).length > 1,
   };
 
   console.log('=== PREPARED DATA SUMMARY ===');
