@@ -1054,6 +1054,20 @@ export const prepareTemplateData = (formData) => {
     hasMultiplePoaAgents: (formData.durablePOA?.client || []).length > 1,
     hasMultipleHealthcareAgents: (formData.healthcarePOA?.client || []).length > 1,
     hasMultipleHipaaAgents: (formData.healthcarePOA?.client || []).length > 1,
+
+    // First Personal Representative (for simpler template access)
+    firstPersonalRepresentative: (() => {
+      const reps = formData.pourOverWill?.client?.personalRepresentatives || [];
+      if (reps.length === 0) return '';
+      return `${reps[0].firstName || ''} ${reps[0].lastName || ''}`.trim();
+    })(),
+
+    // First Guardian (for simpler template access)
+    firstGuardian: (() => {
+      const guardians = formData.guardians || [];
+      if (guardians.length === 0) return '';
+      return `${guardians[0].firstName || ''} ${guardians[0].lastName || ''}`.trim();
+    })(),
   };
 
   console.log('=== PREPARED DATA SUMMARY ===');
