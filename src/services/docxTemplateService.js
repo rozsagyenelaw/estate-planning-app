@@ -267,6 +267,127 @@ const buildGroupsFromAgentsWithGroupType = (agents) => {
 };
 
 /**
+ * Format the first (primary) group from a list of agent groups
+ * @param {Array} groups - Array of group objects with groupType and agents
+ * @returns {string} - Formatted first group (just names, with "jointly or the survivor of them" if joint)
+ *
+ * Example output:
+ * "John Doe" (single agent)
+ * "John Doe and Jane Smith jointly or the survivor of them" (joint, 2 agents)
+ * "John Doe, Jane Smith and Bob Jones jointly or the survivor of them" (joint, 3+ agents)
+ */
+const formatFirstGroup = (groups) => {
+  if (!groups || groups.length === 0) {
+    return '';
+  }
+
+  const firstGroup = groups[0];
+  if (!firstGroup || !firstGroup.agents || firstGroup.agents.length === 0) {
+    return '';
+  }
+
+  // Get agent names
+  const names = firstGroup.agents.map(agent =>
+    agent.fullName || `${agent.firstName || ''} ${agent.lastName || ''}`.trim()
+  ).filter(name => name !== '');
+
+  if (names.length === 0) {
+    return '';
+  }
+
+  // Format agent names
+  let agentText;
+  if (names.length === 1) {
+    agentText = names[0];
+  } else if (names.length === 2) {
+    agentText = `${names[0]} and ${names[1]}`;
+  } else {
+    // 3+ names: "A, B and C"
+    const allButLast = names.slice(0, -1).join(', ');
+    agentText = `${allButLast} and ${names[names.length - 1]}`;
+  }
+
+  // Add "jointly or the survivor of them" for joint groups with multiple agents
+  if (firstGroup.groupType === 'joint' && names.length > 1) {
+    agentText += ' jointly or the survivor of them';
+  }
+
+  return agentText;
+};
+
+/**
+ * Format successor groups (all groups EXCEPT the first) with conditional introductory text
+ * @param {Array} groups - Array of group objects with groupType and agents
+ * @param {string} actionVerb - "nominate" or "appoint"
+ * @param {string} roleSuffix - Role label (e.g., "as successor Personal Representative.")
+ * @returns {string} - Fully formatted successor text with conditional intros
+ *
+ * Example output:
+ * "If the prior appointee is unwilling or unable to serve, I nominate Rozsa Gyene as successor guardian.
+ * If all prior appointees are unwilling or unable to serve, I nominate Daniel Aroz as successor guardian."
+ */
+const formatSuccessorGroups = (groups, actionVerb, roleSuffix) => {
+  if (!groups || groups.length <= 1) {
+    // No successors if only 1 or 0 groups
+    return '';
+  }
+
+  const sentences = [];
+  const successorGroups = groups.slice(1); // Skip the first group
+
+  for (let i = 0; i < successorGroups.length; i++) {
+    const group = successorGroups[i];
+
+    // Skip empty groups
+    if (!group.agents || group.agents.length === 0) {
+      continue;
+    }
+
+    // Get agent names
+    const names = group.agents.map(agent =>
+      agent.fullName || `${agent.firstName || ''} ${agent.lastName || ''}`.trim()
+    ).filter(name => name !== '');
+
+    if (names.length === 0) {
+      continue;
+    }
+
+    // Determine introductory text
+    let intro;
+    if (i === 0) {
+      // First successor
+      intro = `If the prior appointee is unwilling or unable to serve, I ${actionVerb} `;
+    } else {
+      // All later successors
+      intro = `If all prior appointees are unwilling or unable to serve, I ${actionVerb} `;
+    }
+
+    // Format agent names
+    let agentText;
+    if (names.length === 1) {
+      agentText = names[0];
+    } else if (names.length === 2) {
+      agentText = `${names[0]} and ${names[1]}`;
+    } else {
+      // 3+ names: "A, B and C"
+      const allButLast = names.slice(0, -1).join(', ');
+      agentText = `${allButLast} and ${names[names.length - 1]}`;
+    }
+
+    // Add "jointly or the survivor of them" for joint groups with multiple agents
+    if (group.groupType === 'joint' && names.length > 1) {
+      agentText += ' jointly or the survivor of them';
+    }
+
+    // Construct full sentence
+    const sentence = `${intro}${agentText} ${roleSuffix}`;
+    sentences.push(sentence);
+  }
+
+  return sentences.join('\n');
+};
+
+/**
  * Load a DOCX template from the public folder
  * @param {string} templatePath - Path to template (e.g., '/templates/single_living_trust_template.docx')
  * @returns {Promise<ArrayBuffer>} - Template as ArrayBuffer
@@ -1560,6 +1681,258 @@ export const prepareTemplateData = (formData) => {
         groups = buildGroupsFromFlatArray(guardians);
       }
       return renderGroupsWithThen(groups);
+    })(),
+
+    // ============================================================================
+    // FIRST + SUCCESSOR FORMATTED FIELDS (for all 7 fiduciary roles)
+    // ============================================================================
+
+    // 1. Personal Representatives
+    firstPersonalRepresentativeFormatted: (() => {
+      const reps = formData.pourOverWill?.client?.personalRepresentatives || [];
+      let groups;
+      if (formData.pourOverWill?.client?.personalRepresentativeGroups && Array.isArray(formData.pourOverWill.client.personalRepresentativeGroups)) {
+        groups = formData.pourOverWill.client.personalRepresentativeGroups;
+      } else if (reps.some(rep => rep.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(reps);
+      } else {
+        groups = buildGroupsFromFlatArray(reps);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    personalRepresentativeSuccessorsFormatted: (() => {
+      const reps = formData.pourOverWill?.client?.personalRepresentatives || [];
+      let groups;
+      if (formData.pourOverWill?.client?.personalRepresentativeGroups && Array.isArray(formData.pourOverWill.client.personalRepresentativeGroups)) {
+        groups = formData.pourOverWill.client.personalRepresentativeGroups;
+      } else if (reps.some(rep => rep.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(reps);
+      } else {
+        groups = buildGroupsFromFlatArray(reps);
+      }
+      return formatSuccessorGroups(groups, 'nominate', 'as successor Personal Representative.');
+    })(),
+
+    // 2. Guardians
+    firstGuardianFormatted: (() => {
+      const guardians = formData.guardians || [];
+      let groups;
+      if (formData.guardianGroups && Array.isArray(formData.guardianGroups)) {
+        groups = formData.guardianGroups;
+      } else if (guardians.some(guardian => guardian.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(guardians);
+      } else {
+        groups = buildGroupsFromFlatArray(guardians);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    guardianSuccessorsFormatted: (() => {
+      const guardians = formData.guardians || [];
+      let groups;
+      if (formData.guardianGroups && Array.isArray(formData.guardianGroups)) {
+        groups = formData.guardianGroups;
+      } else if (guardians.some(guardian => guardian.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(guardians);
+      } else {
+        groups = buildGroupsFromFlatArray(guardians);
+      }
+      return formatSuccessorGroups(groups, 'nominate', 'as successor guardian.');
+    })(),
+
+    // 3. Trustees During Incapacity
+    firstTrusteeIncapacityFormatted: (() => {
+      const trustees = formData.successorTrustees || [];
+      let groups;
+      if (formData.trusteeGroupsDuringIncapacity && Array.isArray(formData.trusteeGroupsDuringIncapacity)) {
+        groups = formData.trusteeGroupsDuringIncapacity;
+      } else if (trustees.some(t => t.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(trustees);
+      } else {
+        groups = buildGroupsFromFlatArray(trustees);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    trusteeIncapacitySuccessorsFormatted: (() => {
+      const trustees = formData.successorTrustees || [];
+      let groups;
+      if (formData.trusteeGroupsDuringIncapacity && Array.isArray(formData.trusteeGroupsDuringIncapacity)) {
+        groups = formData.trusteeGroupsDuringIncapacity;
+      } else if (trustees.some(t => t.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(trustees);
+      } else {
+        groups = buildGroupsFromFlatArray(trustees);
+      }
+      return formatSuccessorGroups(groups, 'appoint', 'as successor trustee.');
+    })(),
+
+    // 4. Trustees After Death
+    firstTrusteeAfterDeathFormatted: (() => {
+      const trustees = formData.successorTrustees || [];
+      let groups;
+      if (formData.trusteeGroupsAfterDeath && Array.isArray(formData.trusteeGroupsAfterDeath)) {
+        groups = formData.trusteeGroupsAfterDeath;
+      } else if (trustees.some(t => t.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(trustees);
+      } else {
+        groups = buildGroupsFromFlatArray(trustees);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    trusteeAfterDeathSuccessorsFormatted: (() => {
+      const trustees = formData.successorTrustees || [];
+      let groups;
+      if (formData.trusteeGroupsAfterDeath && Array.isArray(formData.trusteeGroupsAfterDeath)) {
+        groups = formData.trusteeGroupsAfterDeath;
+      } else if (trustees.some(t => t.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(trustees);
+      } else {
+        groups = buildGroupsFromFlatArray(trustees);
+      }
+      return formatSuccessorGroups(groups, 'appoint', 'as successor trustee.');
+    })(),
+
+    // 5. Durable Power of Attorney Agents
+    firstPoaAgentFormatted: (() => {
+      const agents = formData.durablePOA?.client || [];
+      let groups;
+      if (formData.durablePOA?.clientGroups && Array.isArray(formData.durablePOA.clientGroups)) {
+        groups = formData.durablePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    poaAgentSuccessorsFormatted: (() => {
+      const agents = formData.durablePOA?.client || [];
+      let groups;
+      if (formData.durablePOA?.clientGroups && Array.isArray(formData.durablePOA.clientGroups)) {
+        groups = formData.durablePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatSuccessorGroups(groups, 'appoint', 'as successor agent under my Durable Power of Attorney.');
+    })(),
+
+    // 6. Healthcare Agents
+    firstHealthcareAgentFormatted: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      let groups;
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        groups = formData.healthcarePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    healthcareAgentSuccessorsFormatted: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      let groups;
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        groups = formData.healthcarePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatSuccessorGroups(groups, 'appoint', 'as successor agent under my Healthcare Power of Attorney.');
+    })(),
+
+    // Healthcare Agents - First Group Array
+    firstHealthcareAgents: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      let groups;
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        groups = formData.healthcarePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      // Return agents from first group only, with required fields
+      if (!groups || groups.length === 0 || !groups[0].agents) {
+        return [];
+      }
+      return groups[0].agents.map(agent => ({
+        fullName: agent.fullName || `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+        address: agent.address || '',
+        city: agent.city || '',
+        state: agent.state || '',
+        zip: agent.zip || '',
+        phone: agent.phone || ''
+      }));
+    })(),
+
+    // Healthcare Agents - Successor Agents Array (flattened from all successor groups)
+    healthcareAgentSuccessorAgents: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      let groups;
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        groups = formData.healthcarePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      // Return flattened list of all agents from successor groups (skip first group)
+      if (!groups || groups.length <= 1) {
+        return [];
+      }
+      const successorGroups = groups.slice(1);
+      const allSuccessorAgents = [];
+      successorGroups.forEach(group => {
+        if (group.agents && group.agents.length > 0) {
+          group.agents.forEach(agent => {
+            allSuccessorAgents.push({
+              fullName: agent.fullName || `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+              address: agent.address || '',
+              city: agent.city || '',
+              state: agent.state || '',
+              zip: agent.zip || '',
+              phone: agent.phone || ''
+            });
+          });
+        }
+      });
+      return allSuccessorAgents;
+    })(),
+
+    // 7. HIPAA Agents
+    firstHipaaAgentFormatted: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      let groups;
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        groups = formData.healthcarePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    hipaaAgentSuccessorsFormatted: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      let groups;
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        groups = formData.healthcarePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatSuccessorGroups(groups, 'appoint', 'as successor agent under my HIPAA Authorization.');
     })(),
   };
 
