@@ -7,6 +7,7 @@
 import { saveClientData, getClientData, searchClients, updateClientData, generateClientId } from './firestoreService';
 import { uploadDocument, uploadMultipleDocuments, listClientDocuments, generateDocumentName } from './storageService';
 import { generateCompleteEstatePlanningPackage, generateLivingTrust } from './documentGenerator';
+import { syncClientToLawFirm, updateClientInLawFirm } from './lawFirmSync';
 
 /**
  * Save client data and generate/upload Living Trust only
@@ -87,6 +88,15 @@ export const saveClientWithLivingTrust = async (formData, onProgress = null) => 
       livingTrustDocuments: documentUrls,
       livingTrustGeneratedAt: new Date().toISOString()
     });
+
+    // Sync to Law Firm Management database
+    updateProgress(onProgress, 98, 'Syncing to Law Firm Management...');
+    const fullClientData = {
+      ...formData,
+      clientId,
+      createdAt: new Date().toISOString()
+    };
+    await syncClientToLawFirm(fullClientData);
 
     updateProgress(onProgress, 100, 'Complete!');
 
@@ -183,6 +193,15 @@ export const saveClientWithDocuments = async (formData, onProgress = null) => {
       documents: documentUrls,
       documentsGeneratedAt: new Date().toISOString()
     });
+
+    // Sync to Law Firm Management database
+    updateProgress(onProgress, 98, 'Syncing to Law Firm Management...');
+    const fullClientData = {
+      ...formData,
+      clientId,
+      createdAt: new Date().toISOString()
+    };
+    await syncClientToLawFirm(fullClientData);
 
     updateProgress(onProgress, 100, 'Complete!');
 
@@ -321,6 +340,10 @@ export const updateClientWithDocuments = async (
         });
       }
     }
+
+    // Sync updates to Law Firm Management database
+    updateProgress(onProgress, 98, 'Syncing updates to Law Firm Management...');
+    await updateClientInLawFirm(clientId, updatedFormData);
 
     updateProgress(onProgress, 100, 'Update complete!');
 
