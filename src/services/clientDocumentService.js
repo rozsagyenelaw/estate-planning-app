@@ -77,7 +77,8 @@ export const saveClientWithLivingTrust = async (formData, onProgress = null) => 
     const documentUrls = {};
     uploadResult.results.forEach((result, index) => {
       if (result.success) {
-        const docType = index === 0 ? 'livingTrustPdf' : 'livingTrustWord';
+        // We only generate DOCX (Word) format, so label it correctly
+        const docType = 'livingTrustWord';
         documentUrls[docType] = result.downloadURL;
       }
     });
@@ -172,7 +173,8 @@ export const saveClientWithDocuments = async (formData, onProgress = null) => {
     const documentUrls = {};
     uploadResult.results.forEach((result, index) => {
       if (result.success) {
-        const docType = index === 0 ? 'pdf' : 'word';
+        // We only generate DOCX (Word) format, so label it correctly
+        const docType = 'word';
         documentUrls[docType] = result.downloadURL;
       }
     });
@@ -306,7 +308,8 @@ export const updateClientWithDocuments = async (
         documentUrls = {};
         uploadResult.results.forEach((result, index) => {
           if (result.success) {
-            const docType = index === 0 ? 'pdf' : 'word';
+            // We only generate DOCX (Word) format, so label it correctly
+            const docType = 'word';
             documentUrls[docType] = result.downloadURL;
           }
         });

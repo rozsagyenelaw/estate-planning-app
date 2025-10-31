@@ -78,6 +78,32 @@ const ViewClients = () => {
     navigate('/');
   };
 
+  const handleDeleteClient = async (clientId, client) => {
+    const clientName = `${client.client?.firstName} ${client.client?.lastName}`;
+
+    if (!window.confirm(
+      `Are you sure you want to delete ${clientName}? This action cannot be undone.`
+    )) {
+      return;
+    }
+
+    try {
+      const { deleteClientData } = await import('../services/firestoreService');
+      const result = await deleteClientData(clientId);
+
+      if (result.success) {
+        // Reload the clients list
+        await loadClients();
+        alert('Client deleted successfully');
+      } else {
+        alert(`Error: ${result.error}`);
+      }
+    } catch (err) {
+      console.error('Error deleting client:', err);
+      alert('Failed to delete client. Please try again.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -150,8 +176,7 @@ const ViewClients = () => {
           {filteredClients.map((client) => (
             <Card
               key={client.id}
-              className="hover:shadow-lg transition-shadow cursor-pointer"
-              onClick={() => handleClientClick(client.id)}
+              className="hover:shadow-lg transition-shadow"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -295,12 +320,29 @@ const ViewClients = () => {
                 </div>
               )}
 
-              {/* View Details Button */}
+              {/* Action Buttons */}
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <div className="flex items-center justify-end">
-                  <span className="text-blue-600 font-semibold hover:text-blue-700">
-                    View Full Details →
-                  </span>
+                <div className="flex items-center justify-between gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClientClick(client.id);
+                    }}
+                    className="flex-1"
+                  >
+                    View Full Details & Edit →
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteClient(client.id, client);
+                    }}
+                    className="text-red-600 hover:bg-red-50 hover:border-red-300"
+                  >
+                    Delete
+                  </Button>
                 </div>
               </div>
             </Card>
