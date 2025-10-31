@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, Button, Autocomplete } from '../../common';
+import { Card, Input, Select, Button, Autocomplete } from '../../common';
 import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
 
 const SuccessorTrusteesSection = () => {
@@ -52,35 +52,14 @@ const SuccessorTrusteesSection = () => {
         {trustees.length > 1 && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <label className="block text-sm font-semibold text-gray-800 mb-3">
-              How should successor trustees serve?
+              Trustee Grouping
             </label>
-            <div className="space-y-2">
-              <label className="flex items-center space-x-3 cursor-pointer">
-                <input
-                  type="radio"
-                  name="trusteesServeType"
-                  value="together"
-                  checked={formData.trusteesServeType === 'together'}
-                  onChange={(e) => updateFormData({ trusteesServeType: e.target.value })}
-                  className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">
-                  <strong>Together (Co-Trustees)</strong> - All trustees serve jointly and must agree on decisions
-                </span>
-              </label>
-              <label className="flex items-center space-x-3 cursor-pointer">
-                <input
-                  type="radio"
-                  name="trusteesServeType"
-                  value="sequential"
-                  checked={formData.trusteesServeType === 'sequential'}
-                  onChange={(e) => updateFormData({ trusteesServeType: e.target.value })}
-                  className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">
-                  <strong>After Each Other (Sequential)</strong> - Trustees serve one at a time in the order listed
-                </span>
-              </label>
+            <p className="text-xs text-gray-600 mb-3">
+              Use the "Group Type" dropdown to create joint groups. Select "Joint with following trustees" to start/continue a group. Select "Stop group here" to end the current group.
+            </p>
+            <div className="text-xs text-gray-500 space-y-1">
+              <div><strong>Example 1:</strong> Trustee 1 (Joint) + Trustee 2 (Stop) = Trustees 1 &amp; 2 serve jointly or the survivor of them, then Trustee 3 (Stop) = Trustee 3 serves alone</div>
+              <div><strong>Example 2:</strong> Trustee 1 (Joint) + Trustee 2 (Joint) + Trustee 3 (Stop) = All 3 serve jointly or the survivor of them</div>
             </div>
           </div>
         )}
@@ -128,6 +107,29 @@ const SuccessorTrusteesSection = () => {
                     placeholder="e.g., Son, Daughter, Friend"
                   />
                 </div>
+
+                {trustees.length > 1 && (
+                  <Select
+                    label="Group Type"
+                    value={trustee.groupType || 'individual'}
+                    onChange={(e) => updateTrustee(index, 'groupType', e.target.value)}
+                    options={[
+                      {
+                        value: 'individual',
+                        label: index === trustees.length - 1
+                          ? 'Last trustee (automatically ends group)'
+                          : 'Stop group here (end joint group or serve alone)'
+                      },
+                      {
+                        value: 'joint',
+                        label: index === trustees.length - 1
+                          ? 'Last trustee (automatically ends group)'
+                          : 'Joint with following trustees'
+                      }
+                    ]}
+                    disabled={index === trustees.length - 1}
+                  />
+                )}
               </div>
             ))}
           </div>

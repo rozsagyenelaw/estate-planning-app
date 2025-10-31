@@ -102,6 +102,171 @@ const getPronounReflexive = (sex) => {
 };
 
 /**
+ * Render a single agent group label
+ * @param {Object} group - Group object with groupType and agents array
+ * @returns {string} - Formatted group label
+ *
+ * Examples:
+ * - Individual: "Jane Doe"
+ * - Joint (2 agents): "Jane Doe and Bob Smith jointly or the survivor of them"
+ * - Joint (3+ agents): "Jane Doe, Bob Smith, and Alice Johnson jointly or the survivor of them"
+ */
+const renderGroupLabel = (group) => {
+  if (!group || !group.agents || group.agents.length === 0) {
+    return '';
+  }
+
+  const names = group.agents.map(agent =>
+    agent.fullName || `${agent.firstName || ''} ${agent.lastName || ''}`.trim()
+  );
+
+  if (group.groupType === 'individual') {
+    // Individual: just return the single name
+    return names[0] || '';
+  } else if (group.groupType === 'joint') {
+    // Joint: "A and B jointly or the survivor of them"
+    if (names.length === 1) {
+      return names[0];
+    } else if (names.length === 2) {
+      return `${names[0]} and ${names[1]} jointly or the survivor of them`;
+    } else {
+      // For 3+: "A, B, and C jointly or the survivor of them"
+      const allButLast = names.slice(0, -1).join(', ');
+      const last = names[names.length - 1];
+      return `${allButLast}, and ${last} jointly or the survivor of them`;
+    }
+  }
+
+  return '';
+};
+
+/**
+ * Render multiple groups sequentially with "then" chaining
+ * @param {Array} groups - Array of group objects
+ * @returns {string} - Formatted string with groups separated by ", then "
+ *
+ * Example: "Jane Doe and Bob Smith jointly or the survivor of them, then Alice Johnson, then Charlie Brown and Dana White jointly or the survivor of them"
+ */
+const renderGroupsSequential = (groups) => {
+  if (!groups || groups.length === 0) {
+    return '';
+  }
+
+  const labels = groups.map(group => renderGroupLabel(group)).filter(label => label !== '');
+  return labels.join(', then ');
+};
+
+/**
+ * Render groups as an array of labels (one per line for templates)
+ * @param {Array} groups - Array of group objects
+ * @returns {Array} - Array of label strings
+ *
+ * Used for template loops where each group needs to be on a separate line
+ */
+const renderGroupsOnePerLine = (groups) => {
+  if (!groups || groups.length === 0) {
+    return [];
+  }
+
+  return groups.map(group => renderGroupLabel(group)).filter(label => label !== '');
+};
+
+/**
+ * Alias for renderGroupsSequential - renders groups with "then" separator
+ * @param {Array} groups - Array of group objects
+ * @returns {string} - Formatted string with groups separated by ", then "
+ */
+const renderGroupsWithThen = (groups) => {
+  return renderGroupsSequential(groups);
+};
+
+/**
+ * Build groups from a flat agent array for backward compatibility
+ * Converts existing flat arrays into the new group structure
+ * @param {Array} agents - Flat array of agents
+ * @returns {Array} - Array of group objects (all individual by default)
+ */
+const buildGroupsFromFlatArray = (agents) => {
+  if (!agents || agents.length === 0) {
+    return [];
+  }
+
+  // Convert each agent into an individual group
+  return agents.map(agent => ({
+    groupType: 'individual',
+    agents: [agent]
+  }));
+};
+
+/**
+ * Build groups from agents array with groupType field
+ * @param {Array} agents - Array of agents with groupType field ('individual' or 'joint')
+ * @returns {Array} - Array of group objects
+ *
+ * Logic:
+ * - If agent.groupType === 'joint', collect consecutive 'joint' agents into one group
+ * - If agent.groupType === 'individual' or undefined, create single-agent group
+ * - Last agent is always individual
+ */
+const buildGroupsFromAgentsWithGroupType = (agents) => {
+  if (!agents || agents.length === 0) {
+    return [];
+  }
+
+  const groups = [];
+  let i = 0;
+
+  while (i < agents.length) {
+    const agent = agents[i];
+    const isLastAgent = i === agents.length - 1;
+
+    // Last agent is always individual
+    if (isLastAgent) {
+      groups.push({
+        groupType: 'individual',
+        agents: [agent]
+      });
+      i++;
+      continue;
+    }
+
+    // Check if this agent wants to be joint with next
+    if (agent.groupType === 'joint') {
+      // Start a joint group - collect this agent and all consecutive 'joint' agents
+      const jointAgents = [agent];
+      let j = i + 1;
+
+      // Keep adding agents while they are marked 'joint' and not the last agent
+      while (j < agents.length - 1 && agents[j].groupType === 'joint') {
+        jointAgents.push(agents[j]);
+        j++;
+      }
+
+      // Add the next agent (which ends the joint group)
+      if (j < agents.length) {
+        jointAgents.push(agents[j]);
+      }
+
+      groups.push({
+        groupType: 'joint',
+        agents: jointAgents
+      });
+
+      i = j + 1;
+    } else {
+      // Individual agent
+      groups.push({
+        groupType: 'individual',
+        agents: [agent]
+      });
+      i++;
+    }
+  }
+
+  return groups;
+};
+
+/**
  * Load a DOCX template from the public folder
  * @param {string} templatePath - Path to template (e.g., '/templates/single_living_trust_template.docx')
  * @returns {Promise<ArrayBuffer>} - Template as ArrayBuffer
@@ -971,6 +1136,14 @@ export const prepareTemplateData = (formData) => {
       relationship: agent.relationship || 'HIPAA representative',
     })),
 
+    // Personal Representatives (for portfolio template loop)
+    personalRepresentatives: (formData.pourOverWill?.client?.personalRepresentatives || []).map(rep => ({
+      firstName: rep.firstName || '',
+      lastName: rep.lastName || '',
+      fullName: `${rep.firstName || ''} ${rep.lastName || ''}`.trim(),
+      relationship: rep.relationship || 'personal representative',
+    })),
+
     // First POA Agent (for simpler template access)
     firstPoaAgent: (() => {
       const agents = formData.durablePOA?.client || [];
@@ -1054,6 +1227,7 @@ export const prepareTemplateData = (formData) => {
     hasMultiplePoaAgents: (formData.durablePOA?.client || []).length > 1,
     hasMultipleHealthcareAgents: (formData.healthcarePOA?.client || []).length > 1,
     hasMultipleHipaaAgents: (formData.healthcarePOA?.client || []).length > 1,
+    hasMultiplePersonalRepresentatives: (formData.pourOverWill?.client?.personalRepresentatives || []).length > 1,
 
     // First Personal Representative (for simpler template access)
     firstPersonalRepresentative: (() => {
@@ -1062,11 +1236,330 @@ export const prepareTemplateData = (formData) => {
       return `${reps[0].firstName || ''} ${reps[0].lastName || ''}`.trim();
     })(),
 
+    // Successor Personal Representatives (all except first)
+    successorPersonalRepresentatives: (formData.pourOverWill?.client?.personalRepresentatives || []).slice(1).map(rep => ({
+      firstName: rep.firstName || '',
+      lastName: rep.lastName || '',
+      fullName: `${rep.firstName || ''} ${rep.lastName || ''}`.trim(),
+      relationship: rep.relationship || 'personal representative',
+    })),
+
     // First Guardian (for simpler template access)
     firstGuardian: (() => {
       const guardians = formData.guardians || [];
       if (guardians.length === 0) return '';
       return `${guardians[0].firstName || ''} ${guardians[0].lastName || ''}`.trim();
+    })(),
+
+    // Successor Guardians (all except first)
+    successorGuardians: (formData.guardians || []).slice(1).map(guardian => ({
+      firstName: guardian.firstName || '',
+      lastName: guardian.lastName || '',
+      fullName: `${guardian.firstName || ''} ${guardian.lastName || ''}`.trim(),
+      relationship: guardian.relationship || 'guardian',
+    })),
+
+    // ===== JOINT/INDIVIDUAL AGENT GROUPS =====
+    // Support mixed joint + individual grouping for all fiduciary roles
+    // Provides backward compatibility: if *Groups field exists, use it; otherwise build from flat array
+
+    // POA Agent Groups
+    poaAgentGroups: (() => {
+      const agents = formData.durablePOA?.client || [];
+      // Check if groups are explicitly provided
+      if (formData.durablePOA?.clientGroups && Array.isArray(formData.durablePOA.clientGroups)) {
+        return formData.durablePOA.clientGroups;
+      }
+      // Check if agents have groupType field (new UI)
+      const hasGroupType = agents.some(agent => agent.groupType);
+      if (hasGroupType) {
+        return buildGroupsFromAgentsWithGroupType(agents);
+      }
+      // Backward compatibility: build individual groups from flat array
+      return buildGroupsFromFlatArray(agents);
+    })(),
+
+    // Healthcare Agent Groups
+    healthcareAgentGroups: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        return formData.healthcarePOA.clientGroups;
+      }
+      // Check if agents have groupType field (new UI)
+      const hasGroupType = agents.some(agent => agent.groupType);
+      if (hasGroupType) {
+        return buildGroupsFromAgentsWithGroupType(agents);
+      }
+      return buildGroupsFromFlatArray(agents);
+    })(),
+
+    // HIPAA Agent Groups (same as healthcare agents)
+    hipaaAgentGroups: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        return formData.healthcarePOA.clientGroups;
+      }
+      // Check if agents have groupType field (new UI)
+      const hasGroupType = agents.some(agent => agent.groupType);
+      if (hasGroupType) {
+        return buildGroupsFromAgentsWithGroupType(agents);
+      }
+      return buildGroupsFromFlatArray(agents);
+    })(),
+
+    // Trustee Groups During Incapacity
+    trusteeGroupsDuringIncapacity: (() => {
+      const trustees = formData.successorTrustees || [];
+      if (formData.successorTrusteeGroups && Array.isArray(formData.successorTrusteeGroups)) {
+        return formData.successorTrusteeGroups;
+      }
+      // Check if trustees have groupType field (new UI)
+      const hasGroupType = trustees.some(trustee => trustee.groupType);
+      if (hasGroupType) {
+        return buildGroupsFromAgentsWithGroupType(trustees);
+      }
+      return buildGroupsFromFlatArray(trustees);
+    })(),
+
+    // Trustee Groups After Death (same as during incapacity for now)
+    trusteeGroupsAfterDeath: (() => {
+      const trustees = formData.successorTrustees || [];
+      if (formData.successorTrusteeGroups && Array.isArray(formData.successorTrusteeGroups)) {
+        return formData.successorTrusteeGroups;
+      }
+      // Check if trustees have groupType field (new UI)
+      const hasGroupType = trustees.some(trustee => trustee.groupType);
+      if (hasGroupType) {
+        return buildGroupsFromAgentsWithGroupType(trustees);
+      }
+      return buildGroupsFromFlatArray(trustees);
+    })(),
+
+    // Personal Representative Groups
+    personalRepresentativeGroups: (() => {
+      const reps = formData.pourOverWill?.client?.personalRepresentatives || [];
+      if (formData.pourOverWill?.client?.personalRepresentativeGroups && Array.isArray(formData.pourOverWill.client.personalRepresentativeGroups)) {
+        return formData.pourOverWill.client.personalRepresentativeGroups;
+      }
+      // Check if reps have groupType field (new UI)
+      const hasGroupType = reps.some(rep => rep.groupType);
+      if (hasGroupType) {
+        return buildGroupsFromAgentsWithGroupType(reps);
+      }
+      return buildGroupsFromFlatArray(reps);
+    })(),
+
+    // Guardian Groups
+    guardianGroups: (() => {
+      const guardians = formData.guardians || [];
+      if (formData.guardianGroups && Array.isArray(formData.guardianGroups)) {
+        return formData.guardianGroups;
+      }
+      // Check if guardians have groupType field (new UI)
+      const hasGroupType = guardians.some(guardian => guardian.groupType);
+      if (hasGroupType) {
+        return buildGroupsFromAgentsWithGroupType(guardians);
+      }
+      return buildGroupsFromFlatArray(guardians);
+    })(),
+
+    // ===== PRE-RENDERED GROUP LABELS =====
+    // These provide ready-to-use labels for templates (no need for complex template logic)
+
+    // POA Agent Group Labels (array of strings)
+    poaAgentGroupLabels: (() => {
+      const agents = formData.durablePOA?.client || [];
+      let groups;
+      if (formData.durablePOA?.clientGroups && Array.isArray(formData.durablePOA.clientGroups)) {
+        groups = formData.durablePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return renderGroupsOnePerLine(groups);
+    })(),
+
+    // POA Agent Groups Formatted (single string with "then" chaining)
+    poaAgentGroupsFormatted: (() => {
+      const agents = formData.durablePOA?.client || [];
+      let groups;
+      if (formData.durablePOA?.clientGroups && Array.isArray(formData.durablePOA.clientGroups)) {
+        groups = formData.durablePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return renderGroupsWithThen(groups);
+    })(),
+
+    // Healthcare Agent Group Labels
+    healthcareAgentGroupLabels: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      let groups;
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        groups = formData.healthcarePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return renderGroupsOnePerLine(groups);
+    })(),
+
+    // Healthcare Agent Groups Formatted
+    healthcareAgentGroupsFormatted: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      let groups;
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        groups = formData.healthcarePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return renderGroupsWithThen(groups);
+    })(),
+
+    // HIPAA Agent Group Labels
+    hipaaAgentGroupLabels: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      let groups;
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        groups = formData.healthcarePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return renderGroupsOnePerLine(groups);
+    })(),
+
+    // HIPAA Agent Groups Formatted
+    hipaaAgentGroupsFormatted: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      let groups;
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        groups = formData.healthcarePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return renderGroupsWithThen(groups);
+    })(),
+
+    // Trustee Groups During Incapacity Labels
+    trusteeGroupsDuringIncapacityLabels: (() => {
+      const trustees = formData.successorTrustees || [];
+      let groups;
+      if (formData.successorTrusteeGroups && Array.isArray(formData.successorTrusteeGroups)) {
+        groups = formData.successorTrusteeGroups;
+      } else if (trustees.some(trustee => trustee.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(trustees);
+      } else {
+        groups = buildGroupsFromFlatArray(trustees);
+      }
+      return renderGroupsOnePerLine(groups);
+    })(),
+
+    // Trustee Groups During Incapacity Formatted
+    trusteeGroupsDuringIncapacityFormatted: (() => {
+      const trustees = formData.successorTrustees || [];
+      let groups;
+      if (formData.successorTrusteeGroups && Array.isArray(formData.successorTrusteeGroups)) {
+        groups = formData.successorTrusteeGroups;
+      } else if (trustees.some(trustee => trustee.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(trustees);
+      } else {
+        groups = buildGroupsFromFlatArray(trustees);
+      }
+      return renderGroupsWithThen(groups);
+    })(),
+
+    // Trustee Groups After Death Labels
+    trusteeGroupsAfterDeathLabels: (() => {
+      const trustees = formData.successorTrustees || [];
+      let groups;
+      if (formData.successorTrusteeGroups && Array.isArray(formData.successorTrusteeGroups)) {
+        groups = formData.successorTrusteeGroups;
+      } else if (trustees.some(trustee => trustee.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(trustees);
+      } else {
+        groups = buildGroupsFromFlatArray(trustees);
+      }
+      return renderGroupsOnePerLine(groups);
+    })(),
+
+    // Trustee Groups After Death Formatted
+    trusteeGroupsAfterDeathFormatted: (() => {
+      const trustees = formData.successorTrustees || [];
+      let groups;
+      if (formData.successorTrusteeGroups && Array.isArray(formData.successorTrusteeGroups)) {
+        groups = formData.successorTrusteeGroups;
+      } else if (trustees.some(trustee => trustee.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(trustees);
+      } else {
+        groups = buildGroupsFromFlatArray(trustees);
+      }
+      return renderGroupsWithThen(groups);
+    })(),
+
+    // Personal Representative Group Labels
+    personalRepresentativeGroupLabels: (() => {
+      const reps = formData.pourOverWill?.client?.personalRepresentatives || [];
+      let groups;
+      if (formData.pourOverWill?.client?.personalRepresentativeGroups && Array.isArray(formData.pourOverWill.client.personalRepresentativeGroups)) {
+        groups = formData.pourOverWill.client.personalRepresentativeGroups;
+      } else if (reps.some(rep => rep.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(reps);
+      } else {
+        groups = buildGroupsFromFlatArray(reps);
+      }
+      return renderGroupsOnePerLine(groups);
+    })(),
+
+    // Personal Representative Groups Formatted
+    personalRepresentativeGroupsFormatted: (() => {
+      const reps = formData.pourOverWill?.client?.personalRepresentatives || [];
+      let groups;
+      if (formData.pourOverWill?.client?.personalRepresentativeGroups && Array.isArray(formData.pourOverWill.client.personalRepresentativeGroups)) {
+        groups = formData.pourOverWill.client.personalRepresentativeGroups;
+      } else if (reps.some(rep => rep.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(reps);
+      } else {
+        groups = buildGroupsFromFlatArray(reps);
+      }
+      return renderGroupsWithThen(groups);
+    })(),
+
+    // Guardian Group Labels
+    guardianGroupLabels: (() => {
+      const guardians = formData.guardians || [];
+      let groups;
+      if (formData.guardianGroups && Array.isArray(formData.guardianGroups)) {
+        groups = formData.guardianGroups;
+      } else if (guardians.some(guardian => guardian.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(guardians);
+      } else {
+        groups = buildGroupsFromFlatArray(guardians);
+      }
+      return renderGroupsOnePerLine(groups);
+    })(),
+
+    // Guardian Groups Formatted
+    guardianGroupsFormatted: (() => {
+      const guardians = formData.guardians || [];
+      let groups;
+      if (formData.guardianGroups && Array.isArray(formData.guardianGroups)) {
+        groups = formData.guardianGroups;
+      } else if (guardians.some(guardian => guardian.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(guardians);
+      } else {
+        groups = buildGroupsFromFlatArray(guardians);
+      }
+      return renderGroupsWithThen(groups);
     })(),
   };
 

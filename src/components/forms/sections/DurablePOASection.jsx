@@ -117,35 +117,14 @@ const DurablePOASection = () => {
           {clientAgents.length > 1 && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
               <label className="block text-sm font-semibold text-gray-800 mb-3">
-                How should agents serve?
+                Agent Grouping
               </label>
-              <div className="space-y-2">
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="durablePOAClientServeType"
-                    value="together"
-                    checked={formData.durablePOAClientServeType === 'together'}
-                    onChange={(e) => updateFormData({ durablePOAClientServeType: e.target.value })}
-                    className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">
-                    <strong>Together (Co-Agents)</strong> - All agents serve jointly and must agree on decisions
-                  </span>
-                </label>
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="durablePOAClientServeType"
-                    value="sequential"
-                    checked={formData.durablePOAClientServeType === 'sequential'}
-                    onChange={(e) => updateFormData({ durablePOAClientServeType: e.target.value })}
-                    className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">
-                    <strong>In Order (Sequential)</strong> - Agents serve one at a time in the order listed
-                  </span>
-                </label>
+              <p className="text-xs text-gray-600 mb-3">
+                Use the "Group Type" dropdown to create joint groups. Select "Joint with following agents" to start/continue a group. Select "Stop group here" to end the current group.
+              </p>
+              <div className="text-xs text-gray-500 space-y-1">
+                <div><strong>Example 1:</strong> Agent 1 (Joint) + Agent 2 (Stop) = Agents 1 &amp; 2 serve jointly, then Agent 3 (Stop) = Agent 3 serves alone</div>
+                <div><strong>Example 2:</strong> Agent 1 (Joint) + Agent 2 (Joint) + Agent 3 (Stop) = All 3 serve jointly together</div>
               </div>
             </div>
           )}
@@ -193,6 +172,29 @@ const DurablePOASection = () => {
                       ]}
                     />
                   </div>
+
+                  {clientAgents.length > 1 && (
+                    <Select
+                      label="Group Type"
+                      value={agent.groupType || 'individual'}
+                      onChange={(e) => handleUpdateClientAgent(index, 'groupType', e.target.value)}
+                      options={[
+                        {
+                          value: 'individual',
+                          label: index === clientAgents.length - 1
+                            ? 'Last agent (automatically ends group)'
+                            : 'Stop group here (end joint group or serve alone)'
+                        },
+                        {
+                          value: 'joint',
+                          label: index === clientAgents.length - 1
+                            ? 'Last agent (automatically ends group)'
+                            : 'Joint with following agents'
+                        }
+                      ]}
+                      disabled={index === clientAgents.length - 1}
+                    />
+                  )}
 
                   <Autocomplete
                     label="Address (Optional)"
@@ -248,35 +250,14 @@ const DurablePOASection = () => {
             {spouseAgents.length > 1 && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <label className="block text-sm font-semibold text-gray-800 mb-3">
-                  How should agents serve?
+                  Agent Grouping
                 </label>
-                <div className="space-y-2">
-                  <label className="flex items-center space-x-3 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="durablePOASpouseServeType"
-                      value="together"
-                      checked={formData.durablePOASpouseServeType === 'together'}
-                      onChange={(e) => updateFormData({ durablePOASpouseServeType: e.target.value })}
-                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">
-                      <strong>Together (Co-Agents)</strong> - All agents serve jointly and must agree on decisions
-                    </span>
-                  </label>
-                  <label className="flex items-center space-x-3 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="durablePOASpouseServeType"
-                      value="sequential"
-                      checked={formData.durablePOASpouseServeType === 'sequential'}
-                      onChange={(e) => updateFormData({ durablePOASpouseServeType: e.target.value })}
-                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">
-                      <strong>In Order (Sequential)</strong> - Agents serve one at a time in the order listed
-                    </span>
-                  </label>
+                <p className="text-xs text-gray-600 mb-3">
+                  Use the "Group Type" dropdown to create joint groups. Select "Joint with following agents" to start/continue a group. Select "Stop group here" to end the current group.
+                </p>
+                <div className="text-xs text-gray-500 space-y-1">
+                  <div><strong>Example 1:</strong> Agent 1 (Joint) + Agent 2 (Stop) = Agents 1 &amp; 2 serve jointly, then Agent 3 (Stop) = Agent 3 serves alone</div>
+                  <div><strong>Example 2:</strong> Agent 1 (Joint) + Agent 2 (Joint) + Agent 3 (Stop) = All 3 serve jointly together</div>
                 </div>
               </div>
             )}
@@ -324,6 +305,29 @@ const DurablePOASection = () => {
                         ]}
                       />
                     </div>
+
+                    {spouseAgents.length > 1 && (
+                      <Select
+                        label="Group Type"
+                        value={agent.groupType || 'individual'}
+                        onChange={(e) => handleUpdateSpouseAgent(index, 'groupType', e.target.value)}
+                        options={[
+                          {
+                            value: 'individual',
+                            label: index === spouseAgents.length - 1
+                              ? 'Last agent (automatically ends group)'
+                              : 'Stop group here (end joint group or serve alone)'
+                          },
+                          {
+                            value: 'joint',
+                            label: index === spouseAgents.length - 1
+                              ? 'Last agent (automatically ends group)'
+                              : 'Joint with following agents'
+                          }
+                        ]}
+                        disabled={index === spouseAgents.length - 1}
+                      />
+                    )}
 
                     <Autocomplete
                       label="Address (Optional)"

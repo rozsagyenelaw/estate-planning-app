@@ -1,5 +1,5 @@
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, Button, Autocomplete } from '../../common';
+import { Card, Input, Select, Button, Autocomplete } from '../../common';
 import {
   getNameSuggestions,
   getAddressSuggestions,
@@ -123,35 +123,14 @@ const PourOverWillSection = () => {
           {clientReps.length > 1 && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
               <label className="block text-sm font-semibold text-gray-800 mb-3">
-                How should personal representatives serve?
+                Personal Representative Grouping
               </label>
-              <div className="space-y-2">
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="executorsServeType"
-                    value="together"
-                    checked={formData.executorsServeType === 'together'}
-                    onChange={(e) => updateFormData({ executorsServeType: e.target.value })}
-                    className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">
-                    <strong>Together (Co-Executors)</strong> - All representatives serve jointly and must agree on decisions
-                  </span>
-                </label>
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="executorsServeType"
-                    value="sequential"
-                    checked={formData.executorsServeType === 'sequential'}
-                    onChange={(e) => updateFormData({ executorsServeType: e.target.value })}
-                    className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">
-                    <strong>In Order (Sequential)</strong> - Representatives serve one at a time in the order listed
-                  </span>
-                </label>
+              <p className="text-xs text-gray-600 mb-3">
+                Use the "Group Type" dropdown to create joint groups. Select "Joint with following representatives" to start/continue a group. Select "Stop group here" to end the current group.
+              </p>
+              <div className="text-xs text-gray-500 space-y-1">
+                <div><strong>Example 1:</strong> Rep 1 (Joint) + Rep 2 (Stop) = Reps 1 &amp; 2 serve jointly or the survivor of them, then Rep 3 (Stop) = Rep 3 serves alone</div>
+                <div><strong>Example 2:</strong> Rep 1 (Joint) + Rep 2 (Joint) + Rep 3 (Stop) = All 3 serve jointly or the survivor of them</div>
               </div>
             </div>
           )}
@@ -187,6 +166,29 @@ const PourOverWillSection = () => {
                       suggestions={nameSuggestions}
                     />
                   </div>
+
+                  {clientReps.length > 1 && (
+                    <Select
+                      label="Group Type"
+                      value={rep.groupType || 'individual'}
+                      onChange={(e) => handleUpdateClientRep(index, 'groupType', e.target.value)}
+                      options={[
+                        {
+                          value: 'individual',
+                          label: index === clientReps.length - 1
+                            ? 'Last representative (automatically ends group)'
+                            : 'Stop group here (end joint group or serve alone)'
+                        },
+                        {
+                          value: 'joint',
+                          label: index === clientReps.length - 1
+                            ? 'Last representative (automatically ends group)'
+                            : 'Joint with following representatives'
+                        }
+                      ]}
+                      disabled={index === clientReps.length - 1}
+                    />
+                  )}
 
                   <Autocomplete
                     label="Address (Optional)"
@@ -234,35 +236,14 @@ const PourOverWillSection = () => {
             {spouseReps.length > 1 && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <label className="block text-sm font-semibold text-gray-800 mb-3">
-                  How should personal representatives serve?
+                  Personal Representative Grouping
                 </label>
-                <div className="space-y-2">
-                  <label className="flex items-center space-x-3 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="executorsSpouseServeType"
-                      value="together"
-                      checked={formData.executorsSpouseServeType === 'together'}
-                      onChange={(e) => updateFormData({ executorsSpouseServeType: e.target.value })}
-                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">
-                      <strong>Together (Co-Executors)</strong> - All representatives serve jointly and must agree on decisions
-                    </span>
-                  </label>
-                  <label className="flex items-center space-x-3 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="executorsSpouseServeType"
-                      value="sequential"
-                      checked={formData.executorsSpouseServeType === 'sequential'}
-                      onChange={(e) => updateFormData({ executorsSpouseServeType: e.target.value })}
-                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">
-                      <strong>In Order (Sequential)</strong> - Representatives serve one at a time in the order listed
-                    </span>
-                  </label>
+                <p className="text-xs text-gray-600 mb-3">
+                  Use the "Group Type" dropdown to create joint groups. Select "Joint with following representatives" to start/continue a group. Select "Stop group here" to end the current group.
+                </p>
+                <div className="text-xs text-gray-500 space-y-1">
+                  <div><strong>Example 1:</strong> Rep 1 (Joint) + Rep 2 (Stop) = Reps 1 &amp; 2 serve jointly or the survivor of them, then Rep 3 (Stop) = Rep 3 serves alone</div>
+                  <div><strong>Example 2:</strong> Rep 1 (Joint) + Rep 2 (Joint) + Rep 3 (Stop) = All 3 serve jointly or the survivor of them</div>
                 </div>
               </div>
             )}
@@ -298,6 +279,29 @@ const PourOverWillSection = () => {
                         suggestions={nameSuggestions}
                       />
                     </div>
+
+                    {spouseReps.length > 1 && (
+                      <Select
+                        label="Group Type"
+                        value={rep.groupType || 'individual'}
+                        onChange={(e) => handleUpdateSpouseRep(index, 'groupType', e.target.value)}
+                        options={[
+                          {
+                            value: 'individual',
+                            label: index === spouseReps.length - 1
+                              ? 'Last representative (automatically ends group)'
+                              : 'Stop group here (end joint group or serve alone)'
+                          },
+                          {
+                            value: 'joint',
+                            label: index === spouseReps.length - 1
+                              ? 'Last representative (automatically ends group)'
+                              : 'Joint with following representatives'
+                          }
+                        ]}
+                        disabled={index === spouseReps.length - 1}
+                      />
+                    )}
 
                     <Autocomplete
                       label="Address (Optional)"

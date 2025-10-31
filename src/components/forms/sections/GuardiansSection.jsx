@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, Button, Autocomplete } from '../../common';
+import { Card, Input, Select, Button, Autocomplete } from '../../common';
 import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
 
 const GuardiansSection = () => {
@@ -52,35 +52,14 @@ const GuardiansSection = () => {
         {guardians.length > 1 && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <label className="block text-sm font-semibold text-gray-800 mb-3">
-              How should guardians serve?
+              Guardian Grouping
             </label>
-            <div className="space-y-2">
-              <label className="flex items-center space-x-3 cursor-pointer">
-                <input
-                  type="radio"
-                  name="guardiansServeType"
-                  value="together"
-                  checked={formData.guardiansServeType === 'together'}
-                  onChange={(e) => updateFormData({ guardiansServeType: e.target.value })}
-                  className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">
-                  <strong>Together (Co-Guardians)</strong> - All guardians serve jointly
-                </span>
-              </label>
-              <label className="flex items-center space-x-3 cursor-pointer">
-                <input
-                  type="radio"
-                  name="guardiansServeType"
-                  value="sequential"
-                  checked={formData.guardiansServeType === 'sequential'}
-                  onChange={(e) => updateFormData({ guardiansServeType: e.target.value })}
-                  className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">
-                  <strong>In Order (Sequential)</strong> - Guardians serve one at a time in the order listed
-                </span>
-              </label>
+            <p className="text-xs text-gray-600 mb-3">
+              Use the "Group Type" dropdown to create joint groups. Select "Joint with following guardians" to start/continue a group. Select "Stop group here" to end the current group.
+            </p>
+            <div className="text-xs text-gray-500 space-y-1">
+              <div><strong>Example 1:</strong> Guardian 1 (Joint) + Guardian 2 (Stop) = Guardians 1 &amp; 2 serve jointly or the survivor of them, then Guardian 3 (Stop) = Guardian 3 serves alone</div>
+              <div><strong>Example 2:</strong> Guardian 1 (Joint) + Guardian 2 (Joint) + Guardian 3 (Stop) = All 3 serve jointly or the survivor of them</div>
             </div>
           </div>
         )}
@@ -128,6 +107,29 @@ const GuardiansSection = () => {
                     placeholder="e.g., Sister, Brother, Friend"
                   />
                 </div>
+
+                {guardians.length > 1 && (
+                  <Select
+                    label="Group Type"
+                    value={guardian.groupType || 'individual'}
+                    onChange={(e) => updateGuardian(index, 'groupType', e.target.value)}
+                    options={[
+                      {
+                        value: 'individual',
+                        label: index === guardians.length - 1
+                          ? 'Last guardian (automatically ends group)'
+                          : 'Stop group here (end joint group or serve alone)'
+                      },
+                      {
+                        value: 'joint',
+                        label: index === guardians.length - 1
+                          ? 'Last guardian (automatically ends group)'
+                          : 'Joint with following guardians'
+                      }
+                    ]}
+                    disabled={index === guardians.length - 1}
+                  />
+                )}
               </div>
             ))}
           </div>
