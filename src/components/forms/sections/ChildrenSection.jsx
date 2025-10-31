@@ -1,5 +1,5 @@
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, Button } from '../../common';
+import { Card, Input, Select, Button } from '../../common';
 
 const ChildrenSection = () => {
   const { formData, updateFormData } = useFormContext();
@@ -9,7 +9,7 @@ const ChildrenSection = () => {
     updateFormData({
       children: [
         ...children,
-        { firstName: '', lastName: '', dateOfBirth: '', relation: 'child' }
+        { firstName: '', lastName: '', dateOfBirth: '', gender: '', relation: 'child' }
       ]
     });
   };
@@ -60,7 +60,7 @@ const ChildrenSection = () => {
                   </Button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <Input
                     label="First Name"
                     value={child.firstName || ''}
@@ -73,11 +73,25 @@ const ChildrenSection = () => {
                     onChange={(e) => updateChild(index, 'lastName', e.target.value)}
                     placeholder="Last name"
                   />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <Input
                     label="Date of Birth"
                     type="date"
                     value={child.dateOfBirth || ''}
                     onChange={(e) => updateChild(index, 'dateOfBirth', e.target.value)}
+                  />
+                  <Select
+                    label="Gender"
+                    value={child.gender || ''}
+                    onChange={(e) => updateChild(index, 'gender', e.target.value)}
+                    options={[
+                      { value: '', label: 'Select gender' },
+                      { value: 'male', label: 'Male' },
+                      { value: 'female', label: 'Female' },
+                      { value: 'other', label: 'Other/Prefer not to specify' }
+                    ]}
                   />
                 </div>
               </div>

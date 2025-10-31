@@ -102,6 +102,48 @@ const getPronounReflexive = (sex) => {
 };
 
 /**
+ * Get subject pronoun based on gender
+ */
+const getPronounSubject = (gender) => {
+  const g = (gender || '').toLowerCase();
+  if (g === 'male' || g === 'm') {
+    return 'he';
+  } else if (g === 'female' || g === 'f') {
+    return 'she';
+  }
+  return 'they';
+};
+
+/**
+ * Get possessive pronoun (standalone) based on gender
+ * Examples: his, hers, theirs
+ */
+const getPronounPossessiveStandalone = (gender) => {
+  const g = (gender || '').toLowerCase();
+  if (g === 'male' || g === 'm') {
+    return 'his';
+  } else if (g === 'female' || g === 'f') {
+    return 'hers';
+  }
+  return 'theirs';
+};
+
+/**
+ * Generate all pronoun fields for a person based on their gender
+ * @param {string} gender - "male", "female", or other
+ * @returns {Object} - Object with all pronoun fields
+ */
+const generatePronouns = (gender) => {
+  return {
+    pronoun_subject: getPronounSubject(gender),           // he/she/they
+    pronoun_object: getPronounObjective(gender),          // him/her/them
+    pronoun_possessive: getPronounPossessive(gender),     // his/her/their
+    pronoun_possessive_standalone: getPronounPossessiveStandalone(gender), // his/hers/theirs
+    pronoun_reflexive: getPronounReflexive(gender)        // himself/herself/themselves
+  };
+};
+
+/**
  * Render a single agent group label
  * @param {Object} group - Group object with groupType and agents array
  * @returns {string} - Formatted group label
@@ -567,12 +609,16 @@ export const prepareTemplateData = (formData) => {
       dateOfBirth: formatDateToUS(formData.children[0].dateOfBirth) || '',
       fullName: `${formData.children[0].firstName || ''} ${formData.children[0].lastName || ''}`.trim(),
       relation: formData.children[0].relation || 'child',
+      gender: formData.children[0].gender || '',
+      ...generatePronouns(formData.children[0].gender) // Add all pronoun fields
     } : {
       firstName: '',
       lastName: '',
       dateOfBirth: '',
       fullName: '',
       relation: '',
+      gender: '',
+      ...generatePronouns('') // Default to gender-neutral pronouns
     },
 
     // Example child (same as first child for template compatibility)
@@ -582,12 +628,16 @@ export const prepareTemplateData = (formData) => {
       dateOfBirth: formatDateToUS(formData.children[0].dateOfBirth) || '',
       fullName: `${formData.children[0].firstName || ''} ${formData.children[0].lastName || ''}`.trim(),
       relation: formData.children[0].relation || 'child',
+      gender: formData.children[0].gender || '',
+      ...generatePronouns(formData.children[0].gender) // Add all pronoun fields
     } : {
       firstName: '',
       lastName: '',
       dateOfBirth: '',
       fullName: '',
       relation: '',
+      gender: '',
+      ...generatePronouns('') // Default to gender-neutral pronouns
     },
 
     // Successor Trustees
@@ -829,6 +879,8 @@ export const prepareTemplateData = (formData) => {
       middleName: child.middleName || '',
       lastName: child.lastName || '',
       dateOfBirth: formatDateToUS(child.dateOfBirth || child.birthday) || '',
+      gender: child.gender || '',
+      ...generatePronouns(child.gender) // Add all pronoun fields
     })),
 
     // Trustees placeholders - formatted for docxtemplater
@@ -1191,6 +1243,8 @@ export const prepareTemplateData = (formData) => {
       birthdate: formatDateToUS(child.dateOfBirth || child.birthday) || '',
       dateOfBirth: formatDateToUS(child.dateOfBirth || child.birthday) || '',
       relationship: child.relationship || 'child',
+      gender: child.gender || '',
+      ...generatePronouns(child.gender) // Add all pronoun fields
     })),
 
     // Override guardians array to ensure fullName
