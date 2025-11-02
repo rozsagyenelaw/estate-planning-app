@@ -7,6 +7,7 @@ import ViewClients from './components/ViewClients';
 import ClientDetail from './components/ClientDetail';
 import AmendmentForm from './components/amendments/AmendmentForm';
 import ExternalTrustAmendment from './components/amendments/ExternalTrustAmendment';
+import TrustTransferDeed from './components/deeds/TrustTransferDeed';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/clients" element={<ViewClients />} />
             <Route path="/client/:clientId" element={<ClientDetail />} />
             <Route path="/client/:clientId/create-amendment" element={<AmendmentForm />} />
+            <Route path="/client/:clientId/trust-transfer-deed" element={<TrustTransferDeed />} />
             <Route path="/external-trust-amendment" element={<ExternalTrustAmendment />} />
           </Routes>
         </main>

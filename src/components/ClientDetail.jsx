@@ -499,6 +499,38 @@ const ClientDetail = () => {
         )}
       </Card>
 
+      {/* Trust Transfer Deed & PCOR */}
+      <Card className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900">Trust Transfer Deed & PCOR</h2>
+          <Button
+            variant="primary"
+            onClick={() => navigate(`/client/${clientId}/trust-transfer-deed`)}
+          >
+            📄 Create Trust Transfer Deed
+          </Button>
+        </div>
+
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
+          <div className="flex items-start">
+            <span className="text-blue-600 mr-3 text-xl">🏠</span>
+            <div>
+              <h4 className="text-blue-900 font-semibold mb-1">Transfer Real Property into Trust</h4>
+              <p className="text-blue-800 text-sm mb-2">
+                Create a trust transfer deed and PCOR form to transfer real property into the client's trust.
+                The wizard will guide you through:
+              </p>
+              <ul className="text-blue-800 text-sm list-disc list-inside space-y-1">
+                <li>Uploading and extracting information from the current deed (OCR)</li>
+                <li>Generating the trust transfer deed</li>
+                <li>Creating the county PCOR form</li>
+                <li>Both documents ready for recording</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </Card>
+
       {/* Trust Amendments */}
       <Card className="mb-6">
         <div className="flex items-center justify-between mb-4">
