@@ -502,7 +502,19 @@ export const prepareTemplateData = (formData) => {
   const tppSectionNum = specificDistributionsWithSections.length > 0
     ? String(specificDistributionsWithSections.length + 1).padStart(2, '0')
     : '01';
-  
+
+  // ============================================================================
+  // SANITIZE CHILDREN ARRAY
+  // Remove any blank/incomplete children entries before building template outputs
+  // ============================================================================
+  const childrenSafe = (formData.children || []).filter(c => {
+    if (!c) return false;
+    const fullName = `${c.firstName || ''} ${c.middleName || ''} ${c.lastName || ''}`.trim();
+    return fullName.length > 0;
+  });
+  console.log('Original children count:', formData.children?.length || 0);
+  console.log('Sanitized children count:', childrenSafe.length);
+
   const tppNum = parseInt(tppSectionNum);
   
   console.log('TPP section numbers:', {
@@ -582,35 +594,53 @@ export const prepareTemplateData = (formData) => {
     },
 
     // Children
-    children: formData.children || [],
-    numChildren: formData.children?.length || 0,
-    childrenList: (formData.children || []).map((c, i) =>
+    children: childrenSafe,
+    numChildren: childrenSafe.length,
+    childrenList: childrenSafe.map((c, i) =>
       `${i + 1}. ${c.firstName} ${c.lastName}, born ${formatDateToUS(c.dateOfBirth)}`
     ).join('\n'),
 
-    // Children statement (for templates)
-    childrenStatement: formData.children && formData.children.length > 0
-      ? formData.children.length === 1
-        ? `I have one child, ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formatDateToUS(formData.children[0].dateOfBirth)}.`
-        : `I have ${formData.children.length} children.`
-      : 'I have no children.',
+    // Children statement (for templates) - Uses Oxford comma and proper formatting
+    childrenStatement: (() => {
+      if (childrenSafe.length === 0) return 'I have no children.';
+      if (childrenSafe.length === 1) {
+        const c = childrenSafe[0];
+        const birthdate = formatDateToUS(c.dateOfBirth) || 'N/A';
+        return `I have 1 child: ${c.firstName} ${c.lastName}, born ${birthdate}.`;
+      }
+      // 2 or more children
+      const childPhrases = childrenSafe.map((c, i) => {
+        const birthdate = formatDateToUS(c.dateOfBirth) || 'N/A';
+        return `${c.firstName} ${c.lastName}, born ${birthdate}`;
+      });
+      // Use Oxford comma: "A, born X; B, born Y; and C, born Z."
+      if (childrenSafe.length === 2) {
+        return `I have ${childrenSafe.length} children: ${childPhrases[0]}; and ${childPhrases[1]}.`;
+      }
+      const allButLast = childPhrases.slice(0, -1).join('; ');
+      const last = childPhrases[childPhrases.length - 1];
+      return `I have ${childrenSafe.length} children: ${allButLast}; and ${last}.`;
+    })(),
 
     // Children table (formatted for Word table placeholders)
-    childrenTable: formData.children && formData.children.length > 0
-      ? formData.children.map(c =>
-          `${c.firstName || ''} ${c.lastName || ''}, born ${formatDateToUS(c.dateOfBirth) || 'N/A'}`
-        ).join('; ')
+    childrenTable: childrenSafe.length > 0
+      ? childrenSafe.map(c => {
+          const fullName = `${c.firstName || ''} ${c.middleName || ''} ${c.lastName || ''}`.trim();
+          const birthdate = formatDateToUS(c.dateOfBirth) || 'N/A';
+          const relationship = c.relation || c.relationship || 'child';
+          return `${fullName} | ${relationship} | ${birthdate}`;
+        }).join('\n')
       : 'None',
 
     // First child info (for templates that reference first child specifically)
-    firstChild: formData.children && formData.children.length > 0 ? {
-      firstName: formData.children[0].firstName || '',
-      lastName: formData.children[0].lastName || '',
-      dateOfBirth: formatDateToUS(formData.children[0].dateOfBirth) || '',
-      fullName: `${formData.children[0].firstName || ''} ${formData.children[0].lastName || ''}`.trim(),
-      relation: formData.children[0].relation || 'child',
-      gender: formData.children[0].gender || '',
-      ...generatePronouns(formData.children[0].gender) // Add all pronoun fields
+    firstChild: childrenSafe.length > 0 ? {
+      firstName: childrenSafe[0].firstName || '',
+      lastName: childrenSafe[0].lastName || '',
+      dateOfBirth: formatDateToUS(childrenSafe[0].dateOfBirth) || '',
+      fullName: `${childrenSafe[0].firstName || ''} ${childrenSafe[0].lastName || ''}`.trim(),
+      relation: childrenSafe[0].relation || 'child',
+      gender: childrenSafe[0].gender || '',
+      ...generatePronouns(childrenSafe[0].gender) // Add all pronoun fields
     } : {
       firstName: '',
       lastName: '',
@@ -622,14 +652,14 @@ export const prepareTemplateData = (formData) => {
     },
 
     // Example child (same as first child for template compatibility)
-    exampleChild: formData.children && formData.children.length > 0 ? {
-      firstName: formData.children[0].firstName || '',
-      lastName: formData.children[0].lastName || '',
-      dateOfBirth: formatDateToUS(formData.children[0].dateOfBirth) || '',
-      fullName: `${formData.children[0].firstName || ''} ${formData.children[0].lastName || ''}`.trim(),
-      relation: formData.children[0].relation || 'child',
-      gender: formData.children[0].gender || '',
-      ...generatePronouns(formData.children[0].gender) // Add all pronoun fields
+    exampleChild: childrenSafe.length > 0 ? {
+      firstName: childrenSafe[0].firstName || '',
+      lastName: childrenSafe[0].lastName || '',
+      dateOfBirth: formatDateToUS(childrenSafe[0].dateOfBirth) || '',
+      fullName: `${childrenSafe[0].firstName || ''} ${childrenSafe[0].lastName || ''}`.trim(),
+      relation: childrenSafe[0].relation || 'child',
+      gender: childrenSafe[0].gender || '',
+      ...generatePronouns(childrenSafe[0].gender) // Add all pronoun fields
     } : {
       firstName: '',
       lastName: '',
@@ -809,29 +839,52 @@ export const prepareTemplateData = (formData) => {
 
     // Trust/Document basics
     trustName: (() => {
-      // Auto-generate trust name for joint trusts if not provided
+      // If trust name is explicitly provided, use it
+      if (formData.trustName && formData.trustName.trim().length > 0) {
+        return formData.trustName;
+      }
+
+      // Auto-generate trust name if not provided
       if (formData.isJoint && formData.client && formData.spouse) {
-        const grantor1 = `${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''}`.trim();
-        const grantor2 = `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim();
-
-        // Use provided trust name only if it clearly indicates both spouses (contains "and" or "&")
-        // This prevents incomplete names like "John Smith Living Trust" from being used for joint trusts
-        if (formData.trustName &&
-            (formData.trustName.includes(' and ') || formData.trustName.includes(' & ')) &&
-            formData.trustName.includes(formData.client.lastName)) {
-          return formData.trustName;
-        }
-
+        const grantor1 = [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ');
+        const grantor2 = [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ');
         return `The ${grantor1} and ${grantor2} Living Trust`;
       }
 
-      // For single trusts, use provided name or generate from client name
-      return formData.trustName || (formData.client
-        ? `The ${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''} Living Trust`.trim()
-        : '');
+      // For single trusts, generate from client name
+      if (formData.client) {
+        const clientName = [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ');
+        return clientName ? `The ${clientName} Living Trust` : '';
+      }
+
+      return '';
     })(),
     trustDate: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
     documentDate: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+
+    // Alternative placeholder names (for templates that may use different conventions)
+    // Note: Square brackets [TRUST NAME] won't work with docxtemplater - must use curly braces {trustName}
+    // These are provided in case templates somehow reference them differently
+    TRUST_NAME: (() => {
+      // Use the same logic as trustName for consistency
+      if (formData.trustName && formData.trustName.trim().length > 0) {
+        return formData.trustName;
+      }
+
+      if (formData.isJoint && formData.client && formData.spouse) {
+        const grantor1 = [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ');
+        const grantor2 = [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ');
+        return `The ${grantor1} and ${grantor2} Living Trust`;
+      }
+
+      if (formData.client) {
+        const clientName = [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ');
+        return clientName ? `The ${clientName} Living Trust` : '';
+      }
+
+      return '';
+    })(),
+    DATE: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
 
     // Restatement information
     isRestatement: formData.isRestatement || false,
@@ -840,10 +893,10 @@ export const prepareTemplateData = (formData) => {
     originalTrustDate: formData.originalTrustDate || '',
 
     // Client name variations (different templates use different names)
-    grantorFullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
+    grantorFullName: [formData.client?.firstName, formData.client?.middleName, formData.client?.lastName].filter(Boolean).join(' '),
     grantorDateOfBirth: formatDateToUS(formData.client?.dateOfBirth) || '',
-    clientFullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
-    fullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
+    clientFullName: [formData.client?.firstName, formData.client?.middleName, formData.client?.lastName].filter(Boolean).join(' '),
+    fullName: [formData.client?.firstName, formData.client?.middleName, formData.client?.lastName].filter(Boolean).join(' '),
 
     // Client address fields
     clientStreetAddress: formData.client?.address || '',
@@ -855,31 +908,42 @@ export const prepareTemplateData = (formData) => {
     // Marital status
     maritalStatus: getMaritalStatusStatement(formData.client?.maritalStatus),
 
-    // Children placeholders
-    childrenStatement: formData.children && formData.children.length > 0
-      ? formData.children.length === 1
-        ? `I have one child: ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formatDateToUS(formData.children[0].dateOfBirth)}.`
-        : formData.children.length === 2
-          ? `I have two children: ${formData.children[0].firstName} ${formData.children[0].lastName}, born ${formatDateToUS(formData.children[0].dateOfBirth)}, and ${formData.children[1].firstName} ${formData.children[1].lastName}, born ${formatDateToUS(formData.children[1].dateOfBirth)}.`
-          : `I have ${formData.children.length} children: ` + (formData.children || []).map((c, i) =>
-              i === formData.children.length - 1
-                ? `and ${c.firstName} ${c.lastName}, born ${formatDateToUS(c.dateOfBirth)}`
-                : `${c.firstName} ${c.lastName}, born ${formatDateToUS(c.dateOfBirth)}`
-            ).join('; ') + '.'
-      : 'I have no children.',
+    // Children placeholders - Uses childrenSafe (sanitized array)
+    childrenStatement: (() => {
+      if (childrenSafe.length === 0) return 'I have no children.';
+      if (childrenSafe.length === 1) {
+        const c = childrenSafe[0];
+        const birthdate = formatDateToUS(c.dateOfBirth) || 'N/A';
+        return `I have 1 child: ${c.firstName} ${c.lastName}, born ${birthdate}.`;
+      }
+      // 2 or more children
+      const childPhrases = childrenSafe.map((c, i) => {
+        const birthdate = formatDateToUS(c.dateOfBirth) || 'N/A';
+        return `${c.firstName} ${c.lastName}, born ${birthdate}`;
+      });
+      // Use Oxford comma: "A, born X; B, born Y; and C, born Z."
+      if (childrenSafe.length === 2) {
+        return `I have ${childrenSafe.length} children: ${childPhrases[0]}; and ${childPhrases[1]}.`;
+      }
+      const allButLast = childPhrases.slice(0, -1).join('; ');
+      const last = childPhrases[childPhrases.length - 1];
+      return `I have ${childrenSafe.length} children: ${allButLast}; and ${last}.`;
+    })(),
 
-    childrenReferences: (formData.children || []).map(c =>
+    childrenReferences: childrenSafe.map(c =>
       `${c.firstName || ''} ${c.lastName || ''}`.trim()
     ).join(' and '),
 
-    // Children array for template loops
-    children: (formData.children || []).map(child => ({
+    // Children array for template loops - Uses childrenSafe with full data
+    children: childrenSafe.map(child => ({
       fullName: `${child.firstName || ''} ${child.middleName || ''} ${child.lastName || ''}`.trim(),
       firstName: child.firstName || '',
       middleName: child.middleName || '',
       lastName: child.lastName || '',
       dateOfBirth: formatDateToUS(child.dateOfBirth || child.birthday) || '',
+      birthdate: formatDateToUS(child.dateOfBirth || child.birthday) || '', // Also provide 'birthdate' key
       gender: child.gender || '',
+      relation: child.relation || child.relationship || 'child',
       ...generatePronouns(child.gender) // Add all pronoun fields
     })),
 
@@ -935,10 +999,75 @@ export const prepareTemplateData = (formData) => {
       }
     })(),
 
+    // Current Trustee(s) - Used in irrevocable trusts and SNT where grantors ≠ trustees
+    // For REVOCABLE trusts: returns the grantor(s) (client/spouse)
+    // For IRREVOCABLE trusts and SNT: returns the separate current trustee(s)
+    currentTrusteeFormatted: (() => {
+      // Check if this is a trust type that requires separate trustees
+      const isSNT = formData.trustType === 'first_party_snt' || formData.trustType === 'third_party_snt';
+      const needsSeparateTrustees = formData.isIrrevocable || isSNT;
+
+      // For IRREVOCABLE trusts and SNT: use separate current trustees
+      if (needsSeparateTrustees && formData.currentTrustees && formData.currentTrustees.length > 0) {
+        const trustees = formData.currentTrustees;
+        const names = trustees.map(t => `${t.firstName || ''} ${t.lastName || ''}`.trim());
+
+        if (names.length === 1) {
+          return names[0];
+        } else if (names.length === 2) {
+          return `${names[0]} and ${names[1]} jointly or the survivor of them`;
+        } else {
+          // For 3+: "A, B, and C jointly or the survivor of them"
+          const allButLast = names.slice(0, -1).join(', ');
+          const last = names[names.length - 1];
+          return `${allButLast}, and ${last} jointly or the survivor of them`;
+        }
+      }
+
+      // For REVOCABLE trusts: grantors ARE the current trustees
+      const clientName = [formData.client?.firstName, formData.client?.lastName].filter(Boolean).join(' ');
+
+      if (formData.isJoint && formData.spouse) {
+        const spouseName = [formData.spouse?.firstName, formData.spouse?.lastName].filter(Boolean).join(' ');
+        return `${clientName} and ${spouseName} jointly or the survivor of them`;
+      }
+
+      return clientName;
+    })(),
+
+    // Successor Trustees - Formatted for irrevocable trusts (also works for revocable)
+    firstSuccessorTrusteeFormatted: (() => {
+      const trustees = formData.successorTrustees || [];
+      if (trustees.length === 0) return '';
+
+      let groups;
+      if (trustees.some(t => t.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(trustees);
+      } else {
+        groups = buildGroupsFromFlatArray(trustees);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    successorTrusteeSuccessorsFormatted: (() => {
+      const trustees = formData.successorTrustees || [];
+      if (trustees.length === 0) return '';
+
+      let groups;
+      if (trustees.some(t => t.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(trustees);
+      } else {
+        groups = buildGroupsFromFlatArray(trustees);
+      }
+      return formatSuccessorGroups(groups, 'appoint', 'as successor trustee.');
+    })(),
+
     // ===== BENEFICIARIES - COMPLETE DATA STRUCTURE FOR DOCXTEMPLATER =====
     // This is the array that will be looped over in the template
     // CRITICAL: Uses cleanedBeneficiaries to avoid empty objects
-    beneficiaries: cleanedBeneficiaries.map((beneficiary, index, array) => {
+    // Create this as a variable first so we can reference it for grouped arrays
+    beneficiaries: (() => {
+      return cleanedBeneficiaries.map((beneficiary, index, array) => {
       // Calculate section number (02, 03, 04, etc. - starts at 02 because 01 is division)
       const sectionNumber = String(index + 2).padStart(2, '0');
       const isNotLast = index < array.length - 1;  // Helper for {{#if isNotLast}}
@@ -1023,7 +1152,10 @@ export const prepareTemplateData = (formData) => {
           }
         }));
         console.log('  Final ageDistributionRules from beneficiary:', JSON.stringify(ageDistributionRules, null, 2));
-      } else if (beneficiary.distributionType === 'general-needs' || beneficiary.distributionType === 'guardian') {
+      } else if (beneficiary.distributionType === 'general-needs' ||
+                 beneficiary.distributionType === 'generalNeeds' ||
+                 beneficiary.distributionType === 'guardian' ||
+                 beneficiary.hasGeneralNeeds === true) {
         console.log('  → Taking PATH 3: General needs trust (no age rules populated)');
         hasGeneralNeedsTrust = true;
       } else {
@@ -1067,7 +1199,88 @@ export const prepareTemplateData = (formData) => {
       console.log('  Final beneficiary data structure:', JSON.stringify(result, null, 2));
 
       return result;
-    }),
+      });
+    })(),
+
+    // Beneficiaries formatted as a narrative list (for confirmation/summary sections)
+    beneficiariesFormatted: (() => {
+      if (cleanedBeneficiaries.length === 0) return 'None specified';
+
+      const beneficiaryNames = cleanedBeneficiaries.map(b => {
+        const name = b.name || `${b.firstName || ''} ${b.lastName || ''}`.trim();
+        const share = b.percentage || b.share || '';
+        if (share) {
+          return `${name} (${share})`;
+        }
+        return name;
+      });
+
+      if (beneficiaryNames.length === 1) {
+        return beneficiaryNames[0];
+      } else if (beneficiaryNames.length === 2) {
+        return `${beneficiaryNames[0]} and ${beneficiaryNames[1]}`;
+      } else {
+        const allButLast = beneficiaryNames.slice(0, -1).join(', ');
+        const last = beneficiaryNames[beneficiaryNames.length - 1];
+        return `${allButLast}, and ${last}`;
+      }
+    })(),
+
+    // Check if any beneficiary has Special Needs Trust distribution
+    hasSpecialNeedsBeneficiary: cleanedBeneficiaries.some(b =>
+      b.distributionType === 'specialNeeds' ||
+      b.hasSpecialNeeds === true ||
+      b.specialNeeds === true
+    ),
+
+    // Grouped beneficiaries by distribution type (for templates that separate sections)
+    // This ensures outright distributions appear FIRST, then general needs trusts
+    // Note: Must filter from cleanedBeneficiaries source data since we can't access
+    // the processed beneficiaries array until after it's created
+    outrightBeneficiariesList: (() => {
+      return cleanedBeneficiaries
+        .filter(b => b.distributionType === 'outright' ||
+                     (!b.distributionType && !b.hasGeneralNeeds && !b.hasSpecialNeeds))
+        .map(b => {
+          const name = b.name || `${b.firstName || ''} ${b.lastName || ''}`.trim();
+          const share = b.percentage || b.share || '';
+          return { name, share };
+        });
+    })(),
+
+    generalNeedsBeneficiariesList: (() => {
+      return cleanedBeneficiaries
+        .filter(b => b.distributionType === 'generalNeeds' || b.hasGeneralNeeds === true)
+        .map(b => {
+          const name = b.name || `${b.firstName || ''} ${b.lastName || ''}`.trim();
+          return { name };
+        });
+    })(),
+
+    hasOutrightBeneficiaries: cleanedBeneficiaries.some(b =>
+      b.distributionType === 'outright' ||
+      (!b.distributionType && !b.hasGeneralNeeds && !b.hasSpecialNeeds)
+    ),
+
+    hasGeneralNeedsBeneficiaries: cleanedBeneficiaries.some(b =>
+      b.distributionType === 'generalNeeds' || b.hasGeneralNeeds === true
+    ),
+
+    // Formatted list of outright beneficiaries for narrative sections
+    outrightBeneficiariesFormatted: (() => {
+      const outright = cleanedBeneficiaries.filter(b =>
+        b.distributionType === 'outright' ||
+        (!b.distributionType && !b.hasGeneralNeeds && !b.hasSpecialNeeds)
+      );
+
+      if (outright.length === 0) return '';
+
+      return outright.map(b => {
+        const name = b.name || `${b.firstName || ''} ${b.lastName || ''}`.trim();
+        const share = b.percentage || b.share || '';
+        return `${name} (${share})`;
+      }).join(', ');
+    })(),
 
     // Power of appointment default values (if not provided per beneficiary)
     limitedSharePercentage: '5%',
@@ -1216,9 +1429,9 @@ export const prepareTemplateData = (formData) => {
       }
     })(),
 
-    // Children count and minor children check
-    childrenCount: (formData.children || []).length,
-    hasMinorChildren: (formData.children || []).some(child => {
+    // Children count and minor children check (using childrenSafe)
+    childrenCount: childrenSafe.length,
+    hasMinorChildren: childrenSafe.some(child => {
       if (!child.dateOfBirth) return false;
       try {
         const birthDate = new Date(child.dateOfBirth);
@@ -1234,8 +1447,8 @@ export const prepareTemplateData = (formData) => {
       }
     }),
 
-    // Override children array to ensure fullName and formatted birthdate
-    children: (formData.children || []).map(child => ({
+    // Override children array to ensure fullName and formatted birthdate (using childrenSafe)
+    children: childrenSafe.map(child => ({
       fullName: `${child.firstName || ''} ${child.middleName || ''} ${child.lastName || ''}`.trim(),
       firstName: child.firstName || '',
       middleName: child.middleName || '',
@@ -1393,8 +1606,8 @@ export const prepareTemplateData = (formData) => {
       relationship: agent.relationship || 'healthcare agent',
     })),
 
-    // Pluralization helper
-    isPlural: (formData.children || []).length > 1,
+    // Pluralization helper (using childrenSafe)
+    isPlural: childrenSafe.length > 1,
 
     // Boolean flags for conditionals (for template conditionals)
     hasMultipleSuccessors: (formData.successorTrustees || []).length > 1,
@@ -1988,6 +2201,90 @@ export const prepareTemplateData = (formData) => {
       }
       return formatSuccessorGroups(groups, 'appoint', 'as successor agent under my HIPAA Authorization.');
     })(),
+
+    // ============================================================================
+    // SNT (Special Needs Trust) Data
+    // ============================================================================
+
+    // Primary beneficiary information
+    sntBeneficiary: (() => {
+      if (!formData.sntData?.beneficiary) return null;
+      const ben = formData.sntData.beneficiary;
+      return {
+        firstName: ben.firstName || '',
+        middleName: ben.middleName || '',
+        lastName: ben.lastName || '',
+        fullName: [ben.firstName, ben.middleName, ben.lastName].filter(Boolean).join(' '),
+        dateOfBirth: formatDateToUS(ben.dateOfBirth) || '',
+        ssn: ben.ssn || '',
+        disabilityDescription: ben.disabilityDescription || '',
+      };
+    })(),
+
+    // Government benefits being received
+    sntGovernmentBenefits: (() => {
+      if (!formData.sntData?.governmentBenefits) return null;
+      const benefits = formData.sntData.governmentBenefits;
+      const benefitsList = [];
+
+      if (benefits.ssi) benefitsList.push('SSI (Supplemental Security Income)');
+      if (benefits.ssdi) benefitsList.push('SSDI (Social Security Disability Insurance)');
+      if (benefits.mediCal) benefitsList.push('Medi-Cal');
+      if (benefits.medicare) benefitsList.push('Medicare');
+      if (benefits.housingAssistance) benefitsList.push('Housing Assistance');
+      if (benefits.other) benefitsList.push(benefits.other);
+
+      return {
+        ssi: benefits.ssi || false,
+        ssdi: benefits.ssdi || false,
+        mediCal: benefits.mediCal || false,
+        medicare: benefits.medicare || false,
+        housingAssistance: benefits.housingAssistance || false,
+        other: benefits.other || '',
+        list: benefitsList,
+        formatted: benefitsList.join(', '),
+        hasBenefits: benefitsList.length > 0,
+      };
+    })(),
+
+    // Remainder beneficiaries
+    sntRemainderBeneficiaries: (() => {
+      if (!formData.sntData?.remainderBeneficiaries) return [];
+      return formData.sntData.remainderBeneficiaries
+        .filter(rb => {
+          const name = [rb.firstName, rb.lastName].filter(Boolean).join(' ').trim();
+          return name.length > 0 && rb.percentage;
+        })
+        .map(rb => ({
+          firstName: rb.firstName || '',
+          lastName: rb.lastName || '',
+          fullName: [rb.firstName, rb.lastName].filter(Boolean).join(' '),
+          relationship: rb.relationship || '',
+          percentage: rb.percentage || '',
+        }));
+    })(),
+
+    // Formatted list of remainder beneficiaries
+    sntRemainderBeneficiariesFormatted: (() => {
+      if (!formData.sntData?.remainderBeneficiaries) return '';
+      const beneficiaries = formData.sntData.remainderBeneficiaries
+        .filter(rb => {
+          const name = [rb.firstName, rb.lastName].filter(Boolean).join(' ').trim();
+          return name.length > 0 && rb.percentage;
+        });
+
+      if (beneficiaries.length === 0) return '';
+
+      return beneficiaries.map(rb => {
+        const name = [rb.firstName, rb.lastName].filter(Boolean).join(' ');
+        return `${name} (${rb.percentage})`;
+      }).join(', ');
+    })(),
+
+    // Helper flags
+    isSNT: formData.trustType === 'first_party_snt' || formData.trustType === 'third_party_snt',
+    isFirstPartySNT: formData.trustType === 'first_party_snt',
+    isThirdPartySNT: formData.trustType === 'third_party_snt',
   };
 
   console.log('=== PREPARED DATA SUMMARY ===');

@@ -80,6 +80,8 @@ export const TRUST_TYPES = {
   JOINT: 'joint',
   SINGLE_IRREVOCABLE: 'single_irrevocable',
   JOINT_IRREVOCABLE: 'joint_irrevocable',
+  FIRST_PARTY_SNT: 'first_party_snt',
+  THIRD_PARTY_SNT: 'third_party_snt',
 };
 
 // Trust Type Options for Radio Buttons
@@ -88,6 +90,8 @@ export const TRUST_TYPE_OPTIONS = [
   { value: 'joint', label: 'Joint Trust (Revocable)', description: 'Living trust for married couple or partners' },
   { value: 'single_irrevocable', label: 'Irrevocable Trust (Single)', description: 'Irrevocable trust for one grantor' },
   { value: 'joint_irrevocable', label: 'Irrevocable Trust (Joint)', description: 'Irrevocable trust for married couple or partners' },
+  { value: 'first_party_snt', label: 'First Party Special Needs Trust', description: 'Self-settled SNT funded with beneficiary\'s own assets' },
+  { value: 'third_party_snt', label: 'Third Party Special Needs Trust', description: 'SNT funded by someone other than the beneficiary' },
 ];
 
 // Form Section IDs

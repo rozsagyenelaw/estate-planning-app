@@ -28,6 +28,18 @@ export const DOCX_TEMPLATES = {
     description: 'Joint irrevocable trust document only'
   },
 
+  // Special Needs Trust Templates (Trust document only)
+  FIRST_PARTY_SNT: {
+    name: 'First Party Special Needs Trust',
+    path: '/templates/first_party_snt_template.docx',
+    description: 'First party/self-settled special needs trust document only'
+  },
+  THIRD_PARTY_SNT: {
+    name: 'Third Party Special Needs Trust',
+    path: '/templates/third_party_snt_template.docx',
+    description: 'Third party special needs trust document only'
+  },
+
   // Complete Estate Planning Package Templates (All documents)
   SINGLE_ESTATE_PLAN: {
     name: 'Single Estate Planning Package',
@@ -48,6 +60,14 @@ export const DOCX_TEMPLATES = {
  * @returns {Object} Template configuration
  */
 export const getDOCXTemplateForFormData = (formData, isCompletePlan = false) => {
+  // Check for Special Needs Trust first (SNT only generates trust document, never complete package)
+  if (formData.trustType === 'first_party_snt') {
+    return DOCX_TEMPLATES.FIRST_PARTY_SNT;
+  }
+  if (formData.trustType === 'third_party_snt') {
+    return DOCX_TEMPLATES.THIRD_PARTY_SNT;
+  }
+
   const isJoint = formData.isJoint || formData.trustType === 'joint' || formData.trustType === 'joint_irrevocable';
   const isIrrevocable = formData.isIrrevocable || formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable';
 

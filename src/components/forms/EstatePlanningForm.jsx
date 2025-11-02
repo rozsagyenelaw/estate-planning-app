@@ -12,7 +12,9 @@ import TrustTypeSection from './sections/TrustTypeSection';
 import ClientInfoSection from './sections/ClientInfoSection';
 import TrustNameSection from './sections/TrustNameSection';
 import ChildrenSection from './sections/ChildrenSection';
+import CurrentTrusteesSection from './sections/CurrentTrusteesSection';
 import SuccessorTrusteesSection from './sections/SuccessorTrusteesSection';
+import SNTBeneficiarySection from './sections/SNTBeneficiarySection';
 import SpecificDistributionSection from './sections/SpecificDistributionSection';
 import ResiduaryDistributionSection from './sections/ResiduaryDistributionSection';
 import GeneralNeedsTrustSection from './sections/GeneralNeedsTrustSection';
@@ -30,6 +32,9 @@ const EstatePlanningForm = () => {
   const [savedLivingTrust, setSavedLivingTrust] = useState(null);
   const [savedCompletePlan, setSavedCompletePlan] = useState(null);
   const [saveProgress, setSaveProgress] = useState({ percent: 0, message: '' });
+
+  // Detect if this is a Special Needs Trust
+  const isSNT = formData.trustType === 'first_party_snt' || formData.trustType === 'third_party_snt';
 
   // Load sample data for testing
   const loadSampleData = () => {
@@ -251,38 +256,54 @@ const EstatePlanningForm = () => {
         {/* Living Trust Name */}
         <TrustNameSection />
 
-        {/* Children */}
-        <ChildrenSection />
+        {/* Children - Not needed for SNT */}
+        {!isSNT && <ChildrenSection />}
+
+        {/* Current Trustees (for Irrevocable Trusts and SNT) */}
+        {(formData.isIrrevocable || isSNT) && <CurrentTrusteesSection />}
 
         {/* Successor Trustees */}
         <SuccessorTrusteesSection />
 
-        {/* Specific Distribution */}
-        <SpecificDistributionSection />
+        {/* SNT-Specific Beneficiary Section */}
+        {isSNT && <SNTBeneficiarySection />}
 
-        {/* Residuary Distribution */}
-        <ResiduaryDistributionSection />
+        {/* Regular Trust Distribution Sections - Hide for SNT */}
+        {!isSNT && (
+          <>
+            {/* Specific Distribution */}
+            <SpecificDistributionSection />
 
-        {/* General Needs Trust */}
-        <GeneralNeedsTrustSection />
+            {/* Residuary Distribution */}
+            <ResiduaryDistributionSection />
 
-        {/* Charitable Distribution */}
-        <CharitableDistributionSection />
+            {/* General Needs Trust */}
+            <GeneralNeedsTrustSection />
 
-        {/* Pour Over Will Representatives */}
-        <PourOverWillSection />
+            {/* Charitable Distribution */}
+            <CharitableDistributionSection />
+          </>
+        )}
 
-        {/* Guardians */}
-        <GuardiansSection />
+        {/* Estate Planning Sections - Hide for SNT (only trust document needed) */}
+        {!isSNT && (
+          <>
+            {/* Pour Over Will Representatives */}
+            <PourOverWillSection />
 
-        {/* Durable Power of Attorney */}
-        <DurablePOASection />
+            {/* Guardians */}
+            <GuardiansSection />
 
-        {/* Healthcare Power of Attorney */}
-        <HealthcarePOASection />
+            {/* Durable Power of Attorney */}
+            <DurablePOASection />
 
-        {/* Anatomical Gifts */}
-        <AnatomicalGiftsSection />
+            {/* Healthcare Power of Attorney */}
+            <HealthcarePOASection />
+
+            {/* Anatomical Gifts */}
+            <AnatomicalGiftsSection />
+          </>
+        )}
 
         {/* Save and Generate Buttons */}
         <Card>
@@ -297,18 +318,20 @@ const EstatePlanningForm = () => {
                 disabled={loading}
                 className="px-8"
               >
-                📜 Save Living Trust
+                {isSNT ? '📜 Save Special Needs Trust' : '📜 Save Living Trust'}
               </Button>
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={handleSaveCompletePlan}
-                loading={loading}
-                disabled={loading}
-                className="px-8"
-              >
-                📦 Save Complete Estate Plan
-              </Button>
+              {!isSNT && (
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={handleSaveCompletePlan}
+                  loading={loading}
+                  disabled={loading}
+                  className="px-8"
+                >
+                  📦 Save Complete Estate Plan
+                </Button>
+              )}
             </div>
 
             {/* Secondary Actions */}
@@ -328,26 +351,30 @@ const EstatePlanningForm = () => {
                 loading={loading}
                 disabled={loading}
               >
-                Generate Living Trust
+                {isSNT ? 'Generate Special Needs Trust' : 'Generate Living Trust'}
               </Button>
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={handleGenerateAllDocuments}
-                loading={loading}
-                disabled={loading}
-              >
-                Generate Complete Package (PDF)
-              </Button>
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={handleGenerateAllDocumentsWord}
-                loading={loading}
-                disabled={loading}
-              >
-                Generate Complete Package (Word)
-              </Button>
+              {!isSNT && (
+                <>
+                  <Button
+                    variant="secondary"
+                    size="lg"
+                    onClick={handleGenerateAllDocuments}
+                    loading={loading}
+                    disabled={loading}
+                  >
+                    Generate Complete Package (PDF)
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="lg"
+                    onClick={handleGenerateAllDocumentsWord}
+                    loading={loading}
+                    disabled={loading}
+                  >
+                    Generate Complete Package (Word)
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 
