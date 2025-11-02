@@ -590,7 +590,7 @@ export const prepareTemplateData = (formData) => {
       isRestatement: formData.isRestatement ? 'Yes' : 'No',
       originalTrustName: formData.originalTrustName || '',
       originalTrustDate: formData.originalTrustDate || '',
-      currentDate: formData.currentDate || new Date().toLocaleDateString('en-US'),
+      currentDate: formatDateToUS(formData.trustDate || formData.currentDate) || new Date().toLocaleDateString('en-US'),
     },
 
     // Children
@@ -859,8 +859,22 @@ export const prepareTemplateData = (formData) => {
 
       return '';
     })(),
-    trustDate: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-    documentDate: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    trustDate: (() => {
+      const date = formData.trustDate || formData.currentDate;
+      if (!date) {
+        return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+      // If it's in YYYY-MM-DD format from date input, format it properly
+      return formatDateToUS(date);
+    })(),
+    documentDate: (() => {
+      const date = formData.trustDate || formData.currentDate;
+      if (!date) {
+        return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+      // If it's in YYYY-MM-DD format from date input, format it properly
+      return formatDateToUS(date);
+    })(),
 
     // Alternative placeholder names (for templates that may use different conventions)
     // Note: Square brackets [TRUST NAME] won't work with docxtemplater - must use curly braces {trustName}
@@ -884,7 +898,13 @@ export const prepareTemplateData = (formData) => {
 
       return '';
     })(),
-    DATE: formData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    DATE: (() => {
+      const date = formData.trustDate || formData.currentDate;
+      if (!date) {
+        return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+      return formatDateToUS(date);
+    })(),
 
     // Restatement information
     isRestatement: formData.isRestatement || false,
