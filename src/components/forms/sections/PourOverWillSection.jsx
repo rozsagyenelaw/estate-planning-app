@@ -1,21 +1,10 @@
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Input, Select, Button, Autocomplete } from '../../common';
-import {
-  getNameSuggestions,
-  getAddressSuggestions,
-  getPhoneSuggestions,
-  addNameSuggestion,
-  addAddressSuggestion,
-  addPhoneSuggestion,
-} from '../../../services/autocompleteService';
+import { parseFullName, combineNameParts } from '../../../utils/nameParser';
 
 const PourOverWillSection = () => {
   const { formData, updateFormData } = useFormContext();
   const isJoint = formData.isJoint || formData.trustType === 'joint';
-
-  const nameSuggestions = getNameSuggestions();
-  const addressSuggestions = getAddressSuggestions();
-  const phoneSuggestions = getPhoneSuggestions();
 
   const handleAddClientRep = () => {
     const updated = {
@@ -25,7 +14,7 @@ const PourOverWillSection = () => {
           ...(formData.pourOverWill?.client || {}),
           personalRepresentatives: [
             ...(formData.pourOverWill?.client?.personalRepresentatives || []),
-            { firstName: '', lastName: '', address: '', phone: '' }
+            { firstName: '', middleName: '', lastName: '', address: '', phone: '' }
           ]
         }
       }
@@ -41,7 +30,7 @@ const PourOverWillSection = () => {
           ...(formData.pourOverWill?.spouse || {}),
           personalRepresentatives: [
             ...(formData.pourOverWill?.spouse?.personalRepresentatives || []),
-            { firstName: '', lastName: '', address: '', phone: '' }
+            { firstName: '', middleName: '', lastName: '', address: '', phone: '' }
           ]
         }
       }
@@ -58,11 +47,40 @@ const PourOverWillSection = () => {
         client: { ...formData.pourOverWill?.client, personalRepresentatives: reps }
       }
     });
+  };
 
-    // Add to autocomplete suggestions
-    if ((field === 'firstName' || field === 'lastName') && value) addNameSuggestion(value);
-    if (field === 'address' && value) addAddressSuggestion(value);
-    if (field === 'phone' && value) addPhoneSuggestion(value);
+  // Store raw input without parsing - client reps
+  const handleUpdateClientRepFullNameInput = (index, fullName) => {
+    const reps = [...(formData.pourOverWill?.client?.personalRepresentatives || [])];
+    reps[index] = {
+      ...reps[index],
+      fullName: fullName, // Store raw input
+    };
+    updateFormData({
+      pourOverWill: {
+        ...formData.pourOverWill,
+        client: { ...formData.pourOverWill?.client, personalRepresentatives: reps }
+      }
+    });
+  };
+
+  // Parse name when done typing (on blur or select) - client reps
+  const parseClientRepFullName = (index, fullName) => {
+    const parsed = parseFullName(fullName);
+    const reps = [...(formData.pourOverWill?.client?.personalRepresentatives || [])];
+    reps[index] = {
+      ...reps[index],
+      fullName: fullName,
+      firstName: parsed.firstName,
+      middleName: parsed.middleName,
+      lastName: parsed.lastName,
+    };
+    updateFormData({
+      pourOverWill: {
+        ...formData.pourOverWill,
+        client: { ...formData.pourOverWill?.client, personalRepresentatives: reps }
+      }
+    });
   };
 
   const handleUpdateSpouseRep = (index, field, value) => {
@@ -74,11 +92,40 @@ const PourOverWillSection = () => {
         spouse: { ...formData.pourOverWill?.spouse, personalRepresentatives: reps }
       }
     });
+  };
 
-    // Add to autocomplete suggestions
-    if ((field === 'firstName' || field === 'lastName') && value) addNameSuggestion(value);
-    if (field === 'address' && value) addAddressSuggestion(value);
-    if (field === 'phone' && value) addPhoneSuggestion(value);
+  // Store raw input without parsing - spouse reps
+  const handleUpdateSpouseRepFullNameInput = (index, fullName) => {
+    const reps = [...(formData.pourOverWill?.spouse?.personalRepresentatives || [])];
+    reps[index] = {
+      ...reps[index],
+      fullName: fullName, // Store raw input
+    };
+    updateFormData({
+      pourOverWill: {
+        ...formData.pourOverWill,
+        spouse: { ...formData.pourOverWill?.spouse, personalRepresentatives: reps }
+      }
+    });
+  };
+
+  // Parse name when done typing (on blur or select) - spouse reps
+  const parseSpouseRepFullName = (index, fullName) => {
+    const parsed = parseFullName(fullName);
+    const reps = [...(formData.pourOverWill?.spouse?.personalRepresentatives || [])];
+    reps[index] = {
+      ...reps[index],
+      fullName: fullName,
+      firstName: parsed.firstName,
+      middleName: parsed.middleName,
+      lastName: parsed.lastName,
+    };
+    updateFormData({
+      pourOverWill: {
+        ...formData.pourOverWill,
+        spouse: { ...formData.pourOverWill?.spouse, personalRepresentatives: reps }
+      }
+    });
   };
 
   const handleRemoveClientRep = (index) => {
@@ -150,22 +197,14 @@ const PourOverWillSection = () => {
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <Autocomplete
-                      label="First Name"
-                      value={rep.firstName || ''}
-                      onChange={(e) => handleUpdateClientRep(index, 'firstName', e.target.value)}
-                      onSelect={(value) => handleUpdateClientRep(index, 'firstName', value)}
-                      suggestions={nameSuggestions}
-                    />
-                    <Autocomplete
-                      label="Last Name"
-                      value={rep.lastName || ''}
-                      onChange={(e) => handleUpdateClientRep(index, 'lastName', e.target.value)}
-                      onSelect={(value) => handleUpdateClientRep(index, 'lastName', value)}
-                      suggestions={nameSuggestions}
-                    />
-                  </div>
+                  <Autocomplete
+                    label="Full Name"
+                    value={rep.fullName !== undefined ? rep.fullName : combineNameParts(rep.firstName, rep.middleName, rep.lastName)}
+                    onChange={(e) => handleUpdateClientRepFullNameInput(index, e.target.value)}
+                    onSelect={(value) => parseClientRepFullName(index, value)}
+                    onBlur={(e) => parseClientRepFullName(index, e.target.value)}
+                    placeholder="e.g., John Michael Smith"
+                  />
 
                   {clientReps.length > 1 && (
                     <Select
@@ -195,7 +234,6 @@ const PourOverWillSection = () => {
                     value={rep.address || ''}
                     onChange={(e) => handleUpdateClientRep(index, 'address', e.target.value)}
                     onSelect={(value) => handleUpdateClientRep(index, 'address', value)}
-                    suggestions={addressSuggestions}
                   />
 
                   <Autocomplete
@@ -203,7 +241,6 @@ const PourOverWillSection = () => {
                     value={rep.phone || ''}
                     onChange={(e) => handleUpdateClientRep(index, 'phone', e.target.value)}
                     onSelect={(value) => handleUpdateClientRep(index, 'phone', value)}
-                    suggestions={phoneSuggestions}
                   />
                 </div>
               ))}
@@ -263,22 +300,14 @@ const PourOverWillSection = () => {
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <Autocomplete
-                        label="First Name"
-                        value={rep.firstName || ''}
-                        onChange={(e) => handleUpdateSpouseRep(index, 'firstName', e.target.value)}
-                        onSelect={(value) => handleUpdateSpouseRep(index, 'firstName', value)}
-                        suggestions={nameSuggestions}
-                      />
-                      <Autocomplete
-                        label="Last Name"
-                        value={rep.lastName || ''}
-                        onChange={(e) => handleUpdateSpouseRep(index, 'lastName', e.target.value)}
-                        onSelect={(value) => handleUpdateSpouseRep(index, 'lastName', value)}
-                        suggestions={nameSuggestions}
-                      />
-                    </div>
+                    <Autocomplete
+                      label="Full Name"
+                      value={rep.fullName !== undefined ? rep.fullName : combineNameParts(rep.firstName, rep.middleName, rep.lastName)}
+                      onChange={(e) => handleUpdateSpouseRepFullNameInput(index, e.target.value)}
+                      onSelect={(value) => parseSpouseRepFullName(index, value)}
+                      onBlur={(e) => parseSpouseRepFullName(index, e.target.value)}
+                      placeholder="e.g., Jane Marie Johnson"
+                    />
 
                     {spouseReps.length > 1 && (
                       <Select
@@ -308,7 +337,6 @@ const PourOverWillSection = () => {
                       value={rep.address || ''}
                       onChange={(e) => handleUpdateSpouseRep(index, 'address', e.target.value)}
                       onSelect={(value) => handleUpdateSpouseRep(index, 'address', value)}
-                      suggestions={addressSuggestions}
                     />
 
                     <Autocomplete
@@ -316,7 +344,6 @@ const PourOverWillSection = () => {
                       value={rep.phone || ''}
                       onChange={(e) => handleUpdateSpouseRep(index, 'phone', e.target.value)}
                       onSelect={(value) => handleUpdateSpouseRep(index, 'phone', value)}
-                      suggestions={phoneSuggestions}
                     />
                   </div>
                 ))}

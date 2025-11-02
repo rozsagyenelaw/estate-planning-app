@@ -7,11 +7,6 @@ import {
 import {
   saveFormDraft,
   loadFormDraft,
-  addNameSuggestion,
-  addAddressSuggestion,
-  addPhoneSuggestion,
-  addCitySuggestion,
-  addCountySuggestion,
 } from '../services/autocompleteService';
 
 const FormContext = createContext();
@@ -98,6 +93,15 @@ export const FormProvider = ({ children }) => {
       client: 'none',
       spouse: 'none',
     },
+
+    // Autocomplete Suggestions (per client)
+    autocompleteSuggestions: {
+      names: [],
+      addresses: [],
+      phones: [],
+      cities: [],
+      counties: [],
+    },
   });
 
   const [isDraft, setIsDraft] = useState(false);
@@ -128,6 +132,39 @@ export const FormProvider = ({ children }) => {
     }));
   };
 
+  // Add autocomplete suggestion
+  const addAutocompleteSuggestion = (type, value) => {
+    if (!value || value.trim().length === 0) return;
+
+    const trimmedValue = value.trim();
+
+    setFormData((prev) => {
+      const currentSuggestions = prev.autocompleteSuggestions || {
+        names: [],
+        addresses: [],
+        phones: [],
+        cities: [],
+        counties: [],
+      };
+
+      const typeKey = type + 's'; // 'name' -> 'names', 'address' -> 'addresses'
+      const suggestions = currentSuggestions[typeKey] || [];
+
+      // Only add if not already in the list
+      if (!suggestions.includes(trimmedValue)) {
+        return {
+          ...prev,
+          autocompleteSuggestions: {
+            ...currentSuggestions,
+            [typeKey]: [...suggestions, trimmedValue],
+          },
+        };
+      }
+
+      return prev;
+    });
+  };
+
   // Update client data
   const updateClientData = (field, value) => {
     setFormData((prev) => ({
@@ -137,13 +174,6 @@ export const FormProvider = ({ children }) => {
         [field]: value,
       },
     }));
-
-    // Add to autocomplete suggestions
-    if ((field === 'firstName' || field === 'middleName' || field === 'lastName') && value) addNameSuggestion(value);
-    if (field === 'address' && value) addAddressSuggestion(value);
-    if (field === 'phone' && value) addPhoneSuggestion(value);
-    if (field === 'city' && value) addCitySuggestion(value);
-    if (field === 'county' && value) addCountySuggestion(value);
   };
 
   // Update spouse data
@@ -155,13 +185,6 @@ export const FormProvider = ({ children }) => {
         [field]: value,
       },
     }));
-
-    // Add to autocomplete suggestions
-    if ((field === 'firstName' || field === 'middleName' || field === 'lastName') && value) addNameSuggestion(value);
-    if (field === 'address' && value) addAddressSuggestion(value);
-    if (field === 'phone' && value) addPhoneSuggestion(value);
-    if (field === 'city' && value) addCitySuggestion(value);
-    if (field === 'county' && value) addCountySuggestion(value);
   };
 
   // Toggle trust type between single and joint (legacy function)
@@ -251,6 +274,13 @@ export const FormProvider = ({ children }) => {
       healthcarePOAClientServeType: 'sequential',
       healthcarePOASpouseServeType: 'sequential',
       anatomicalGifts: { client: 'none', spouse: 'none' },
+      autocompleteSuggestions: {
+        names: [],
+        addresses: [],
+        phones: [],
+        cities: [],
+        counties: [],
+      },
     });
     setIsDraft(false);
   };
@@ -266,6 +296,7 @@ export const FormProvider = ({ children }) => {
     addArrayItem,
     updateArrayItem,
     removeArrayItem,
+    addAutocompleteSuggestion,
     resetForm,
     isDraft,
   };

@@ -1,18 +1,17 @@
 import { useState } from 'react';
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Input, Button, Autocomplete } from '../../common';
-import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
+import { parseFullName, combineNameParts } from '../../../utils/nameParser';
 
 const CurrentTrusteesSection = () => {
   const { formData, updateFormData } = useFormContext();
   const trustees = formData.currentTrustees || [];
-  const nameSuggestions = getNameSuggestions();
 
   const addTrustee = () => {
     updateFormData({
       currentTrustees: [
         ...trustees,
-        { firstName: '', lastName: '', relationship: '' }
+        { firstName: '', middleName: '', lastName: '', relationship: '' }
       ]
     });
   };
@@ -21,11 +20,30 @@ const CurrentTrusteesSection = () => {
     const updatedTrustees = [...trustees];
     updatedTrustees[index] = { ...updatedTrustees[index], [field]: value };
     updateFormData({ currentTrustees: updatedTrustees });
+  };
 
-    // Add to autocomplete suggestions
-    if ((field === 'firstName' || field === 'lastName') && value) {
-      addNameSuggestion(value);
-    }
+  // Store raw input without parsing
+  const updateTrusteeFullNameInput = (index, fullName) => {
+    const updatedTrustees = [...trustees];
+    updatedTrustees[index] = {
+      ...updatedTrustees[index],
+      fullName: fullName, // Store raw input
+    };
+    updateFormData({ currentTrustees: updatedTrustees });
+  };
+
+  // Parse name when done typing (on blur or select)
+  const parseTrusteeFullName = (index, fullName) => {
+    const parsed = parseFullName(fullName);
+    const updatedTrustees = [...trustees];
+    updatedTrustees[index] = {
+      ...updatedTrustees[index],
+      fullName: fullName,
+      firstName: parsed.firstName,
+      middleName: parsed.middleName,
+      lastName: parsed.lastName,
+    };
+    updateFormData({ currentTrustees: updatedTrustees });
   };
 
   const removeTrustee = (index) => {
@@ -79,21 +97,14 @@ const CurrentTrusteesSection = () => {
                   </Button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <Autocomplete
-                    label="First Name"
-                    value={trustee.firstName || ''}
-                    onChange={(e) => updateTrustee(index, 'firstName', e.target.value)}
-                    onSelect={(value) => updateTrustee(index, 'firstName', value)}
-                    suggestions={nameSuggestions}
-                    required
-                  />
-                  <Autocomplete
-                    label="Last Name"
-                    value={trustee.lastName || ''}
-                    onChange={(e) => updateTrustee(index, 'lastName', e.target.value)}
-                    onSelect={(value) => updateTrustee(index, 'lastName', value)}
-                    suggestions={nameSuggestions}
+                    label="Full Name"
+                    value={trustee.fullName !== undefined ? trustee.fullName : combineNameParts(trustee.firstName, trustee.middleName, trustee.lastName)}
+                    onChange={(e) => updateTrusteeFullNameInput(index, e.target.value)}
+                    onSelect={(value) => parseTrusteeFullName(index, value)}
+                    onBlur={(e) => parseTrusteeFullName(index, e.target.value)}
+                    placeholder="e.g., John Michael Smith"
                     required
                   />
                   <Input

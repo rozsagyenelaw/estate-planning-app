@@ -1,6 +1,6 @@
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Input, Button, Autocomplete } from '../../common';
-import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
+import { parseFullName, combineNameParts } from '../../../utils/nameParser';
 
 const SNTBeneficiarySection = () => {
   const { formData, updateFormData } = useFormContext();
@@ -8,8 +8,6 @@ const SNTBeneficiarySection = () => {
   const beneficiary = sntData.beneficiary || {};
   const governmentBenefits = sntData.governmentBenefits || {};
   const remainderBeneficiaries = sntData.remainderBeneficiaries || [];
-
-  const nameSuggestions = getNameSuggestions();
 
   // Update SNT beneficiary info
   const updateBeneficiary = (field, value) => {
@@ -22,10 +20,36 @@ const SNTBeneficiarySection = () => {
         }
       }
     });
+  };
 
-    if ((field === 'firstName' || field === 'lastName') && value) {
-      addNameSuggestion(value);
-    }
+  // Store raw input without parsing - primary beneficiary
+  const updateBeneficiaryFullNameInput = (fullName) => {
+    updateFormData({
+      sntData: {
+        ...sntData,
+        beneficiary: {
+          ...beneficiary,
+          fullName: fullName, // Store raw input
+        }
+      }
+    });
+  };
+
+  // Parse name when done typing (on blur or select) - primary beneficiary
+  const parseBeneficiaryFullName = (fullName) => {
+    const parsed = parseFullName(fullName);
+    updateFormData({
+      sntData: {
+        ...sntData,
+        beneficiary: {
+          ...beneficiary,
+          fullName: fullName,
+          firstName: parsed.firstName,
+          middleName: parsed.middleName,
+          lastName: parsed.lastName,
+        }
+      }
+    });
   };
 
   // Update if this is a joint trust (2 grantors)
@@ -52,7 +76,7 @@ const SNTBeneficiarySection = () => {
         ...sntData,
         remainderBeneficiaries: [
           ...remainderBeneficiaries,
-          { firstName: '', lastName: '', relationship: '', percentage: '' }
+          { firstName: '', middleName: '', lastName: '', relationship: '', percentage: '' }
         ]
       }
     });
@@ -68,10 +92,40 @@ const SNTBeneficiarySection = () => {
         remainderBeneficiaries: updated
       }
     });
+  };
 
-    if ((field === 'firstName' || field === 'lastName') && value) {
-      addNameSuggestion(value);
-    }
+  // Store raw input without parsing - remainder beneficiaries
+  const updateRemainderBeneficiaryFullNameInput = (index, fullName) => {
+    const updated = [...remainderBeneficiaries];
+    updated[index] = {
+      ...updated[index],
+      fullName: fullName, // Store raw input
+    };
+    updateFormData({
+      sntData: {
+        ...sntData,
+        remainderBeneficiaries: updated
+      }
+    });
+  };
+
+  // Parse name when done typing (on blur or select) - remainder beneficiaries
+  const parseRemainderBeneficiaryFullName = (index, fullName) => {
+    const parsed = parseFullName(fullName);
+    const updated = [...remainderBeneficiaries];
+    updated[index] = {
+      ...updated[index],
+      fullName: fullName,
+      firstName: parsed.firstName,
+      middleName: parsed.middleName,
+      lastName: parsed.lastName,
+    };
+    updateFormData({
+      sntData: {
+        ...sntData,
+        remainderBeneficiaries: updated
+      }
+    });
   };
 
   // Remove remainder beneficiary
@@ -96,29 +150,15 @@ const SNTBeneficiarySection = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Autocomplete
-              label="First Name"
-              value={beneficiary.firstName || ''}
-              onChange={(e) => updateBeneficiary('firstName', e.target.value)}
-              onSelect={(value) => updateBeneficiary('firstName', value)}
-              suggestions={nameSuggestions}
-              required
-            />
-            <Input
-              label="Middle Name"
-              value={beneficiary.middleName || ''}
-              onChange={(e) => updateBeneficiary('middleName', e.target.value)}
-            />
-            <Autocomplete
-              label="Last Name"
-              value={beneficiary.lastName || ''}
-              onChange={(e) => updateBeneficiary('lastName', e.target.value)}
-              onSelect={(value) => updateBeneficiary('lastName', value)}
-              suggestions={nameSuggestions}
-              required
-            />
-          </div>
+          <Autocomplete
+            label="Full Name"
+            value={beneficiary.fullName !== undefined ? beneficiary.fullName : combineNameParts(beneficiary.firstName, beneficiary.middleName, beneficiary.lastName)}
+            onChange={(e) => updateBeneficiaryFullNameInput(e.target.value)}
+            onSelect={(value) => parseBeneficiaryFullName(value)}
+            onBlur={(e) => parseBeneficiaryFullName(e.target.value)}
+            placeholder="e.g., John Michael Smith"
+            required
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Input
@@ -357,21 +397,14 @@ const SNTBeneficiarySection = () => {
                     </Button>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <Autocomplete
-                      label="First Name"
-                      value={rb.firstName || ''}
-                      onChange={(e) => updateRemainderBeneficiary(index, 'firstName', e.target.value)}
-                      onSelect={(value) => updateRemainderBeneficiary(index, 'firstName', value)}
-                      suggestions={nameSuggestions}
-                      required
-                    />
-                    <Autocomplete
-                      label="Last Name"
-                      value={rb.lastName || ''}
-                      onChange={(e) => updateRemainderBeneficiary(index, 'lastName', e.target.value)}
-                      onSelect={(value) => updateRemainderBeneficiary(index, 'lastName', value)}
-                      suggestions={nameSuggestions}
+                      label="Full Name"
+                      value={rb.fullName !== undefined ? rb.fullName : combineNameParts(rb.firstName, rb.middleName, rb.lastName)}
+                      onChange={(e) => updateRemainderBeneficiaryFullNameInput(index, e.target.value)}
+                      onSelect={(value) => parseRemainderBeneficiaryFullName(index, value)}
+                      onBlur={(e) => parseRemainderBeneficiaryFullName(index, e.target.value)}
+                      placeholder="e.g., Jane Marie Johnson"
                       required
                     />
                     <Input

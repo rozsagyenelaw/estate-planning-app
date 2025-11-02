@@ -1,21 +1,10 @@
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Input, Select, Button, Autocomplete } from '../../common';
-import {
-  getNameSuggestions,
-  getAddressSuggestions,
-  getPhoneSuggestions,
-  addNameSuggestion,
-  addAddressSuggestion,
-  addPhoneSuggestion,
-} from '../../../services/autocompleteService';
+import { parseFullName, combineNameParts } from '../../../utils/nameParser';
 
 const DurablePOASection = () => {
   const { formData, updateFormData } = useFormContext();
   const isJoint = formData.isJoint || formData.trustType === 'joint';
-
-  const nameSuggestions = getNameSuggestions();
-  const addressSuggestions = getAddressSuggestions();
-  const phoneSuggestions = getPhoneSuggestions();
 
   const handleAddClientAgent = () => {
     const updated = {
@@ -23,7 +12,7 @@ const DurablePOASection = () => {
         ...formData.durablePOA,
         client: [
           ...(formData.durablePOA?.client || []),
-          { firstName: '', lastName: '', sex: '', address: '', phone: '', email: '' }
+          { firstName: '', middleName: '', lastName: '', sex: '', address: '', phone: '', email: '' }
         ]
       }
     };
@@ -36,7 +25,7 @@ const DurablePOASection = () => {
         ...formData.durablePOA,
         spouse: [
           ...(formData.durablePOA?.spouse || []),
-          { firstName: '', lastName: '', sex: '', address: '', phone: '', email: '' }
+          { firstName: '', middleName: '', lastName: '', sex: '', address: '', phone: '', email: '' }
         ]
       }
     };
@@ -52,11 +41,40 @@ const DurablePOASection = () => {
         client: agents
       }
     });
+  };
 
-    // Add to autocomplete suggestions
-    if ((field === 'firstName' || field === 'lastName') && value) addNameSuggestion(value);
-    if (field === 'address' && value) addAddressSuggestion(value);
-    if (field === 'phone' && value) addPhoneSuggestion(value);
+  // Store raw input without parsing - client agents
+  const handleUpdateClientAgentFullNameInput = (index, fullName) => {
+    const agents = [...(formData.durablePOA?.client || [])];
+    agents[index] = {
+      ...agents[index],
+      fullName: fullName, // Store raw input
+    };
+    updateFormData({
+      durablePOA: {
+        ...formData.durablePOA,
+        client: agents
+      }
+    });
+  };
+
+  // Parse name when done typing (on blur or select) - client agents
+  const parseClientAgentFullName = (index, fullName) => {
+    const parsed = parseFullName(fullName);
+    const agents = [...(formData.durablePOA?.client || [])];
+    agents[index] = {
+      ...agents[index],
+      fullName: fullName,
+      firstName: parsed.firstName,
+      middleName: parsed.middleName,
+      lastName: parsed.lastName,
+    };
+    updateFormData({
+      durablePOA: {
+        ...formData.durablePOA,
+        client: agents
+      }
+    });
   };
 
   const handleUpdateSpouseAgent = (index, field, value) => {
@@ -68,11 +86,40 @@ const DurablePOASection = () => {
         spouse: agents
       }
     });
+  };
 
-    // Add to autocomplete suggestions
-    if ((field === 'firstName' || field === 'lastName') && value) addNameSuggestion(value);
-    if (field === 'address' && value) addAddressSuggestion(value);
-    if (field === 'phone' && value) addPhoneSuggestion(value);
+  // Store raw input without parsing - spouse agents
+  const handleUpdateSpouseAgentFullNameInput = (index, fullName) => {
+    const agents = [...(formData.durablePOA?.spouse || [])];
+    agents[index] = {
+      ...agents[index],
+      fullName: fullName, // Store raw input
+    };
+    updateFormData({
+      durablePOA: {
+        ...formData.durablePOA,
+        spouse: agents
+      }
+    });
+  };
+
+  // Parse name when done typing (on blur or select) - spouse agents
+  const parseSpouseAgentFullName = (index, fullName) => {
+    const parsed = parseFullName(fullName);
+    const agents = [...(formData.durablePOA?.spouse || [])];
+    agents[index] = {
+      ...agents[index],
+      fullName: fullName,
+      firstName: parsed.firstName,
+      middleName: parsed.middleName,
+      lastName: parsed.lastName,
+    };
+    updateFormData({
+      durablePOA: {
+        ...formData.durablePOA,
+        spouse: agents
+      }
+    });
   };
 
   const handleRemoveClientAgent = (index) => {
@@ -146,20 +193,14 @@ const DurablePOASection = () => {
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Autocomplete
-                      label="First Name"
-                      value={agent.firstName || ''}
-                      onChange={(e) => handleUpdateClientAgent(index, 'firstName', e.target.value)}
-                      onSelect={(value) => handleUpdateClientAgent(index, 'firstName', value)}
-                      suggestions={nameSuggestions}
-                    />
-                    <Autocomplete
-                      label="Last Name"
-                      value={agent.lastName || ''}
-                      onChange={(e) => handleUpdateClientAgent(index, 'lastName', e.target.value)}
-                      onSelect={(value) => handleUpdateClientAgent(index, 'lastName', value)}
-                      suggestions={nameSuggestions}
+                      label="Full Name"
+                      value={agent.fullName !== undefined ? agent.fullName : combineNameParts(agent.firstName, agent.middleName, agent.lastName)}
+                      onChange={(e) => handleUpdateClientAgentFullNameInput(index, e.target.value)}
+                      onSelect={(value) => parseClientAgentFullName(index, value)}
+                      onBlur={(e) => parseClientAgentFullName(index, e.target.value)}
+                      placeholder="e.g., John Michael Smith"
                     />
                     <Select
                       label="Sex"
@@ -201,7 +242,6 @@ const DurablePOASection = () => {
                     value={agent.address || ''}
                     onChange={(e) => handleUpdateClientAgent(index, 'address', e.target.value)}
                     onSelect={(value) => handleUpdateClientAgent(index, 'address', value)}
-                    suggestions={addressSuggestions}
                   />
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -210,7 +250,6 @@ const DurablePOASection = () => {
                       value={agent.phone || ''}
                       onChange={(e) => handleUpdateClientAgent(index, 'phone', e.target.value)}
                       onSelect={(value) => handleUpdateClientAgent(index, 'phone', value)}
-                      suggestions={phoneSuggestions}
                     />
                     <Input
                       label="Email"
@@ -279,20 +318,14 @@ const DurablePOASection = () => {
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <Autocomplete
-                        label="First Name"
-                        value={agent.firstName || ''}
-                        onChange={(e) => handleUpdateSpouseAgent(index, 'firstName', e.target.value)}
-                        onSelect={(value) => handleUpdateSpouseAgent(index, 'firstName', value)}
-                        suggestions={nameSuggestions}
-                      />
-                      <Autocomplete
-                        label="Last Name"
-                        value={agent.lastName || ''}
-                        onChange={(e) => handleUpdateSpouseAgent(index, 'lastName', e.target.value)}
-                        onSelect={(value) => handleUpdateSpouseAgent(index, 'lastName', value)}
-                        suggestions={nameSuggestions}
+                        label="Full Name"
+                        value={agent.fullName !== undefined ? agent.fullName : combineNameParts(agent.firstName, agent.middleName, agent.lastName)}
+                        onChange={(e) => handleUpdateSpouseAgentFullNameInput(index, e.target.value)}
+                        onSelect={(value) => parseSpouseAgentFullName(index, value)}
+                        onBlur={(e) => parseSpouseAgentFullName(index, e.target.value)}
+                        placeholder="e.g., Jane Marie Johnson"
                       />
                       <Select
                         label="Sex"
@@ -334,7 +367,6 @@ const DurablePOASection = () => {
                       value={agent.address || ''}
                       onChange={(e) => handleUpdateSpouseAgent(index, 'address', e.target.value)}
                       onSelect={(value) => handleUpdateSpouseAgent(index, 'address', value)}
-                      suggestions={addressSuggestions}
                     />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -343,7 +375,6 @@ const DurablePOASection = () => {
                         value={agent.phone || ''}
                         onChange={(e) => handleUpdateSpouseAgent(index, 'phone', e.target.value)}
                         onSelect={(value) => handleUpdateSpouseAgent(index, 'phone', value)}
-                        suggestions={phoneSuggestions}
                       />
                       <Input
                         label="Email"

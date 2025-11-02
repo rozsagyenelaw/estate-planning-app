@@ -1,26 +1,21 @@
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, Button, Autocomplete } from '../../common';
-import { getNameSuggestions, addNameSuggestion } from '../../../services/autocompleteService';
+import { Card, Input, Button, Autocomplete, Select } from '../../common';
 
 const SpecificDistributionSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
-  const nameSuggestions = getNameSuggestions();
 
   const handleAdd = () => {
     addArrayItem('specificDistributions', {
       beneficiary: '',
       description: '',
       percentage: '',
+      contingentBeneficiaryType: 'descendants',
+      contingentIndividuals: '',
     });
   };
 
   const handleUpdate = (index, field, value) => {
     updateArrayItem('specificDistributions', index, { [field]: value });
-
-    // Add to autocomplete suggestions
-    if (field === 'beneficiary' && value) {
-      addNameSuggestion(value);
-    }
   };
 
   const handleRemove = (index) => {
@@ -57,7 +52,6 @@ const SpecificDistributionSection = () => {
                   value={dist.beneficiary || ''}
                   onChange={(e) => handleUpdate(index, 'beneficiary', e.target.value)}
                   onSelect={(value) => handleUpdate(index, 'beneficiary', value)}
-                  suggestions={nameSuggestions}
                   placeholder="Enter beneficiary name"
                 />
 
@@ -74,6 +68,52 @@ const SpecificDistributionSection = () => {
                   onChange={(e) => handleUpdate(index, 'percentage', e.target.value)}
                   placeholder="e.g., 25%, $10,000, etc."
                 />
+
+                {/* Contingent Beneficiaries Section */}
+                <div className="pt-3 border-t border-gray-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-2">
+                    If this beneficiary predeceases, this gift goes to:
+                  </h5>
+
+                  <Select
+                    label="Contingent Beneficiary"
+                    value={dist.contingentBeneficiaryType || 'descendants'}
+                    onChange={(e) => handleUpdate(index, 'contingentBeneficiaryType', e.target.value)}
+                    options={[
+                      { value: 'descendants', label: 'Their descendants' },
+                      { value: 'other_beneficiaries', label: 'Other beneficiaries (pro rata)' },
+                      { value: 'individuals', label: 'Specific individuals' },
+                    ]}
+                  />
+
+                  {dist.contingentBeneficiaryType === 'individuals' && (
+                    <div className="mt-2">
+                      <Input
+                        label="Individual Names"
+                        value={dist.contingentIndividuals || ''}
+                        onChange={(e) => handleUpdate(index, 'contingentIndividuals', e.target.value)}
+                        placeholder="e.g., John Smith, Jane Doe"
+                        helperText="Enter names separated by commas"
+                      />
+                    </div>
+                  )}
+
+                  {dist.contingentBeneficiaryType === 'descendants' && (
+                    <div className="mt-2 bg-blue-50 border border-blue-200 rounded p-2">
+                      <p className="text-xs text-blue-800">
+                        The gift will pass to this beneficiary's descendants per stirpes
+                      </p>
+                    </div>
+                  )}
+
+                  {dist.contingentBeneficiaryType === 'other_beneficiaries' && (
+                    <div className="mt-2 bg-green-50 border border-green-200 rounded p-2">
+                      <p className="text-xs text-green-800">
+                        The gift will be redistributed proportionally among the remaining beneficiaries
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>

@@ -1,17 +1,21 @@
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Input, Button, Autocomplete } from '../../common';
+import { parseFullName, combineNameParts } from '../../../utils/nameParser';
 
 const GeneralNeedsTrustSection = () => {
   const { formData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
 
   // Generate suggestions from children
   const childrenSuggestions = (formData.children || []).map(child =>
-    `${child.firstName} ${child.lastName}`.trim()
+    combineNameParts(child.firstName, child.middleName, child.lastName)
   ).filter(name => name.length > 0);
 
   const handleAdd = () => {
     addArrayItem('generalNeedsTrusts', {
       beneficiaryName: '',
+      beneficiaryFirstName: '',
+      beneficiaryMiddleName: '',
+      beneficiaryLastName: '',
       distributions: [],
       specialInstructions: '',
     });
@@ -19,6 +23,24 @@ const GeneralNeedsTrustSection = () => {
 
   const handleUpdate = (index, field, value) => {
     updateArrayItem('generalNeedsTrusts', index, { [field]: value });
+  };
+
+  // Store raw input without parsing
+  const handleUpdateBeneficiaryNameInput = (index, fullName) => {
+    updateArrayItem('generalNeedsTrusts', index, {
+      beneficiaryName: fullName, // Store raw input
+    });
+  };
+
+  // Parse name when done typing (on blur or select)
+  const parseBeneficiaryName = (index, fullName) => {
+    const parsed = parseFullName(fullName);
+    updateArrayItem('generalNeedsTrusts', index, {
+      beneficiaryName: fullName,
+      beneficiaryFirstName: parsed.firstName,
+      beneficiaryMiddleName: parsed.middleName,
+      beneficiaryLastName: parsed.lastName,
+    });
   };
 
   const handleRemove = (index) => {
@@ -95,12 +117,13 @@ const GeneralNeedsTrustSection = () => {
                 </div>
 
                 <Autocomplete
-                  label="Beneficiary Name"
-                  value={trust.beneficiaryName || ''}
-                  onChange={(e) => handleUpdate(trustIndex, 'beneficiaryName', e.target.value)}
-                  onSelect={(value) => handleUpdate(trustIndex, 'beneficiaryName', value)}
+                  label="Beneficiary Full Name"
+                  value={trust.beneficiaryName !== undefined ? trust.beneficiaryName : combineNameParts(trust.beneficiaryFirstName, trust.beneficiaryMiddleName, trust.beneficiaryLastName)}
+                  onChange={(e) => handleUpdateBeneficiaryNameInput(trustIndex, e.target.value)}
+                  onSelect={(value) => parseBeneficiaryName(trustIndex, value)}
+                  onBlur={(e) => parseBeneficiaryName(trustIndex, e.target.value)}
                   suggestions={childrenSuggestions}
-                  placeholder="Enter beneficiary name"
+                  placeholder="e.g., John Michael Smith"
                   required
                 />
 

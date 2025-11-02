@@ -1,11 +1,7 @@
+import React from 'react';
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Input, Select, Autocomplete } from '../../common';
-import {
-  getAddressSuggestions,
-  getPhoneSuggestions,
-  getCitySuggestions,
-  getCountySuggestions,
-} from '../../../services/autocompleteService';
+import { parseFullName, combineNameParts } from '../../../utils/nameParser';
 
 const ClientInfoSection = () => {
   const { formData, updateFormData, updateClientData, updateSpouseData } = useFormContext();
@@ -23,11 +19,46 @@ const ClientInfoSection = () => {
     updateSpouseData(field, value);
   };
 
-  // Get autocomplete suggestions
-  const addressSuggestions = getAddressSuggestions();
-  const phoneSuggestions = getPhoneSuggestions();
-  const citySuggestions = getCitySuggestions();
-  const countySuggestions = getCountySuggestions();
+  // Handle client full name input (store raw input without parsing)
+  const handleClientFullNameChange = (value) => {
+    updateClientData('fullName', value);
+  };
+
+  // Parse client name when done typing (on blur or select)
+  const handleClientFullNameParse = (fullName) => {
+    const parsed = parseFullName(fullName);
+    updateClientData('fullName', fullName);
+    updateClientData('firstName', parsed.firstName);
+    updateClientData('middleName', parsed.middleName);
+    updateClientData('lastName', parsed.lastName);
+  };
+
+  // Handle spouse full name input (store raw input without parsing)
+  const handleSpouseFullNameChange = (value) => {
+    updateSpouseData('fullName', value);
+  };
+
+  // Parse spouse name when done typing (on blur or select)
+  const handleSpouseFullNameParse = (fullName) => {
+    const parsed = parseFullName(fullName);
+    updateSpouseData('fullName', fullName);
+    updateSpouseData('firstName', parsed.firstName);
+    updateSpouseData('middleName', parsed.middleName);
+    updateSpouseData('lastName', parsed.lastName);
+  };
+
+  // Get current full names
+  const clientFullName = combineNameParts(
+    formData.client?.firstName,
+    formData.client?.middleName,
+    formData.client?.lastName
+  );
+
+  const spouseFullName = combineNameParts(
+    formData.spouse?.firstName,
+    formData.spouse?.middleName,
+    formData.spouse?.lastName
+  );
 
   return (
     <>
@@ -43,28 +74,16 @@ const ClientInfoSection = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Input
-              label="First Name"
-              name="clientFirstName"
-              value={formData.client?.firstName || ''}
-              onChange={(e) => handleClientChange('firstName', e.target.value)}
-              required
-            />
-            <Input
-              label="Middle Name"
-              name="clientMiddleName"
-              value={formData.client?.middleName || ''}
-              onChange={(e) => handleClientChange('middleName', e.target.value)}
-            />
-            <Input
-              label="Last Name"
-              name="clientLastName"
-              value={formData.client?.lastName || ''}
-              onChange={(e) => handleClientChange('lastName', e.target.value)}
-              required
-            />
-          </div>
+          <Autocomplete
+            label="Full Name"
+            name="clientFullName"
+            value={formData.client?.fullName !== undefined ? formData.client.fullName : clientFullName}
+            onChange={(e) => handleClientFullNameChange(e.target.value)}
+            onSelect={(value) => handleClientFullNameParse(value)}
+            onBlur={(e) => handleClientFullNameParse(e.target.value)}
+            placeholder="e.g., John Michael Smith"
+            required
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
@@ -93,7 +112,6 @@ const ClientInfoSection = () => {
             value={formData.client?.address || ''}
             onChange={(e) => handleClientChange('address', e.target.value)}
             onSelect={(value) => handleClientChange('address', value)}
-            suggestions={addressSuggestions}
           />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -103,7 +121,6 @@ const ClientInfoSection = () => {
               value={formData.client?.city || ''}
               onChange={(e) => handleClientChange('city', e.target.value)}
               onSelect={(value) => handleClientChange('city', value)}
-              suggestions={citySuggestions}
             />
             <Input
               label="State"
@@ -126,7 +143,6 @@ const ClientInfoSection = () => {
               value={formData.client?.county || ''}
               onChange={(e) => handleClientChange('county', e.target.value)}
               onSelect={(value) => handleClientChange('county', value)}
-              suggestions={countySuggestions}
             />
             <Autocomplete
               label="Phone"
@@ -135,7 +151,6 @@ const ClientInfoSection = () => {
               value={formData.client?.phone || ''}
               onChange={(e) => handleClientChange('phone', e.target.value)}
               onSelect={(value) => handleClientChange('phone', value)}
-              suggestions={phoneSuggestions}
             />
           </div>
 
@@ -183,28 +198,16 @@ const ClientInfoSection = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Input
-                label="First Name"
-                name="spouseFirstName"
-                value={formData.spouse?.firstName || ''}
-                onChange={(e) => handleSpouseChange('firstName', e.target.value)}
-                required
-              />
-              <Input
-                label="Middle Name"
-                name="spouseMiddleName"
-                value={formData.spouse?.middleName || ''}
-                onChange={(e) => handleSpouseChange('middleName', e.target.value)}
-              />
-              <Input
-                label="Last Name"
-                name="spouseLastName"
-                value={formData.spouse?.lastName || ''}
-                onChange={(e) => handleSpouseChange('lastName', e.target.value)}
-                required
-              />
-            </div>
+            <Autocomplete
+              label="Full Name"
+              name="spouseFullName"
+              value={formData.spouse?.fullName !== undefined ? formData.spouse.fullName : spouseFullName}
+              onChange={(e) => handleSpouseFullNameChange(e.target.value)}
+              onSelect={(value) => handleSpouseFullNameParse(value)}
+              onBlur={(e) => handleSpouseFullNameParse(e.target.value)}
+              placeholder="e.g., Jane Marie Johnson"
+              required
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
@@ -233,7 +236,6 @@ const ClientInfoSection = () => {
               value={formData.spouse?.address || ''}
               onChange={(e) => handleSpouseChange('address', e.target.value)}
               onSelect={(value) => handleSpouseChange('address', value)}
-              suggestions={addressSuggestions}
               placeholder="Leave blank if same as Client 1"
             />
 
@@ -245,7 +247,6 @@ const ClientInfoSection = () => {
                 value={formData.spouse?.phone || ''}
                 onChange={(e) => handleSpouseChange('phone', e.target.value)}
                 onSelect={(value) => handleSpouseChange('phone', value)}
-                suggestions={phoneSuggestions}
               />
               <Input
                 label="Email"

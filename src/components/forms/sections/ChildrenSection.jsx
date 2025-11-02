@@ -1,5 +1,6 @@
 import { useFormContext } from '../../../context/FormContext';
-import { Card, Input, Select, Button } from '../../common';
+import { Card, Input, Select, Button, Autocomplete } from '../../common';
+import { parseFullName, combineNameParts } from '../../../utils/nameParser';
 
 const ChildrenSection = () => {
   const { formData, updateFormData } = useFormContext();
@@ -9,7 +10,7 @@ const ChildrenSection = () => {
     updateFormData({
       children: [
         ...children,
-        { firstName: '', lastName: '', dateOfBirth: '', gender: '', relation: 'child' }
+        { firstName: '', middleName: '', lastName: '', dateOfBirth: '', gender: '', relation: 'child' }
       ]
     });
   };
@@ -17,6 +18,30 @@ const ChildrenSection = () => {
   const updateChild = (index, field, value) => {
     const updatedChildren = [...children];
     updatedChildren[index] = { ...updatedChildren[index], [field]: value };
+    updateFormData({ children: updatedChildren });
+  };
+
+  // Update raw input without parsing
+  const updateChildFullNameInput = (index, fullName) => {
+    const updatedChildren = [...children];
+    updatedChildren[index] = {
+      ...updatedChildren[index],
+      fullName: fullName, // Store raw input
+    };
+    updateFormData({ children: updatedChildren });
+  };
+
+  // Parse name when done typing (on blur or select)
+  const parseChildFullName = (index, fullName) => {
+    const parsed = parseFullName(fullName);
+    const updatedChildren = [...children];
+    updatedChildren[index] = {
+      ...updatedChildren[index],
+      fullName: fullName,
+      firstName: parsed.firstName,
+      middleName: parsed.middleName,
+      lastName: parsed.lastName,
+    };
     updateFormData({ children: updatedChildren });
   };
 
@@ -60,20 +85,14 @@ const ChildrenSection = () => {
                   </Button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <Input
-                    label="First Name"
-                    value={child.firstName || ''}
-                    onChange={(e) => updateChild(index, 'firstName', e.target.value)}
-                    placeholder="First name"
-                  />
-                  <Input
-                    label="Last Name"
-                    value={child.lastName || ''}
-                    onChange={(e) => updateChild(index, 'lastName', e.target.value)}
-                    placeholder="Last name"
-                  />
-                </div>
+                <Autocomplete
+                  label="Full Name"
+                  value={child.fullName !== undefined ? child.fullName : combineNameParts(child.firstName, child.middleName, child.lastName)}
+                  onChange={(e) => updateChildFullNameInput(index, e.target.value)}
+                  onSelect={(value) => parseChildFullName(index, value)}
+                  onBlur={(e) => parseChildFullName(index, e.target.value)}
+                  placeholder="e.g., Emily Rose Johnson"
+                />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <Input

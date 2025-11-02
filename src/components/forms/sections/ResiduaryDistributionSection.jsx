@@ -1,12 +1,13 @@
 import { useFormContext } from '../../../context/FormContext';
 import { Card, Input, Select, Button, Autocomplete } from '../../common';
+import { parseFullName, combineNameParts } from '../../../utils/nameParser';
 
 const ResiduaryDistributionSection = () => {
   const { formData, updateFormData, addArrayItem, updateArrayItem, removeArrayItem } = useFormContext();
 
   // Generate suggestions from children
   const childrenSuggestions = (formData.children || []).map(child =>
-    `${child.firstName} ${child.lastName}`.trim()
+    combineNameParts(child.firstName, child.middleName, child.lastName)
   ).filter(name => name.length > 0);
 
   const handleTypeChange = (value) => {
@@ -20,13 +21,36 @@ const ResiduaryDistributionSection = () => {
   const handleAddBeneficiary = () => {
     addArrayItem('residuaryBeneficiaries', {
       name: '',
+      firstName: '',
+      middleName: '',
+      lastName: '',
       percentage: '',
       relationship: '',
+      contingentBeneficiaryType: 'descendants', // descendants, other_beneficiaries, individuals
+      contingentIndividuals: '', // Comma-separated names if individuals selected
     });
   };
 
   const handleUpdateBeneficiary = (index, field, value) => {
     updateArrayItem('residuaryBeneficiaries', index, { [field]: value });
+  };
+
+  // Store raw input without parsing
+  const handleUpdateBeneficiaryNameInput = (index, fullName) => {
+    updateArrayItem('residuaryBeneficiaries', index, {
+      name: fullName, // Store raw input
+    });
+  };
+
+  // Parse name when done typing (on blur or select)
+  const parseBeneficiaryName = (index, fullName) => {
+    const parsed = parseFullName(fullName);
+    updateArrayItem('residuaryBeneficiaries', index, {
+      name: fullName,
+      firstName: parsed.firstName,
+      middleName: parsed.middleName,
+      lastName: parsed.lastName,
+    });
   };
 
   const handleRemoveBeneficiary = (index) => {
@@ -37,14 +61,20 @@ const ResiduaryDistributionSection = () => {
     // Populate beneficiaries from children with equal shares
     if (formData.children && formData.children.length > 0) {
       const sharePerChild = Math.floor(100 / formData.children.length);
-      const beneficiaries = formData.children.map((child) => ({
-        name: `${child.firstName} ${child.lastName}`.trim(),
-        firstName: child.firstName || '',
-        lastName: child.lastName || '',
-        relationship: 'child',
-        dateOfBirth: child.dateOfBirth || '',
-        percentage: sharePerChild,
-      }));
+      const beneficiaries = formData.children.map((child) => {
+        const fullName = combineNameParts(child.firstName, child.middleName, child.lastName);
+        return {
+          name: fullName,
+          firstName: child.firstName || '',
+          middleName: child.middleName || '',
+          lastName: child.lastName || '',
+          relationship: 'child',
+          dateOfBirth: child.dateOfBirth || '',
+          percentage: sharePerChild,
+          contingentBeneficiaryType: 'descendants', // Default to descendants
+          contingentIndividuals: '',
+        };
+      });
       updateFormData({ residuaryBeneficiaries: beneficiaries });
     }
   };
@@ -109,12 +139,13 @@ const ResiduaryDistributionSection = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <Autocomplete
-                        label="Name"
-                        value={ben.name || ''}
-                        onChange={(e) => handleUpdateBeneficiary(index, 'name', e.target.value)}
-                        onSelect={(value) => handleUpdateBeneficiary(index, 'name', value)}
+                        label="Full Name"
+                        value={ben.name !== undefined ? ben.name : combineNameParts(ben.firstName, ben.middleName, ben.lastName)}
+                        onChange={(e) => handleUpdateBeneficiaryNameInput(index, e.target.value)}
+                        onSelect={(value) => parseBeneficiaryName(index, value)}
+                        onBlur={(e) => parseBeneficiaryName(index, e.target.value)}
                         suggestions={childrenSuggestions}
-                        placeholder="Beneficiary name"
+                        placeholder="e.g., John Michael Smith"
                       />
                       <Input
                         label="Relationship"
@@ -132,6 +163,52 @@ const ResiduaryDistributionSection = () => {
                         placeholder="e.g., 25%, 50%"
                       />
                     )}
+
+                    {/* Contingent Beneficiaries Section */}
+                    <div className="pt-3 border-t border-gray-200">
+                      <h5 className="text-sm font-medium text-gray-700 mb-2">
+                        If this beneficiary predeceases, their share goes to:
+                      </h5>
+
+                      <Select
+                        label="Contingent Beneficiary"
+                        value={ben.contingentBeneficiaryType || 'descendants'}
+                        onChange={(e) => handleUpdateBeneficiary(index, 'contingentBeneficiaryType', e.target.value)}
+                        options={[
+                          { value: 'descendants', label: 'Their descendants' },
+                          { value: 'other_beneficiaries', label: 'Other beneficiaries (pro rata)' },
+                          { value: 'individuals', label: 'Specific individuals' },
+                        ]}
+                      />
+
+                      {ben.contingentBeneficiaryType === 'individuals' && (
+                        <div className="mt-2">
+                          <Input
+                            label="Individual Names"
+                            value={ben.contingentIndividuals || ''}
+                            onChange={(e) => handleUpdateBeneficiary(index, 'contingentIndividuals', e.target.value)}
+                            placeholder="e.g., John Smith, Jane Doe"
+                            helperText="Enter names separated by commas"
+                          />
+                        </div>
+                      )}
+
+                      {ben.contingentBeneficiaryType === 'descendants' && (
+                        <div className="mt-2 bg-blue-50 border border-blue-200 rounded p-2">
+                          <p className="text-xs text-blue-800">
+                            The share will pass to this beneficiary's descendants per stirpes
+                          </p>
+                        </div>
+                      )}
+
+                      {ben.contingentBeneficiaryType === 'other_beneficiaries' && (
+                        <div className="mt-2 bg-green-50 border border-green-200 rounded p-2">
+                          <p className="text-xs text-green-800">
+                            The share will be redistributed proportionally among the remaining beneficiaries
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
