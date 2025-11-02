@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useFormContext } from '../context/FormContext';
 import { getClientData, deleteClientData } from '../services/firestoreService';
 import { updateClientWithDocuments } from '../services/clientDocumentService';
+import { getAmendments, deleteAmendment, getOrdinalName } from '../services/amendmentService';
 import { Button, Card } from './common';
 
 const ClientDetail = () => {
@@ -14,9 +15,12 @@ const ClientDetail = () => {
   const [error, setError] = useState('');
   const [regenerating, setRegenerating] = useState(false);
   const [regenerateProgress, setRegenerateProgress] = useState({ percent: 0, message: '' });
+  const [amendments, setAmendments] = useState([]);
+  const [amendmentsLoading, setAmendmentsLoading] = useState(true);
 
   useEffect(() => {
     loadClient();
+    loadAmendments();
   }, [clientId]);
 
   const loadClient = async () => {
@@ -34,6 +38,20 @@ const ClientDetail = () => {
       setError('Failed to load client data. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadAmendments = async () => {
+    setAmendmentsLoading(true);
+    try {
+      const result = await getAmendments(clientId);
+      if (result.success) {
+        setAmendments(result.data);
+      }
+    } catch (err) {
+      console.error('Error loading amendments:', err);
+    } finally {
+      setAmendmentsLoading(false);
     }
   };
 
@@ -119,6 +137,31 @@ const ClientDetail = () => {
 
   const handleBack = () => {
     navigate('/clients');
+  };
+
+  const handleCreateAmendment = () => {
+    navigate(`/client/${clientId}/create-amendment`);
+  };
+
+  const handleDeleteAmendment = async (amendmentId, amendmentNumber) => {
+    if (!window.confirm(
+      `Are you sure you want to delete the ${getOrdinalName(amendmentNumber)} Amendment? This action cannot be undone.`
+    )) {
+      return;
+    }
+
+    try {
+      const result = await deleteAmendment(clientId, amendmentId);
+      if (result.success) {
+        alert('Amendment deleted successfully');
+        loadAmendments(); // Reload amendments
+      } else {
+        alert(`Error: ${result.error}`);
+      }
+    } catch (err) {
+      console.error('Error deleting amendment:', err);
+      alert('Failed to delete amendment. Please try again.');
+    }
   };
 
   if (loading) {
@@ -451,6 +494,88 @@ const ClientDetail = () => {
             </p>
             <Button variant="primary" onClick={handleRegenerateDocuments} className="mt-4">
               Generate Documents Now
+            </Button>
+          </div>
+        )}
+      </Card>
+
+      {/* Trust Amendments */}
+      <Card className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900">Trust Amendments</h2>
+          <Button variant="primary" onClick={handleCreateAmendment}>
+            + Create Amendment
+          </Button>
+        </div>
+
+        {amendmentsLoading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+            <p className="text-gray-600 text-sm">Loading amendments...</p>
+          </div>
+        ) : amendments.length > 0 ? (
+          <div className="space-y-3">
+            {amendments.map((amendment) => (
+              <div
+                key={amendment.id}
+                className="p-4 bg-purple-50 hover:bg-purple-100 border-2 border-purple-300 rounded-lg transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">📝</span>
+                      <div>
+                        <div className="font-semibold text-gray-900">
+                          {getOrdinalName(amendment.amendmentNumber)} Amendment
+                        </div>
+                        <div className="text-xs text-gray-600">
+                          Date: {amendment.amendmentDate} | Created: {formatDate(amendment.createdAt)}
+                        </div>
+                      </div>
+                    </div>
+
+                    {amendment.sections && amendment.sections.length > 0 && (
+                      <div className="text-sm text-gray-700 ml-11">
+                        <strong>Amended Sections:</strong>{' '}
+                        {amendment.sections.map((s, i) =>
+                          s.articleNumber || `Section ${i + 1}`
+                        ).join(', ')}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {amendment.pdfUrl && (
+                      <a
+                        href={amendment.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-semibold"
+                      >
+                        View PDF →
+                      </a>
+                    )}
+                    <Button
+                      variant="outline"
+                      onClick={() => handleDeleteAmendment(amendment.id, amendment.amendmentNumber)}
+                      className="text-red-600 hover:bg-red-50 text-sm"
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-gray-50 rounded-lg">
+            <div className="text-gray-400 text-6xl mb-4">📝</div>
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">No Amendments Yet</h3>
+            <p className="text-gray-600 mb-6">
+              Create trust amendments to modify existing trust provisions
+            </p>
+            <Button variant="primary" onClick={handleCreateAmendment}>
+              Create First Amendment
             </Button>
           </div>
         )}

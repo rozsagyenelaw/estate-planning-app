@@ -41,6 +41,16 @@ const Header = () => {
               >
                 View Clients
               </Link>
+              <Link
+                to="/external-trust-amendment"
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  isActive('/external-trust-amendment')
+                    ? 'bg-purple-600 text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                Amendment (External Trust)
+              </Link>
             </nav>
             <div className="text-sm text-gray-500 border-l pl-6">
               <span className="font-medium">State:</span> California
