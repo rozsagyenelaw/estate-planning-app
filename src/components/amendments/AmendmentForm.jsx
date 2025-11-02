@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Input, Button } from '../common';
 import { getClientData } from '../../services/firestoreService';
+import { storage } from '../../services/firebase';
+import { ref, getDownloadURL } from 'firebase/storage';
+import * as pdfjsLib from 'pdfjs-dist';
 import {
   getNextAmendmentNumber,
   generateAmendmentId,
@@ -14,6 +17,9 @@ import {
   previewAmendmentPDF
 } from '../../services/amendmentPDFService';
 
+// Set PDF.js worker - use unpkg CDN
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+
 const AmendmentForm = () => {
   const { clientId } = useParams();
   const navigate = useNavigate();
@@ -23,6 +29,12 @@ const AmendmentForm = () => {
   const [client, setClient] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [error, setError] = useState('');
+  const [parsedArticles, setParsedArticles] = useState([]);
+  const [selectedArticles, setSelectedArticles] = useState([]);
+  const [parsingTrust, setParsingTrust] = useState(false);
+  const [trustDocumentUrl, setTrustDocumentUrl] = useState(null);
+  const [canParseTrust, setCanParseTrust] = useState(false);
+  const [uploadedTrustFile, setUploadedTrustFile] = useState(null);
 
   const [formData, setFormData] = useState({
     amendmentNumber: 1,
@@ -39,10 +51,7 @@ const AmendmentForm = () => {
         sectionText: ''
       }
     ],
-    scheduleOfAssets: '',
-    witnesses: [
-      { name: '', address: '' }
-    ]
+    scheduleOfAssets: ''
   });
 
   useEffect(() => {
@@ -61,25 +70,75 @@ const AmendmentForm = () => {
         return;
       }
 
-      setClient(clientResult.data);
+      const clientData = clientResult.data;
+      setClient(clientData);
 
       // Get next amendment number
       const nextNumber = await getNextAmendmentNumber(clientId);
 
+      // Extract trustor name from various possible structures
+      let trustorName = '';
+      if (clientData.client) {
+        trustorName = `${clientData.client.firstName || ''} ${clientData.client.lastName || ''}`.trim();
+      } else if (clientData.clientInfo) {
+        trustorName = `${clientData.clientInfo.firstName || ''} ${clientData.clientInfo.lastName || ''}`.trim();
+      }
+
+      // Extract trustee name - try multiple sources
+      let trusteeName = '';
+      if (clientData.currentTrustees && clientData.currentTrustees.length > 0) {
+        const trustee = clientData.currentTrustees[0];
+        trusteeName = `${trustee.firstName || ''} ${trustee.lastName || ''}`.trim();
+      } else if (clientData.trusteeInfo) {
+        trusteeName = `${clientData.trusteeInfo.firstName || ''} ${clientData.trusteeInfo.lastName || ''}`.trim();
+      }
+      // If no trustee found, use trustor as default
+      if (!trusteeName && trustorName) {
+        trusteeName = trustorName;
+      }
+
+      // Extract trust date
+      const trustDate = clientData.trustDate || clientData.currentDate || '';
+
+      // Extract trust name
+      const trustName = clientData.trustName ||
+        (trustorName ? `THE ${trustorName.toUpperCase()} LIVING TRUST` : '');
+
       // Pre-fill form with client data
-      const clientData = clientResult.data;
       setFormData(prev => ({
         ...prev,
         amendmentNumber: nextNumber,
-        trustorName: clientData.client
-          ? `${clientData.client.firstName} ${clientData.client.lastName}`
-          : '',
-        trusteeName: clientData.currentTrustees?.[0]
-          ? `${clientData.currentTrustees[0].firstName} ${clientData.currentTrustees[0].lastName}`
-          : '',
-        originalTrustDate: clientData.trustDate || clientData.currentDate || '',
-        trustName: clientData.trustName || ''
+        trustorName,
+        trusteeName,
+        originalTrustDate: trustDate,
+        trustName
       }));
+
+      // Try to find and parse trust document if available
+      let trustDocUrl = null;
+
+      // Check for external trust PDF
+      if (clientData.originalTrustDocument) {
+        trustDocUrl = clientData.originalTrustDocument;
+      }
+      // Check for uploaded trust documents
+      else if (clientData.livingTrustDocuments?.livingTrustPdf) {
+        trustDocUrl = clientData.livingTrustDocuments.livingTrustPdf;
+      }
+      // Check documents field
+      else if (clientData.documents?.trust) {
+        trustDocUrl = clientData.documents.trust;
+      }
+
+      if (trustDocUrl) {
+        setTrustDocumentUrl(trustDocUrl);
+        setCanParseTrust(true);
+        // Automatically start parsing
+        await parseTrustDocument(trustDocUrl);
+      } else {
+        setCanParseTrust(false);
+        console.log('No PDF trust document found for automatic parsing');
+      }
     } catch (err) {
       console.error('Error loading client data:', err);
       setError('Failed to load client data');
@@ -88,8 +147,154 @@ const AmendmentForm = () => {
     }
   };
 
+  const parseTrustDocument = async (trustDocUrl) => {
+    setParsingTrust(true);
+    try {
+      // Fetch the PDF from storage
+      const response = await fetch(trustDocUrl);
+      const arrayBuffer = await response.arrayBuffer();
+
+      // Extract text from PDF
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const totalPages = pdf.numPages;
+      let allText = '';
+
+      for (let i = 1; i <= totalPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map(item => item.str).join(' ');
+        allText += pageText + '\n\n--- PAGE BREAK ---\n\n';
+      }
+
+      // Parse articles from text
+      const articles = parseArticlesFromText(allText);
+      setParsedArticles(articles);
+    } catch (err) {
+      console.error('Error parsing trust document:', err);
+      // Don't show error - just continue without parsed articles
+    } finally {
+      setParsingTrust(false);
+    }
+  };
+
+  const parseArticlesFromText = (text) => {
+    // Filter out TOC pages
+    const pages = text.split('--- PAGE BREAK ---');
+    const trustContentPages = pages.filter(page => {
+      const tocDensity = (page.match(/\.{3,}/g) || []).length;
+      return page.length > 500 && tocDensity < 10;
+    });
+
+    const fullText = trustContentPages.join('\n\n');
+    const articles = [];
+
+    // Pattern to match "Article [Word/Number] [Title]"
+    const articleRegex = /Article\s+(One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|I{1,3}|IV|V|VI{0,3}|IX|X|XI{0,3}|1?\d)\s+([^\n]+?)(?=\n|$)/gi;
+
+    let match;
+    const articleMatches = [];
+
+    while ((match = articleRegex.exec(fullText)) !== null) {
+      articleMatches.push({
+        articleNumber: match[1],
+        title: match[2].trim(),
+        startIndex: match.index
+      });
+    }
+
+    // Extract content between articles
+    for (let i = 0; i < articleMatches.length; i++) {
+      const article = articleMatches[i];
+      const nextArticle = articleMatches[i + 1];
+
+      const startIndex = article.startIndex;
+      const endIndex = nextArticle ? nextArticle.startIndex : fullText.length;
+      const content = fullText.substring(startIndex, endIndex).trim();
+
+      // Get first 500 chars as preview
+      const preview = content.substring(0, 500);
+
+      articles.push({
+        articleNumber: article.articleNumber,
+        title: article.title,
+        content: content,
+        preview: preview
+      });
+    }
+
+    return articles;
+  };
+
   const updateFormData = (updates) => {
     setFormData(prev => ({ ...prev, ...updates }));
+  };
+
+  const toggleArticleSelection = (index) => {
+    setSelectedArticles(prev => {
+      if (prev.includes(index)) {
+        return prev.filter(i => i !== index);
+      } else {
+        return [...prev, index];
+      }
+    });
+  };
+
+  const addSelectedArticlesToSections = () => {
+    const newSections = selectedArticles.map(index => {
+      const article = parsedArticles[index];
+      return {
+        articleNumber: `Article ${article.articleNumber}`,
+        sectionTitle: article.title,
+        sectionText: article.content
+      };
+    });
+
+    setFormData(prev => ({
+      ...prev,
+      sections: [...prev.sections.filter(s => s.articleNumber || s.sectionTitle || s.sectionText), ...newSections]
+    }));
+
+    setSelectedArticles([]);
+  };
+
+  const handleTrustFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Only accept PDFs
+    if (file.type !== 'application/pdf') {
+      setError('Please upload a PDF file');
+      return;
+    }
+
+    setUploadedTrustFile(file);
+    setError('');
+
+    // Parse the uploaded PDF
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const totalPages = pdf.numPages;
+      let allText = '';
+
+      setParsingTrust(true);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map(item => item.str).join(' ');
+        allText += pageText + '\n\n--- PAGE BREAK ---\n\n';
+      }
+
+      const articles = parseArticlesFromText(allText);
+      setParsedArticles(articles);
+      setCanParseTrust(true);
+    } catch (err) {
+      console.error('Error parsing uploaded PDF:', err);
+      setError('Failed to parse PDF. You can still manually enter sections.');
+    } finally {
+      setParsingTrust(false);
+    }
   };
 
   const addSection = () => {
@@ -249,7 +454,7 @@ const AmendmentForm = () => {
           {[
             { num: 1, label: 'Basic Info' },
             { num: 2, label: 'Sections' },
-            { num: 3, label: 'Assets & Witnesses' },
+            { num: 3, label: 'Assets' },
             { num: 4, label: 'Review' }
           ].map((step, index) => (
             <div key={step.num} className="flex items-center flex-1">
@@ -295,7 +500,7 @@ const AmendmentForm = () => {
               label="Amendment Number"
               value={`${getOrdinalName(formData.amendmentNumber)} (${formData.amendmentNumber})`}
               disabled
-              helpText="Auto-incremented based on existing amendments"
+              helperText="Auto-incremented based on existing amendments"
             />
 
             <Input
@@ -351,6 +556,95 @@ const AmendmentForm = () => {
           <p className="text-gray-600 mb-6">
             Add the sections of the trust that are being amended. You can add multiple sections.
           </p>
+
+          {/* Upload Trust PDF if not available */}
+          {!canParseTrust && !parsingTrust && (
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                📄 Upload Trust Document for Auto-Parsing (Optional)
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Upload a PDF of the trust document to automatically extract all articles and sections.
+                This makes it easier to select which sections to amend.
+              </p>
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={handleTrustFileUpload}
+                className="block w-full text-sm text-gray-500
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-blue-500 file:text-white
+                  hover:file:bg-blue-600
+                  cursor-pointer"
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                If you don't have a PDF, you can manually enter the sections below.
+              </p>
+            </div>
+          )}
+
+          {/* Parsed Articles from Trust Document */}
+          {parsedArticles.length > 0 && (
+            <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                📄 Articles from Trust Document ({parsedArticles.length} found)
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Select articles below to automatically add them to your amendment sections.
+                You can edit the text after adding.
+              </p>
+
+              <div className="space-y-3 mb-4 max-h-96 overflow-y-auto">
+                {parsedArticles.map((article, index) => (
+                  <div
+                    key={index}
+                    onClick={() => toggleArticleSelection(index)}
+                    className={`p-3 bg-white rounded border-2 cursor-pointer transition-all ${
+                      selectedArticles.includes(index)
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-blue-300'
+                    }`}
+                  >
+                    <div className="flex items-start">
+                      <input
+                        type="checkbox"
+                        checked={selectedArticles.includes(index)}
+                        onChange={() => toggleArticleSelection(index)}
+                        className="mt-1 mr-3"
+                      />
+                      <div className="flex-1">
+                        <div className="font-semibold text-gray-900">
+                          Article {article.articleNumber}: {article.title}
+                        </div>
+                        <div className="text-sm text-gray-600 mt-1">
+                          {article.preview}...
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {selectedArticles.length > 0 && (
+                <Button
+                  variant="primary"
+                  onClick={addSelectedArticlesToSections}
+                  className="w-full"
+                >
+                  Add Selected Articles to Sections ({selectedArticles.length})
+                </Button>
+              )}
+            </div>
+          )}
+
+          {parsingTrust && (
+            <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600 mx-auto mb-2"></div>
+              <p className="text-yellow-800">Parsing trust document...</p>
+            </div>
+          )}
 
           {formData.sections.map((section, index) => (
             <div key={index} className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -409,17 +703,17 @@ const AmendmentForm = () => {
               ← Back
             </Button>
             <Button variant="primary" onClick={nextStep}>
-              Next: Assets & Witnesses →
+              Next: Assets →
             </Button>
           </div>
         </Card>
       )}
 
-      {/* Step 3: Schedule of Assets & Witnesses */}
+      {/* Step 3: Schedule of Assets */}
       {currentStep === 3 && (
         <Card>
           <h2 className="text-xl font-bold text-gray-900 mb-6">
-            Schedule of Assets & Witnesses
+            Schedule of Assets
           </h2>
 
           <div className="mb-8">
@@ -436,53 +730,6 @@ const AmendmentForm = () => {
               placeholder="1. Real Property: ...&#10;2. Bank Accounts: ...&#10;3. Investment Accounts: ..."
             />
           </div>
-
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Witnesses</h3>
-            {formData.witnesses.map((witness, index) => (
-              <div key={index} className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-gray-700">Witness {index + 1}</h4>
-                  {formData.witnesses.length > 1 && (
-                    <Button
-                      variant="outline"
-                      onClick={() => removeWitness(index)}
-                      className="text-red-600 hover:bg-red-50"
-                    >
-                      Remove
-                    </Button>
-                  )}
-                </div>
-
-                <div className="space-y-3">
-                  <Input
-                    label="Name"
-                    value={witness.name}
-                    onChange={(e) => updateWitness(index, 'name', e.target.value)}
-                    placeholder="Witness name"
-                  />
-                  <Input
-                    label="Address"
-                    value={witness.address}
-                    onChange={(e) => updateWitness(index, 'address', e.target.value)}
-                    placeholder="Witness address"
-                  />
-                </div>
-              </div>
-            ))}
-
-            <Button variant="outline" onClick={addWitness}>
-              + Add Another Witness
-            </Button>
-          </div>
-
-          <Input
-            label="Date of Execution"
-            type="date"
-            value={formData.executionDate}
-            onChange={(e) => updateFormData({ executionDate: e.target.value })}
-            required
-          />
 
           <div className="mt-6 flex justify-between">
             <Button variant="outline" onClick={prevStep}>
