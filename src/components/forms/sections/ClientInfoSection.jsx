@@ -9,7 +9,11 @@ import {
 
 const ClientInfoSection = () => {
   const { formData, updateFormData, updateClientData, updateSpouseData } = useFormContext();
-  const isJoint = formData.isJoint || formData.trustType === 'joint';
+  const isJoint = formData.isJoint ||
+                  formData.trustType === 'joint' ||
+                  formData.trustType === 'joint_irrevocable' ||
+                  formData.trustType === 'joint_first_party_snt' ||
+                  formData.trustType === 'joint_third_party_snt';
 
   const handleClientChange = (field, value) => {
     updateClientData(field, value);

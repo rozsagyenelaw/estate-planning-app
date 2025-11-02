@@ -2203,10 +2203,165 @@ export const prepareTemplateData = (formData) => {
     })(),
 
     // ============================================================================
-    // SNT (Special Needs Trust) Data
+    // SNT (Special Needs Trust) Data - Numbered Placeholders for Template
     // ============================================================================
 
-    // Primary beneficiary information
+    // Primary beneficiary name (single placeholder)
+    beneficiaryName: (() => {
+      if (!formData.sntData?.beneficiary) return '';
+      const ben = formData.sntData.beneficiary;
+      return [ben.firstName, ben.middleName, ben.lastName].filter(Boolean).join(' ');
+    })(),
+
+    // Disability description
+    disability: formData.sntData?.beneficiary?.disabilityDescription || '',
+
+    // Gender pronouns based on beneficiary sex
+    his_her: (() => {
+      const sex = formData.sntData?.beneficiary?.sex;
+      if (sex === 'male') return 'his';
+      if (sex === 'female') return 'her';
+      return 'his/her';
+    })(),
+
+    he_she: (() => {
+      const sex = formData.sntData?.beneficiary?.sex;
+      if (sex === 'male') return 'he';
+      if (sex === 'female') return 'she';
+      return 'he/she';
+    })(),
+
+    him_her: (() => {
+      const sex = formData.sntData?.beneficiary?.sex;
+      if (sex === 'male') return 'him';
+      if (sex === 'female') return 'her';
+      return 'him/her';
+    })(),
+
+    // Grantor names (numbered, max 2)
+    grantor1Name: (() => {
+      if (!formData.client) return '';
+      return [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ');
+    })(),
+
+    grantor2Name: (() => {
+      if (!formData.spouse) return '';
+      return [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ');
+    })(),
+
+    // Helper flags for grantors
+    hasGrantor2: (() => {
+      return !!formData.spouse && !!(formData.spouse.firstName || formData.spouse.lastName);
+    })(),
+
+    hasSingleGrantor: (() => {
+      return !formData.spouse || !(formData.spouse.firstName || formData.spouse.lastName);
+    })(),
+
+    // Grantor names concatenated with proper "and" logic
+    grantorNames: (() => {
+      const name1 = formData.client ? [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ') : '';
+      const name2 = formData.spouse ? [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ') : '';
+
+      if (!name1) return name2;
+      if (!name2) return name1;
+      return `${name1} and ${name2}`;
+    })(),
+
+    // Current trustee names (numbered, max 2)
+    currentTrustee1Name: (() => {
+      const trustees = formData.currentTrustees || [];
+      if (trustees.length === 0) return '';
+      const t = trustees[0];
+      return [t.firstName, t.middleName, t.lastName].filter(Boolean).join(' ');
+    })(),
+
+    currentTrustee2Name: (() => {
+      const trustees = formData.currentTrustees || [];
+      if (trustees.length < 2) return '';
+      const t = trustees[1];
+      return [t.firstName, t.middleName, t.lastName].filter(Boolean).join(' ');
+    })(),
+
+    // Helper flags for current trustees
+    hasCurrentTrustee2: (() => {
+      const trustees = formData.currentTrustees || [];
+      return trustees.length >= 2;
+    })(),
+
+    hasSingleCurrentTrustee: (() => {
+      const trustees = formData.currentTrustees || [];
+      return trustees.length === 1;
+    })(),
+
+    // Current trustees concatenated with proper "and" logic
+    currentTrusteesNames: (() => {
+      const trustees = formData.currentTrustees || [];
+      if (trustees.length === 0) return '';
+      if (trustees.length === 1) {
+        const t = trustees[0];
+        return [t.firstName, t.middleName, t.lastName].filter(Boolean).join(' ');
+      }
+      if (trustees.length === 2) {
+        const t1 = trustees[0];
+        const t2 = trustees[1];
+        const name1 = [t1.firstName, t1.middleName, t1.lastName].filter(Boolean).join(' ');
+        const name2 = [t2.firstName, t2.middleName, t2.lastName].filter(Boolean).join(' ');
+        return `${name1} and ${name2}`;
+      }
+      // More than 2: use first two with "and"
+      const t1 = trustees[0];
+      const t2 = trustees[1];
+      const name1 = [t1.firstName, t1.middleName, t1.lastName].filter(Boolean).join(' ');
+      const name2 = [t2.firstName, t2.middleName, t2.lastName].filter(Boolean).join(' ');
+      return `${name1} and ${name2}`;
+    })(),
+
+    // Successor trustee names (numbered, max 2)
+    successorTrustee1Name: (() => {
+      const trustees = formData.successorTrustees || [];
+      if (trustees.length === 0) return '';
+      const t = trustees[0];
+      return [t.firstName, t.middleName, t.lastName].filter(Boolean).join(' ');
+    })(),
+
+    successorTrustee2Name: (() => {
+      const trustees = formData.successorTrustees || [];
+      if (trustees.length < 2) return '';
+      const t = trustees[1];
+      return [t.firstName, t.middleName, t.lastName].filter(Boolean).join(' ');
+    })(),
+
+    // Remainder beneficiary names (numbered, max 3)
+    remainderBeneficiary1Name: (() => {
+      const beneficiaries = formData.sntData?.remainderBeneficiaries || [];
+      if (beneficiaries.length === 0) return '';
+      const b = beneficiaries[0];
+      return [b.firstName, b.middleName, b.lastName].filter(Boolean).join(' ');
+    })(),
+
+    remainderBeneficiary2Name: (() => {
+      const beneficiaries = formData.sntData?.remainderBeneficiaries || [];
+      if (beneficiaries.length < 2) return '';
+      const b = beneficiaries[1];
+      return [b.firstName, b.middleName, b.lastName].filter(Boolean).join(' ');
+    })(),
+
+    remainderBeneficiary3Name: (() => {
+      const beneficiaries = formData.sntData?.remainderBeneficiaries || [];
+      if (beneficiaries.length < 3) return '';
+      const b = beneficiaries[2];
+      return [b.firstName, b.middleName, b.lastName].filter(Boolean).join(' ');
+    })(),
+
+    // Notary information
+    notaryName: formData.sntData?.notaryName || '',
+    notaryDate: formatDateToUS(formData.sntData?.notaryDate) || '',
+
+    // Schedule A Property
+    scheduleAProperty: formData.sntData?.scheduleAProperty || '',
+
+    // Legacy/detailed placeholders for backward compatibility
     sntBeneficiary: (() => {
       if (!formData.sntData?.beneficiary) return null;
       const ben = formData.sntData.beneficiary;
@@ -2217,6 +2372,7 @@ export const prepareTemplateData = (formData) => {
         fullName: [ben.firstName, ben.middleName, ben.lastName].filter(Boolean).join(' '),
         dateOfBirth: formatDateToUS(ben.dateOfBirth) || '',
         ssn: ben.ssn || '',
+        sex: ben.sex || '',
         disabilityDescription: ben.disabilityDescription || '',
       };
     })(),
@@ -2282,9 +2438,12 @@ export const prepareTemplateData = (formData) => {
     })(),
 
     // Helper flags
-    isSNT: formData.trustType === 'first_party_snt' || formData.trustType === 'third_party_snt',
-    isFirstPartySNT: formData.trustType === 'first_party_snt',
-    isThirdPartySNT: formData.trustType === 'third_party_snt',
+    isSNT: formData.trustType === 'first_party_snt' ||
+           formData.trustType === 'third_party_snt' ||
+           formData.trustType === 'joint_first_party_snt' ||
+           formData.trustType === 'joint_third_party_snt',
+    isFirstPartySNT: formData.trustType === 'first_party_snt' || formData.trustType === 'joint_first_party_snt',
+    isThirdPartySNT: formData.trustType === 'third_party_snt' || formData.trustType === 'joint_third_party_snt',
   };
 
   console.log('=== PREPARED DATA SUMMARY ===');

@@ -6,8 +6,19 @@ const TrustTypeSection = () => {
   const { formData, updateFormData } = useFormContext();
 
   const handleTrustTypeChange = (value) => {
-    const isJoint = value === 'joint' || value === 'joint_irrevocable';
-    const isIrrevocable = value === 'single_irrevocable' || value === 'joint_irrevocable';
+    // Check if it's a joint trust (including SNT types)
+    const isJoint = value === 'joint' ||
+                    value === 'joint_irrevocable' ||
+                    value === 'joint_first_party_snt' ||
+                    value === 'joint_third_party_snt';
+
+    // Check if it's an irrevocable trust
+    const isIrrevocable = value === 'single_irrevocable' ||
+                          value === 'joint_irrevocable';
+
+    console.log('Trust type changed to:', value);
+    console.log('isJoint:', isJoint);
+    console.log('isIrrevocable:', isIrrevocable);
 
     updateFormData({
       trustType: value,

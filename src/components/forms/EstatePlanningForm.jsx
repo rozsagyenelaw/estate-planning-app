@@ -34,7 +34,10 @@ const EstatePlanningForm = () => {
   const [saveProgress, setSaveProgress] = useState({ percent: 0, message: '' });
 
   // Detect if this is a Special Needs Trust
-  const isSNT = formData.trustType === 'first_party_snt' || formData.trustType === 'third_party_snt';
+  const isSNT = formData.trustType === 'first_party_snt' ||
+                formData.trustType === 'third_party_snt' ||
+                formData.trustType === 'joint_first_party_snt' ||
+                formData.trustType === 'joint_third_party_snt';
 
   // Load sample data for testing
   const loadSampleData = () => {
@@ -162,6 +165,13 @@ const EstatePlanningForm = () => {
     setLoading(true);
     setSavedLivingTrust(null);
     setStatus('Saving Living Trust to database...');
+
+    // DEBUG: Log form data before saving
+    console.log('=== FORM DATA BEFORE SAVE ===');
+    console.log('formData.trustType:', formData.trustType);
+    console.log('formData.isJoint:', formData.isJoint);
+    console.log('formData.isIrrevocable:', formData.isIrrevocable);
+    console.log('Full formData:', formData);
 
     try {
       const result = await saveClientWithLivingTrust(

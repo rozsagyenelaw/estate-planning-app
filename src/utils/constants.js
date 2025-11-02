@@ -82,6 +82,8 @@ export const TRUST_TYPES = {
   JOINT_IRREVOCABLE: 'joint_irrevocable',
   FIRST_PARTY_SNT: 'first_party_snt',
   THIRD_PARTY_SNT: 'third_party_snt',
+  JOINT_FIRST_PARTY_SNT: 'joint_first_party_snt',
+  JOINT_THIRD_PARTY_SNT: 'joint_third_party_snt',
 };
 
 // Trust Type Options for Radio Buttons
@@ -90,8 +92,10 @@ export const TRUST_TYPE_OPTIONS = [
   { value: 'joint', label: 'Joint Trust (Revocable)', description: 'Living trust for married couple or partners' },
   { value: 'single_irrevocable', label: 'Irrevocable Trust (Single)', description: 'Irrevocable trust for one grantor' },
   { value: 'joint_irrevocable', label: 'Irrevocable Trust (Joint)', description: 'Irrevocable trust for married couple or partners' },
-  { value: 'first_party_snt', label: 'First Party Special Needs Trust', description: 'Self-settled SNT funded with beneficiary\'s own assets' },
-  { value: 'third_party_snt', label: 'Third Party Special Needs Trust', description: 'SNT funded by someone other than the beneficiary' },
+  { value: 'first_party_snt', label: 'First Party SNT (Single)', description: 'Self-settled SNT with one grantor' },
+  { value: 'joint_first_party_snt', label: 'First Party SNT (Joint)', description: 'Self-settled SNT with two grantors' },
+  { value: 'third_party_snt', label: 'Third Party SNT (Single)', description: 'Third party SNT with one grantor' },
+  { value: 'joint_third_party_snt', label: 'Third Party SNT (Joint)', description: 'Third party SNT with two grantors' },
 ];
 
 // Form Section IDs

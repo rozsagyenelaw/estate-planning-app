@@ -28,6 +28,10 @@ const SNTBeneficiarySection = () => {
     }
   };
 
+  // Update if this is a joint trust (2 grantors)
+  const isSNT = formData.trustType === 'first_party_snt' || formData.trustType === 'third_party_snt';
+  const showJointGrantor = isSNT && (formData.isJoint || formData.trustType?.includes('joint'));
+
   // Update government benefits
   const updateBenefits = (field, value) => {
     updateFormData({
@@ -116,7 +120,7 @@ const SNTBeneficiarySection = () => {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Input
               label="Date of Birth"
               type="date"
@@ -132,6 +136,21 @@ const SNTBeneficiarySection = () => {
               placeholder="XXX-XX-XXXX"
               required
             />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Gender <span className="text-red-500">*</span>
+              </label>
+              <select
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                value={beneficiary.sex || ''}
+                onChange={(e) => updateBeneficiary('sex', e.target.value)}
+                required
+              >
+                <option value="">Select...</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
           </div>
 
           <div>
@@ -236,6 +255,67 @@ const SNTBeneficiarySection = () => {
         </div>
       </Card>
 
+      {/* Notary Information */}
+      <Card>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800">Notary Information</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Information for notarization of the trust document
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Notary Name"
+              value={sntData.notaryName || ''}
+              onChange={(e) => updateFormData({
+                sntData: { ...sntData, notaryName: e.target.value }
+              })}
+              placeholder="Full name of notary"
+            />
+            <Input
+              label="Notary Date"
+              type="date"
+              value={sntData.notaryDate || ''}
+              onChange={(e) => updateFormData({
+                sntData: { ...sntData, notaryDate: e.target.value }
+              })}
+            />
+          </div>
+        </div>
+      </Card>
+
+      {/* Schedule A Property */}
+      <Card>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800">Schedule A - Trust Property</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              List the property or assets being transferred to the trust
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Property Description
+            </label>
+            <textarea
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              rows="6"
+              value={sntData.scheduleAProperty || ''}
+              onChange={(e) => updateFormData({
+                sntData: { ...sntData, scheduleAProperty: e.target.value }
+              })}
+              placeholder="Enter property description, including real estate, bank accounts, investments, personal property, etc."
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Be as specific as possible when describing trust property
+            </p>
+          </div>
+        </div>
+      </Card>
+
       {/* Remainder Beneficiaries */}
       <Card>
         <div className="space-y-4">
@@ -243,12 +323,14 @@ const SNTBeneficiarySection = () => {
             <div>
               <h3 className="text-lg font-semibold text-gray-800">Remainder Beneficiaries</h3>
               <p className="text-sm text-gray-600 mt-1">
-                Who will receive the remaining trust assets after the primary beneficiary's death
+                Who will receive the remaining trust assets after the primary beneficiary's death (maximum 3)
               </p>
             </div>
-            <Button variant="primary" onClick={addRemainderBeneficiary}>
-              + Add Beneficiary
-            </Button>
+            {remainderBeneficiaries.length < 3 && (
+              <Button variant="primary" onClick={addRemainderBeneficiary}>
+                + Add Beneficiary
+              </Button>
+            )}
           </div>
 
           {remainderBeneficiaries.length === 0 ? (
