@@ -863,17 +863,21 @@ export const prepareTemplateData = (formData) => {
         return formData.trustName;
       }
 
+      // Determine trust type suffix
+      const isIrrevocable = formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable';
+      const trustTypeSuffix = isIrrevocable ? 'Irrevocable Trust' : 'Living Trust';
+
       // Auto-generate trust name if not provided
       if (formData.isJoint && formData.client && formData.spouse) {
         const grantor1 = [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ');
         const grantor2 = [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ');
-        return `The ${grantor1} and ${grantor2} Living Trust`;
+        return `The ${grantor1} and ${grantor2} ${trustTypeSuffix}`;
       }
 
       // For single trusts, generate from client name
       if (formData.client) {
         const clientName = [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ');
-        return clientName ? `The ${clientName} Living Trust` : '';
+        return clientName ? `The ${clientName} ${trustTypeSuffix}` : '';
       }
 
       return '';
@@ -904,15 +908,19 @@ export const prepareTemplateData = (formData) => {
         return formData.trustName;
       }
 
+      // Determine trust type suffix
+      const isIrrevocable = formData.trustType === 'single_irrevocable' || formData.trustType === 'joint_irrevocable';
+      const trustTypeSuffix = isIrrevocable ? 'Irrevocable Trust' : 'Living Trust';
+
       if (formData.isJoint && formData.client && formData.spouse) {
         const grantor1 = [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ');
         const grantor2 = [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ');
-        return `The ${grantor1} and ${grantor2} Living Trust`;
+        return `The ${grantor1} and ${grantor2} ${trustTypeSuffix}`;
       }
 
       if (formData.client) {
         const clientName = [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ');
-        return clientName ? `The ${clientName} Living Trust` : '';
+        return clientName ? `The ${clientName} ${trustTypeSuffix}` : '';
       }
 
       return '';
