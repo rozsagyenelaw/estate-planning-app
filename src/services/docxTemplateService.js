@@ -834,6 +834,18 @@ export const prepareTemplateData = (formData) => {
       spouse: formData.anatomicalGifts?.spouse || 'none',
     },
 
+    // Anatomical Gifts Boolean Flags for Conditional Rendering
+    anatomicalGifts_client_none: (formData.anatomicalGifts?.client || 'none') === 'none',
+    anatomicalGifts_client_any: (formData.anatomicalGifts?.client || 'none') === 'any',
+    anatomicalGifts_client_therapy: (formData.anatomicalGifts?.client || 'none') === 'therapy',
+    anatomicalGifts_client_research: (formData.anatomicalGifts?.client || 'none') === 'research',
+    anatomicalGifts_client_specific: (formData.anatomicalGifts?.client || 'none') === 'specific',
+    anatomicalGifts_spouse_none: (formData.anatomicalGifts?.spouse || 'none') === 'none',
+    anatomicalGifts_spouse_any: (formData.anatomicalGifts?.spouse || 'none') === 'any',
+    anatomicalGifts_spouse_therapy: (formData.anatomicalGifts?.spouse || 'none') === 'therapy',
+    anatomicalGifts_spouse_research: (formData.anatomicalGifts?.spouse || 'none') === 'research',
+    anatomicalGifts_spouse_specific: (formData.anatomicalGifts?.spouse || 'none') === 'specific',
+
     // ===== FLAT PLACEHOLDERS FOR TEMPLATES =====
     // These match the placeholders in the DOCX templates exactly
 
