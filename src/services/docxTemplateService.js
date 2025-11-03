@@ -495,6 +495,13 @@ export const prepareTemplateData = (formData) => {
       hasAgeCondition: dist.hasAgeCondition || false,
       conditionAge: dist.conditionAge || dist.age || '',
       conditionPerson: dist.conditionPerson || dist.beneficiaryName || dist.beneficiary || '',
+
+      // Contingent Beneficiary Information
+      contingentBeneficiaryType: dist.contingentBeneficiaryType || 'descendants',
+      contingentIndividuals: dist.contingentIndividuals || '',
+      contingent_descendants: (dist.contingentBeneficiaryType || 'descendants') === 'descendants',
+      contingent_other_beneficiaries: (dist.contingentBeneficiaryType || 'descendants') === 'other_beneficiaries',
+      contingent_individuals: (dist.contingentBeneficiaryType || 'descendants') === 'individuals',
     }
   }));
   
@@ -1225,6 +1232,13 @@ export const prepareTemplateData = (formData) => {
           limitedSharePercentage: beneficiary.limitedSharePercentage || '5%',
           limitedShareAmount: beneficiary.limitedShareAmount || '$5,000',
           limitedShareAmountWords: beneficiary.limitedShareAmountWords || 'Five Thousand Dollars',
+
+          // Contingent Beneficiary Information
+          contingentBeneficiaryType: beneficiary.contingentBeneficiaryType || 'descendants',
+          contingentIndividuals: beneficiary.contingentIndividuals || '',
+          contingent_descendants: (beneficiary.contingentBeneficiaryType || 'descendants') === 'descendants',
+          contingent_other_beneficiaries: (beneficiary.contingentBeneficiaryType || 'descendants') === 'other_beneficiaries',
+          contingent_individuals: (beneficiary.contingentBeneficiaryType || 'descendants') === 'individuals',
         }
       };
 
