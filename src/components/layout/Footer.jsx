@@ -1,5 +1,13 @@
+import { useLocation } from 'react-router-dom';
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const location = useLocation();
+
+  // Don't show footer on login page
+  if (location.pathname === '/login') {
+    return null;
+  }
 
   return (
     <footer className="bg-gray-800 text-white mt-12">
