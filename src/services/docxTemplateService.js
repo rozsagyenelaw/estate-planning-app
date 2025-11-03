@@ -502,6 +502,7 @@ export const prepareTemplateData = (formData) => {
       contingent_descendants: (dist.contingentBeneficiaryType || 'descendants') === 'descendants',
       contingent_other_beneficiaries: (dist.contingentBeneficiaryType || 'descendants') === 'other_beneficiaries',
       contingent_individuals: (dist.contingentBeneficiaryType || 'descendants') === 'individuals',
+      contingent_lapse: (dist.contingentBeneficiaryType || 'descendants') === 'lapse',
     }
   }));
   
@@ -1247,6 +1248,7 @@ export const prepareTemplateData = (formData) => {
           contingent_descendants: (beneficiary.contingentBeneficiaryType || 'descendants') === 'descendants',
           contingent_other_beneficiaries: (beneficiary.contingentBeneficiaryType || 'descendants') === 'other_beneficiaries',
           contingent_individuals: (beneficiary.contingentBeneficiaryType || 'descendants') === 'individuals',
+          contingent_lapse: (beneficiary.contingentBeneficiaryType || 'descendants') === 'lapse',
         }
       };
 

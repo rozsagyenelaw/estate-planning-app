@@ -83,6 +83,7 @@ const SpecificDistributionSection = () => {
                       { value: 'descendants', label: 'Their descendants' },
                       { value: 'other_beneficiaries', label: 'Other beneficiaries (pro rata)' },
                       { value: 'individuals', label: 'Specific individuals' },
+                      { value: 'lapse', label: 'Lapse (goes back to trust)' },
                     ]}
                   />
 
@@ -110,6 +111,14 @@ const SpecificDistributionSection = () => {
                     <div className="mt-2 bg-green-50 border border-green-200 rounded p-2">
                       <p className="text-xs text-green-800">
                         The gift will be redistributed proportionally among the remaining beneficiaries
+                      </p>
+                    </div>
+                  )}
+
+                  {dist.contingentBeneficiaryType === 'lapse' && (
+                    <div className="mt-2 bg-purple-50 border border-purple-200 rounded p-2">
+                      <p className="text-xs text-purple-800">
+                        The gift will lapse and be distributed according to the residuary clause of the trust
                       </p>
                     </div>
                   )}
