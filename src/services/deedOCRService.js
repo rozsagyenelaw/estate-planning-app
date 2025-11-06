@@ -8,7 +8,10 @@
 import { storage } from './firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-const CLOUD_FUNCTIONS_URL = import.meta.env.VITE_CLOUD_FUNCTIONS_URL;
+const CLOUD_FUNCTIONS_URL = import.meta.env.VITE_CLOUD_FUNCTIONS_URL || 'https://us-central1-estate-planning-app-b5335.cloudfunctions.net';
+
+// Log the Cloud Functions URL for debugging
+console.log('Cloud Functions URL:', CLOUD_FUNCTIONS_URL);
 
 /**
  * Upload deed PDF to Firebase Storage
@@ -54,8 +57,11 @@ export const extractDeedInfo = async (fileUrl) => {
     throw new Error('No file URL provided');
   }
 
+  const functionUrl = `${CLOUD_FUNCTIONS_URL}/extractDeedInfo`;
+  console.log('Calling Cloud Function:', functionUrl);
+
   try {
-    const response = await fetch(`${CLOUD_FUNCTIONS_URL}/extractDeedInfo`, {
+    const response = await fetch(functionUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -63,9 +69,21 @@ export const extractDeedInfo = async (fileUrl) => {
       body: JSON.stringify({ fileUrl })
     });
 
+    console.log('Response status:', response.status);
+    console.log('Response content-type:', response.headers.get('content-type'));
+
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to extract deed information');
+      // Try to get error details
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to extract deed information');
+      } else {
+        // If response is not JSON (e.g., HTML error page), get text
+        const errorText = await response.text();
+        console.error('Non-JSON error response:', errorText.substring(0, 200));
+        throw new Error(`Failed to extract deed information: ${response.status} ${response.statusText}`);
+      }
     }
 
     const result = await response.json();
