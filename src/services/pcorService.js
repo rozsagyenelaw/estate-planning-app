@@ -110,8 +110,8 @@ function fillLosAngelesPCOR(form, data) {
           const fieldType = field.constructor.name;
           console.log(`Found field: ${fieldName}, Type: ${fieldType}`);
 
-          // Handle both PDFTextField and PDFTextField2 (different pdf-lib versions)
-          if (fieldType === 'PDFTextField' || fieldType === 'PDFTextField2') {
+          // Use duck-typing to check if it's a text field (works with minified builds)
+          if (typeof field.setText === 'function') {
             field.setText(String(value || ''));
             console.log(`✓ Set ${fieldName} = ${value}`);
           } else {
@@ -133,8 +133,8 @@ function fillLosAngelesPCOR(form, data) {
           const fieldType = field.constructor.name;
           console.log(`Found checkbox: ${fieldName}, Type: ${fieldType}`);
 
-          // Handle both PDFCheckBox and PDFCheckBox2 (different pdf-lib versions)
-          if (fieldType === 'PDFCheckBox' || fieldType === 'PDFCheckBox2') {
+          // Use duck-typing to check if it's a checkbox (works with minified builds)
+          if (typeof field.check === 'function') {
             field.check();
             console.log(`✓ Checked ${fieldName}`);
           } else {
