@@ -1,9 +1,12 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useFormContext } from '../../context/FormContext';
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout, isAuthenticated } = useAuth();
+  const { resetForm } = useFormContext();
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -13,6 +16,11 @@ const Header = () => {
     if (window.confirm('Are you sure you want to log out?')) {
       await logout();
     }
+  };
+
+  const handleNewClient = () => {
+    resetForm();
+    navigate('/');
   };
 
   // Don't show header on login page
@@ -35,8 +43,8 @@ const Header = () => {
           <div className="flex items-center space-x-6">
             {isAuthenticated && (
               <nav className="flex items-center space-x-4">
-                <Link
-                  to="/"
+                <button
+                  onClick={handleNewClient}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     isActive('/')
                       ? 'bg-blue-600 text-white'
@@ -44,7 +52,7 @@ const Header = () => {
                   }`}
                 >
                   New Client
-                </Link>
+                </button>
                 <Link
                   to="/clients"
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${

@@ -7,6 +7,7 @@ import {
 import {
   saveFormDraft,
   loadFormDraft,
+  clearFormDraft,
 } from '../services/autocompleteService';
 
 const FormContext = createContext();
@@ -283,6 +284,7 @@ export const FormProvider = ({ children }) => {
       },
     });
     setIsDraft(false);
+    clearFormDraft(); // Clear the saved draft from localStorage
   };
 
   const value = {
