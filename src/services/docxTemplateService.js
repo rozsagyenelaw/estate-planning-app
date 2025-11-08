@@ -774,6 +774,15 @@ export const prepareTemplateData = (formData) => {
       lastName: '',
       fullName: '',
     },
+    clientHealthcare3: formData.healthcarePOA?.client && formData.healthcarePOA.client.length > 2 ? {
+      firstName: formData.healthcarePOA.client[2].firstName || '',
+      lastName: formData.healthcarePOA.client[2].lastName || '',
+      fullName: `${formData.healthcarePOA.client[2].firstName || ''} ${formData.healthcarePOA.client[2].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
 
     // Healthcare Agents - Spouse
     spouseHealthcare: formData.healthcarePOA?.spouse || [],
@@ -790,6 +799,15 @@ export const prepareTemplateData = (formData) => {
       firstName: formData.healthcarePOA.spouse[1].firstName || '',
       lastName: formData.healthcarePOA.spouse[1].lastName || '',
       fullName: `${formData.healthcarePOA.spouse[1].firstName || ''} ${formData.healthcarePOA.spouse[1].lastName || ''}`.trim(),
+    } : {
+      firstName: '',
+      lastName: '',
+      fullName: '',
+    },
+    spouseHealthcare3: formData.healthcarePOA?.spouse && formData.healthcarePOA.spouse.length > 2 ? {
+      firstName: formData.healthcarePOA.spouse[2].firstName || '',
+      lastName: formData.healthcarePOA.spouse[2].lastName || '',
+      fullName: `${formData.healthcarePOA.spouse[2].firstName || ''} ${formData.healthcarePOA.spouse[2].lastName || ''}`.trim(),
     } : {
       firstName: '',
       lastName: '',
@@ -1737,6 +1755,27 @@ export const prepareTemplateData = (formData) => {
       return buildGroupsFromFlatArray(agents);
     })(),
 
+    // Healthcare Agent Groups - SUCCESSORS ONLY (all groups except first)
+    healthcareAgentGroupsSuccessors: (() => {
+      const agents = formData.healthcarePOA?.client || [];
+      let groups;
+      if (formData.healthcarePOA?.clientGroups && Array.isArray(formData.healthcarePOA.clientGroups)) {
+        groups = formData.healthcarePOA.clientGroups;
+      } else {
+        const hasGroupType = agents.some(agent => agent.groupType);
+        if (hasGroupType) {
+          groups = buildGroupsFromAgentsWithGroupType(agents);
+        } else {
+          groups = buildGroupsFromFlatArray(agents);
+        }
+      }
+      // Return all groups except the first one, and rename 'agents' to 'healthcareAgents' for template
+      return groups.slice(1).map(group => ({
+        ...group,
+        healthcareAgents: group.agents || []
+      }));
+    })(),
+
     // HIPAA Agent Groups (same as healthcare agents)
     hipaaAgentGroups: (() => {
       const agents = formData.healthcarePOA?.client || [];
@@ -2230,6 +2269,93 @@ export const prepareTemplateData = (formData) => {
       });
       return allSuccessorAgents;
     })(),
+
+    // Healthcare Agents - SPOUSE - First Group Formatted
+    spouseFirstHealthcareAgentFormatted: (() => {
+      const agents = formData.healthcarePOA?.spouse || [];
+      let groups;
+      if (formData.healthcarePOA?.spouseGroups && Array.isArray(formData.healthcarePOA.spouseGroups)) {
+        groups = formData.healthcarePOA.spouseGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    // Healthcare Agents - SPOUSE - Successors Formatted
+    spouseHealthcareAgentSuccessorsFormatted: (() => {
+      const agents = formData.healthcarePOA?.spouse || [];
+      let groups;
+      if (formData.healthcarePOA?.spouseGroups && Array.isArray(formData.healthcarePOA.spouseGroups)) {
+        groups = formData.healthcarePOA.spouseGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatSuccessorGroups(groups, 'appoint', 'as successor agent under my Healthcare Power of Attorney.');
+    })(),
+
+    // Healthcare Agents - SPOUSE - Successor Groups Array (for loops)
+    spouseHealthcareAgentGroupsSuccessors: (() => {
+      const agents = formData.healthcarePOA?.spouse || [];
+      let groups;
+      if (formData.healthcarePOA?.spouseGroups && Array.isArray(formData.healthcarePOA.spouseGroups)) {
+        groups = formData.healthcarePOA.spouseGroups;
+      } else {
+        const hasGroupType = agents.some(agent => agent.groupType);
+        if (hasGroupType) {
+          groups = buildGroupsFromAgentsWithGroupType(agents);
+        } else {
+          groups = buildGroupsFromFlatArray(agents);
+        }
+      }
+      // Return all groups except the first one, and rename 'agents' to 'spouseHealthcareAgents' for template
+      return groups.slice(1).map(group => ({
+        ...group,
+        spouseHealthcareAgents: group.agents || []
+      }));
+    })(),
+
+    // Healthcare Agents - SPOUSE - First Group Array (for detail display loop)
+    spouseFirstHealthcareAgents: (() => {
+      const agents = formData.healthcarePOA?.spouse || [];
+      let groups;
+      if (formData.healthcarePOA?.spouseGroups && Array.isArray(formData.healthcarePOA.spouseGroups)) {
+        groups = formData.healthcarePOA.spouseGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      // Return agents from first group only, with required fields
+      if (!groups || groups.length === 0 || !groups[0].agents) {
+        return [];
+      }
+      return groups[0].agents.map(agent => ({
+        fullName: agent.fullName || `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+        address: agent.address || '',
+        city: agent.city || '',
+        state: agent.state || '',
+        zip: agent.zip || '',
+        phone: agent.phone || ''
+      }));
+    })(),
+
+    // Healthcare Agents - SPOUSE - All agents array (for general loops)
+    spouseHealthcareAgents: (formData.healthcarePOA?.spouse || []).map(agent => ({
+      firstName: agent.firstName || '',
+      lastName: agent.lastName || '',
+      fullName: `${agent.firstName || ''} ${agent.lastName || ''}`.trim(),
+      address: agent.address || '',
+      city: agent.city || '',
+      state: agent.state || '',
+      zip: agent.zip || '',
+      phone: agent.phone || '',
+      relationship: agent.relationship || 'healthcare agent',
+    })),
 
     // 7. HIPAA Agents
     firstHipaaAgentFormatted: (() => {
