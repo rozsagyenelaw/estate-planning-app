@@ -95,6 +95,16 @@ export const addCountySuggestion = (county) => {
   addToAutocomplete(STORAGE_KEYS.AUTOCOMPLETE_COUNTIES, county);
 };
 
+// Get zip suggestions
+export const getZipSuggestions = () => {
+  return getAutocompleteData(STORAGE_KEYS.AUTOCOMPLETE_ZIPS);
+};
+
+// Add zip to suggestions
+export const addZipSuggestion = (zip) => {
+  addToAutocomplete(STORAGE_KEYS.AUTOCOMPLETE_ZIPS, zip);
+};
+
 // Save form data to local storage (for auto-save)
 export const saveFormDraft = (formData) => {
   try {

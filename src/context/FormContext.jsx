@@ -102,6 +102,7 @@ export const FormProvider = ({ children }) => {
       phones: [],
       cities: [],
       counties: [],
+      zips: [],
     },
   });
 
@@ -146,6 +147,7 @@ export const FormProvider = ({ children }) => {
         phones: [],
         cities: [],
         counties: [],
+        zips: [],
       };
 
       const typeKey = type + 's'; // 'name' -> 'names', 'address' -> 'addresses'
@@ -281,6 +283,7 @@ export const FormProvider = ({ children }) => {
         phones: [],
         cities: [],
         counties: [],
+        zips: [],
       },
     });
     setIsDraft(false);

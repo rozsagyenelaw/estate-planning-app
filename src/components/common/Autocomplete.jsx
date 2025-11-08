@@ -43,6 +43,9 @@ const Autocomplete = forwardRef(({
     if (lowerLabel.includes('county')) {
       return 'county';
     }
+    if (lowerLabel.includes('zip')) {
+      return 'zip';
+    }
     return null;
   };
 

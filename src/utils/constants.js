@@ -202,4 +202,5 @@ export const STORAGE_KEYS = {
   AUTOCOMPLETE_PHONES: 'autocomplete_phones',
   AUTOCOMPLETE_CITIES: 'autocomplete_cities',
   AUTOCOMPLETE_COUNTIES: 'autocomplete_counties',
+  AUTOCOMPLETE_ZIPS: 'autocomplete_zips',
 };
