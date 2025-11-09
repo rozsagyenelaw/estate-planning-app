@@ -430,6 +430,85 @@ const formatSuccessorGroups = (groups, actionVerb, roleSuffix) => {
 };
 
 /**
+ * Format successor POA agents with section numbers
+ * Returns formatted text with section headings for each successor
+ * Example:
+ * "Section 1.02     First Successor Attorney in Fact
+ *  If the prior appointee is unwilling or unable to serve, I appoint John Smith as successor agent under my Durable Power of Attorney.
+ *
+ *  Section 1.03     Second Successor Attorney in Fact
+ *  If all prior appointees are unwilling or unable to serve, I appoint Jane Doe as successor agent under my Durable Power of Attorney."
+ */
+const formatPOASuccessorsWithSections = (groups, actionVerb, roleSuffix) => {
+  if (!groups || groups.length <= 1) {
+    // No successors if only 1 or 0 groups
+    return '';
+  }
+
+  const sections = [];
+  const successorGroups = groups.slice(1); // Skip the first group (1.01)
+
+  for (let i = 0; i < successorGroups.length; i++) {
+    const group = successorGroups[i];
+
+    // Skip empty groups
+    if (!group.agents || group.agents.length === 0) {
+      continue;
+    }
+
+    // Get agent names
+    const names = group.agents.map(agent =>
+      agent.fullName || `${agent.firstName || ''} ${agent.lastName || ''}`.trim()
+    ).filter(name => name !== '');
+
+    if (names.length === 0) {
+      continue;
+    }
+
+    // Section number: 1.02 for first successor, 1.03 for second, etc.
+    const sectionNumber = `1.${(i + 2).toString().padStart(2, '0')}`;
+
+    // Section heading
+    const ordinals = ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth'];
+    const ordinal = ordinals[i] || `${i + 1}th`;
+    const sectionHeading = `${ordinal} Successor Attorney in Fact`;
+
+    // Determine introductory text
+    let intro;
+    if (i === 0) {
+      // First successor
+      intro = `If the prior appointee is unwilling or unable to serve, I ${actionVerb} `;
+    } else {
+      // All later successors
+      intro = `If all prior appointees are unwilling or unable to serve, I ${actionVerb} `;
+    }
+
+    // Format agent names
+    let agentText;
+    if (names.length === 1) {
+      agentText = names[0];
+    } else if (names.length === 2) {
+      agentText = `${names[0]} and ${names[1]}`;
+    } else {
+      // 3+ names: "A, B and C"
+      const allButLast = names.slice(0, -1).join(', ');
+      agentText = `${allButLast} and ${names[names.length - 1]}`;
+    }
+
+    // Add "jointly or the survivor of them" for joint groups with multiple agents
+    if (group.groupType === 'joint' && names.length > 1) {
+      agentText += ' jointly or the survivor of them';
+    }
+
+    // Construct full section with heading and sentence
+    const section = `Section ${sectionNumber}      ${sectionHeading}\n${intro}${agentText} ${roleSuffix}`;
+    sections.push(section);
+  }
+
+  return sections.join('\n');
+};
+
+/**
  * Load a DOCX template from the public folder
  * @param {string} templatePath - Path to template (e.g., '/templates/single_living_trust_template.docx')
  * @returns {Promise<ArrayBuffer>} - Template as ArrayBuffer
@@ -2199,7 +2278,7 @@ export const prepareTemplateData = (formData) => {
       } else {
         groups = buildGroupsFromFlatArray(agents);
       }
-      return formatSuccessorGroups(groups, 'appoint', 'as successor agent under my Durable Power of Attorney.');
+      return formatPOASuccessorsWithSections(groups, 'appoint', 'as successor agent under my Durable Power of Attorney.');
     })(),
 
     // 6. Healthcare Agents
