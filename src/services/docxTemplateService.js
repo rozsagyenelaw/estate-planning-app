@@ -564,26 +564,30 @@ export const prepareTemplateData = (formData) => {
   }
   
   // Add section numbers to specificDistributions
-  const specificDistributionsWithSections = cleanedSpecificDistributions.map((dist, index) => ({
-    distribution: {
-      sectionNumber: String(index + 1).padStart(2, '0'),
-      beneficiaryName: dist.beneficiaryName || dist.beneficiary || '',
-      propertyDescription: dist.propertyDescription || dist.description || dist.property || '',
-      property: dist.propertyDescription || dist.description || dist.property || '',
-      percentage: dist.percentage || '',
-      hasAgeCondition: dist.hasAgeCondition || false,
-      conditionAge: dist.conditionAge || dist.age || '',
-      conditionPerson: dist.conditionPerson || dist.beneficiaryName || dist.beneficiary || '',
+  const specificDistributionsWithSections = cleanedSpecificDistributions.map((dist, index) => {
+    const sectionNum = String(index + 1).padStart(2, '0');
+    return {
+      distribution: {
+        sectionNumber: sectionNum,
+        fullSectionNumber: `6.${sectionNum}`,  // Complete formatted section number
+        beneficiaryName: dist.beneficiaryName || dist.beneficiary || '',
+        propertyDescription: dist.propertyDescription || dist.description || dist.property || '',
+        property: dist.propertyDescription || dist.description || dist.property || '',
+        percentage: dist.percentage || '',
+        hasAgeCondition: dist.hasAgeCondition || false,
+        conditionAge: dist.conditionAge || dist.age || '',
+        conditionPerson: dist.conditionPerson || dist.beneficiaryName || dist.beneficiary || '',
 
-      // Contingent Beneficiary Information
-      contingentBeneficiaryType: dist.contingentBeneficiaryType || 'descendants',
-      contingentIndividuals: dist.contingentIndividuals || '',
-      contingent_descendants: (dist.contingentBeneficiaryType || 'descendants') === 'descendants',
-      contingent_other_beneficiaries: (dist.contingentBeneficiaryType || 'descendants') === 'other_beneficiaries',
-      contingent_individuals: (dist.contingentBeneficiaryType || 'descendants') === 'individuals',
-      contingent_lapse: (dist.contingentBeneficiaryType || 'descendants') === 'lapse',
-    }
-  }));
+        // Contingent Beneficiary Information
+        contingentBeneficiaryType: dist.contingentBeneficiaryType || 'descendants',
+        contingentIndividuals: dist.contingentIndividuals || '',
+        contingent_descendants: (dist.contingentBeneficiaryType || 'descendants') === 'descendants',
+        contingent_other_beneficiaries: (dist.contingentBeneficiaryType || 'descendants') === 'other_beneficiaries',
+        contingent_individuals: (dist.contingentBeneficiaryType || 'descendants') === 'individuals',
+        contingent_lapse: (dist.contingentBeneficiaryType || 'descendants') === 'lapse',
+      }
+    };
+  });
   
   // Calculate tpp_section_num based on cleaned array
   const tppSectionNum = specificDistributionsWithSections.length > 0
