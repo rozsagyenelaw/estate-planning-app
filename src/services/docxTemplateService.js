@@ -588,6 +588,12 @@ export const prepareTemplateData = (formData) => {
       }
     };
   });
+
+  console.log('=== SPECIFIC DISTRIBUTIONS WITH SECTIONS ===');
+  console.log('Total count:', specificDistributionsWithSections.length);
+  specificDistributionsWithSections.forEach((item, idx) => {
+    console.log(`  ${idx + 1}. ${item.distribution.beneficiaryName} - Section ${item.distribution.fullSectionNumber}`);
+  });
   
   // Calculate tpp_section_num based on cleaned array
   const tppSectionNum = specificDistributionsWithSections.length > 0
