@@ -961,6 +961,8 @@ export const prepareTemplateData = (formData) => {
     // Client name variations (different templates use different names)
     grantorFullName: [formData.client?.firstName, formData.client?.middleName, formData.client?.lastName].filter(Boolean).join(' '),
     grantorDateOfBirth: formatDateToUS(formData.client?.dateOfBirth) || '',
+    grantorZip: formData.client?.zip || '',
+    grantorZipCode: formData.client?.zip || '',
     clientFullName: [formData.client?.firstName, formData.client?.middleName, formData.client?.lastName].filter(Boolean).join(' '),
     fullName: [formData.client?.firstName, formData.client?.middleName, formData.client?.lastName].filter(Boolean).join(' '),
 
@@ -969,6 +971,7 @@ export const prepareTemplateData = (formData) => {
     city: formData.client?.city || '',
     state: formData.client?.state || '',
     clientZipCode: formData.client?.zip || '',
+    zipCode: formData.client?.zip || '', // Alias for HIPAA and other sections
     county: formData.client?.county || '',
 
     // Marital status
@@ -1453,13 +1456,28 @@ export const prepareTemplateData = (formData) => {
     // Spouse 1 and Spouse 2 (for joint trusts)
     spouse1FullName: formData.client ? [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ') : '',
     spouse1DateOfBirth: formatDateToUS(formData.client?.dateOfBirth) || '',
+    spouse1Zip: formData.client?.zip || '',
+    spouse1ZipCode: formData.client?.zip || '',
 
     spouse2FullName: formData.spouse ? [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ') : '',
     spouse2DateOfBirth: formatDateToUS(formData.spouse?.dateOfBirth) || '',
+    spouse2Zip: formData.spouse?.zip || '',
+    spouse2ZipCode: formData.spouse?.zip || '',
+
+    // Spouse aliases (for templates that use "spouse" instead of "spouse2")
+    spouseDateOfBirth: formatDateToUS(formData.spouse?.dateOfBirth) || '',
+    spouseZip: formData.spouse?.zip || '',
+    spouseZipCode: formData.spouse?.zip || '',
 
     // Grantor names (aliases for joint trust template compatibility)
     grantor1FullName: formData.client ? [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ') : '',
+    grantor1DateOfBirth: formatDateToUS(formData.client?.dateOfBirth) || '',
+    grantor1Zip: formData.client?.zip || '',
+    grantor1ZipCode: formData.client?.zip || '',
     grantor2FullName: formData.spouse ? [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ') : '',
+    grantor2DateOfBirth: formatDateToUS(formData.spouse?.dateOfBirth) || '',
+    grantor2Zip: formData.spouse?.zip || '',
+    grantor2ZipCode: formData.spouse?.zip || '',
 
     // Beneficiary distribution guidelines
     beneficiaryDistributionGuidelines: cleanedBeneficiaries.length > 0
