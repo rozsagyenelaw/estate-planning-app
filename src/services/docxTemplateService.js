@@ -517,7 +517,7 @@ export const prepareTemplateData = (formData) => {
   // ============================================================================
   const childrenSafe = (formData.children || []).filter(c => {
     if (!c) return false;
-    const fullName = `${c.firstName || ''} ${c.middleName || ''} ${c.lastName || ''}`.trim();
+    const fullName = [c.firstName, c.middleName, c.lastName].filter(Boolean).join(' ');
     return fullName.length > 0;
   });
   console.log('Original children count:', formData.children?.length || 0);
@@ -554,7 +554,7 @@ export const prepareTemplateData = (formData) => {
       firstName: formData.client?.firstName || '',
       middleName: formData.client?.middleName || '',
       lastName: formData.client?.lastName || '',
-      fullName: `${formData.client?.firstName || ''} ${formData.client?.middleName || ''} ${formData.client?.lastName || ''}`.trim(),
+      fullName: [formData.client?.firstName, formData.client?.middleName, formData.client?.lastName].filter(Boolean).join(' '),
       address: formData.client?.address || '',
       city: formData.client?.city || '',
       state: formData.client?.state || '',
@@ -575,7 +575,7 @@ export const prepareTemplateData = (formData) => {
       firstName: formData.spouse.firstName || '',
       middleName: formData.spouse.middleName || '',
       lastName: formData.spouse.lastName || '',
-      fullName: `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim(),
+      fullName: [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' '),
       address: formData.spouse.address || '',
       city: formData.spouse.city || '',
       state: formData.spouse.state || '',
@@ -633,7 +633,7 @@ export const prepareTemplateData = (formData) => {
     // Children table (formatted for Word table placeholders)
     childrenTable: childrenSafe.length > 0
       ? childrenSafe.map(c => {
-          const fullName = `${c.firstName || ''} ${c.middleName || ''} ${c.lastName || ''}`.trim();
+          const fullName = [c.firstName, c.middleName, c.lastName].filter(Boolean).join(' ');
           const birthdate = formatDateToUS(c.dateOfBirth) || 'N/A';
           const relationship = c.relation || c.relationship || 'child';
           return `${fullName} | ${relationship} | ${birthdate}`;
@@ -645,7 +645,7 @@ export const prepareTemplateData = (formData) => {
       firstName: childrenSafe[0].firstName || '',
       lastName: childrenSafe[0].lastName || '',
       dateOfBirth: formatDateToUS(childrenSafe[0].dateOfBirth) || '',
-      fullName: `${childrenSafe[0].firstName || ''} ${childrenSafe[0].lastName || ''}`.trim(),
+      fullName: [childrenSafe[0].firstName, childrenSafe[0].lastName].filter(Boolean).join(' '),
       relation: childrenSafe[0].relation || 'child',
       gender: childrenSafe[0].gender || '',
       ...generatePronouns(childrenSafe[0].gender) // Add all pronoun fields
@@ -664,7 +664,7 @@ export const prepareTemplateData = (formData) => {
       firstName: childrenSafe[0].firstName || '',
       lastName: childrenSafe[0].lastName || '',
       dateOfBirth: formatDateToUS(childrenSafe[0].dateOfBirth) || '',
-      fullName: `${childrenSafe[0].firstName || ''} ${childrenSafe[0].lastName || ''}`.trim(),
+      fullName: [childrenSafe[0].firstName, childrenSafe[0].lastName].filter(Boolean).join(' '),
       relation: childrenSafe[0].relation || 'child',
       gender: childrenSafe[0].gender || '',
       ...generatePronouns(childrenSafe[0].gender) // Add all pronoun fields
@@ -1002,7 +1002,7 @@ export const prepareTemplateData = (formData) => {
 
     // Children array for template loops - Uses childrenSafe with full data
     children: childrenSafe.map(child => ({
-      fullName: `${child.firstName || ''} ${child.middleName || ''} ${child.lastName || ''}`.trim(),
+      fullName: [child.firstName, child.middleName, child.lastName].filter(Boolean).join(' '),
       firstName: child.firstName || '',
       middleName: child.middleName || '',
       lastName: child.lastName || '',
@@ -1451,15 +1451,15 @@ export const prepareTemplateData = (formData) => {
     jointZipCode: formData.client?.zip || '',
 
     // Spouse 1 and Spouse 2 (for joint trusts)
-    spouse1FullName: formData.client ? `${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''}`.trim() : '',
+    spouse1FullName: formData.client ? [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ') : '',
     spouse1DateOfBirth: formatDateToUS(formData.client?.dateOfBirth) || '',
 
-    spouse2FullName: formData.spouse ? `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim() : '',
+    spouse2FullName: formData.spouse ? [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ') : '',
     spouse2DateOfBirth: formatDateToUS(formData.spouse?.dateOfBirth) || '',
 
     // Grantor names (aliases for joint trust template compatibility)
-    grantor1FullName: formData.client ? `${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''}`.trim() : '',
-    grantor2FullName: formData.spouse ? `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim() : '',
+    grantor1FullName: formData.client ? [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ') : '',
+    grantor2FullName: formData.spouse ? [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ') : '',
 
     // Beneficiary distribution guidelines
     beneficiaryDistributionGuidelines: cleanedBeneficiaries.length > 0
@@ -1523,7 +1523,7 @@ export const prepareTemplateData = (formData) => {
 
     // Override children array to ensure fullName and formatted birthdate (using childrenSafe)
     children: childrenSafe.map(child => ({
-      fullName: `${child.firstName || ''} ${child.middleName || ''} ${child.lastName || ''}`.trim(),
+      fullName: [child.firstName, child.middleName, child.lastName].filter(Boolean).join(' '),
       firstName: child.firstName || '',
       middleName: child.middleName || '',
       lastName: child.lastName || '',

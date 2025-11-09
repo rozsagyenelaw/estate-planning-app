@@ -162,7 +162,7 @@ const createPlaceholderMap = (formData) => {
     addField(map, 'CLIENT_FIRST_NAME', formData.client.firstName || '');
     addField(map, 'CLIENT_MIDDLE_NAME', formData.client.middleName || '');
     addField(map, 'CLIENT_LAST_NAME', formData.client.lastName || '');
-    addField(map, 'CLIENT_FULL_NAME', `${formData.client.firstName || ''} ${formData.client.middleName || ''} ${formData.client.lastName || ''}`.trim());
+    addField(map, 'CLIENT_FULL_NAME', [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' '));
     addField(map, 'CLIENT_ADDRESS', formData.client.address || '');
     addField(map, 'CLIENT_CITY', formData.client.city || '');
     addField(map, 'CLIENT_STATE', formData.client.state || '');
@@ -182,7 +182,7 @@ const createPlaceholderMap = (formData) => {
     addField(map, 'SPOUSE_FIRST_NAME', formData.spouse.firstName || '');
     addField(map, 'SPOUSE_MIDDLE_NAME', formData.spouse.middleName || '');
     addField(map, 'SPOUSE_LAST_NAME', formData.spouse.lastName || '');
-    addField(map, 'SPOUSE_FULL_NAME', `${formData.spouse.firstName || ''} ${formData.spouse.middleName || ''} ${formData.spouse.lastName || ''}`.trim());
+    addField(map, 'SPOUSE_FULL_NAME', [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' '));
     addField(map, 'SPOUSE_ADDRESS', formData.spouse.address || '');
     addField(map, 'SPOUSE_CITY', formData.spouse.city || '');
     addField(map, 'SPOUSE_STATE', formData.spouse.state || '');
