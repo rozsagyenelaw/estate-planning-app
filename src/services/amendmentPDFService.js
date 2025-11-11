@@ -6,6 +6,7 @@
 
 import { jsPDF } from 'jspdf';
 import { getOrdinalName } from './amendmentService';
+import { formatDate } from '../utils/formatters';
 
 /**
  * Generate amendment PDF
@@ -83,7 +84,7 @@ export const generateAmendmentPDF = (amendmentData) => {
 
   // ========== WHEREAS CLAUSES ==========
   addText(
-    `WHEREAS, the Trustor and the Trustee entered into a Revocable Living Trust dated ${amendmentData.originalTrustDate}, hereinafter called the Trust Agreement.`,
+    `WHEREAS, the Trustor and the Trustee entered into a Revocable Living Trust dated ${amendmentData.originalTrustDate ? formatDate(amendmentData.originalTrustDate) : amendmentData.originalTrustDate}, hereinafter called the Trust Agreement.`,
     12,
     'normal'
   );
@@ -128,7 +129,7 @@ export const generateAmendmentPDF = (amendmentData) => {
   // ========== RATIFICATION CLAUSE ==========
   addSpacing(2);
   addText(
-    `Except as expressly amended herein, all other terms and provisions of the Trust Agreement dated ${amendmentData.originalTrustDate} shall remain in full force and effect and are hereby ratified and confirmed.`,
+    `Except as expressly amended herein, all other terms and provisions of the Trust Agreement dated ${amendmentData.originalTrustDate ? formatDate(amendmentData.originalTrustDate) : amendmentData.originalTrustDate} shall remain in full force and effect and are hereby ratified and confirmed.`,
     12,
     'normal'
   );

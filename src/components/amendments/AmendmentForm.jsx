@@ -16,6 +16,7 @@ import {
   generateAmendmentPDF,
   previewAmendmentPDF
 } from '../../services/amendmentPDFService';
+import { formatDate } from '../../utils/formatters';
 
 // Set PDF.js worker - use unpkg CDN
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
@@ -760,7 +761,7 @@ const AmendmentForm = () => {
                 <strong>Trustee:</strong> {formData.trusteeName}
               </p>
               <p className="text-sm text-gray-700">
-                <strong>Original Trust Date:</strong> {formData.originalTrustDate}
+                <strong>Original Trust Date:</strong> {formData.originalTrustDate ? formatDate(formData.originalTrustDate) : 'N/A'}
               </p>
             </div>
 

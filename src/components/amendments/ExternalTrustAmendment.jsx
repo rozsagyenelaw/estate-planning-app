@@ -16,6 +16,7 @@ import {
 import { saveClientData, generateClientId } from '../../services/firestoreService';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../services/firebase';
+import { formatDate } from '../../utils/formatters';
 
 // Configure PDF.js worker - use unpkg CDN with correct version
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
@@ -1059,7 +1060,7 @@ const ExternalTrustAmendment = () => {
               <p className="text-sm text-gray-700"><strong>Trust Name:</strong> {extractedData.trustName}</p>
               <p className="text-sm text-gray-700"><strong>Trustor:</strong> {extractedData.trustorName}</p>
               <p className="text-sm text-gray-700"><strong>Trustee:</strong> {extractedData.trusteeName}</p>
-              <p className="text-sm text-gray-700"><strong>Original Date:</strong> {extractedData.originalTrustDate}</p>
+              <p className="text-sm text-gray-700"><strong>Original Date:</strong> {extractedData.originalTrustDate ? formatDate(extractedData.originalTrustDate) : 'N/A'}</p>
             </div>
 
             <div className="p-4 bg-green-50 rounded-lg">
