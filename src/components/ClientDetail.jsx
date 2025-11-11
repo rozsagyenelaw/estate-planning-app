@@ -5,6 +5,7 @@ import { getClientData, deleteClientData } from '../services/firestoreService';
 import { updateClientWithDocuments } from '../services/clientDocumentService';
 import { getAmendments, deleteAmendment, getOrdinalName } from '../services/amendmentService';
 import { Button, Card } from './common';
+import { formatDate } from '../utils/formatters';
 
 const ClientDetail = () => {
   const { clientId } = useParams();
@@ -298,7 +299,7 @@ const ClientDetail = () => {
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700">Date of Birth</label>
-                <p className="text-gray-900">{client.client?.dateOfBirth || 'N/A'}</p>
+                <p className="text-gray-900">{client.client?.dateOfBirth ? formatDate(client.client.dateOfBirth) : 'N/A'}</p>
               </div>
             </div>
           </div>
@@ -323,7 +324,7 @@ const ClientDetail = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700">Date of Birth</label>
-                  <p className="text-gray-900">{client.spouse?.dateOfBirth || 'N/A'}</p>
+                  <p className="text-gray-900">{client.spouse?.dateOfBirth ? formatDate(client.spouse.dateOfBirth) : 'N/A'}</p>
                 </div>
               </div>
             </div>
@@ -341,7 +342,7 @@ const ClientDetail = () => {
                 <p className="font-semibold text-gray-900">
                   {child.firstName} {child.lastName}
                 </p>
-                <p className="text-sm text-gray-600">DOB: {child.dateOfBirth || 'N/A'}</p>
+                <p className="text-sm text-gray-600">DOB: {child.dateOfBirth ? formatDate(child.dateOfBirth) : 'N/A'}</p>
               </div>
             ))}
           </div>

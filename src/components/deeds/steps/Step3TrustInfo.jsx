@@ -6,6 +6,7 @@
 
 import { useEffect } from 'react';
 import { Card, Button, Input } from '../../common';
+import { formatDate } from '../../../utils/formatters';
 
 const VESTING_OPTIONS = [
   'Single woman, as her sole and separate property',
@@ -22,7 +23,7 @@ const VESTING_OPTIONS = [
 const Step3TrustInfo = ({ formData, updateFormData, nextStep, prevStep, clientData, setError }) => {
   // Auto-generate trust designation option
   const trustDesignationOption = formData.trustorName && formData.trustName && formData.trustDate
-    ? `${formData.trustorName}, Trustee of the ${formData.trustName}, dated ${formData.trustDate}`
+    ? `${formData.trustorName}, Trustee of the ${formData.trustName}, dated ${formatDate(formData.trustDate)}`
     : 'Trustee of trust (fill in trust information below)';
 
   const vestingOptions = VESTING_OPTIONS.map(option =>

@@ -347,7 +347,7 @@ const Step2ReviewExtraction = ({ formData, updateFormData, nextStep, prevStep, s
             label="Recording Date"
             value={formData.recordingInfo?.recordingDate || ''}
             onChange={(e) => handleNestedChange('recordingInfo', 'recordingDate', e.target.value)}
-            placeholder="01/15/2023"
+            placeholder="January 15, 2023"
           />
         </div>
       </Card>

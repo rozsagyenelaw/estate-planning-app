@@ -219,7 +219,7 @@ function formatGrantorNamesWithVesting(grantorNames, currentVesting) {
 function formatTrusteeDesignation(trusteeName, trustName, trustDate) {
   const trusteeUpper = trusteeName ? trusteeName.toUpperCase() : '';
   const trustNameUpper = trustName ? trustName.toUpperCase() : '';
-  const formattedDate = trustDate || '';
+  const formattedDate = trustDate ? formatDate(new Date(trustDate)).toUpperCase() : '';
 
   return `${trusteeUpper}, TRUSTEES OF THE ${trustNameUpper} DATED ${formattedDate}, AND ANY AMENDMENTS THERETO`;
 }

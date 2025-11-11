@@ -6,6 +6,7 @@
 
 import { Card, Button } from '../../common';
 import { COUNTIES } from './Step5SelectCounty';
+import { formatDate } from '../../../utils/formatters';
 
 const Step6ReviewPCOR = ({ formData, nextStep, prevStep }) => {
   const selectedCounty = COUNTIES.find(c => c.id === formData.selectedCounty);
@@ -102,7 +103,7 @@ const Step6ReviewPCOR = ({ formData, nextStep, prevStep }) => {
               </div>
               <div className="flex">
                 <span className="text-sm font-medium text-gray-600 w-40">Trust Date:</span>
-                <span className="text-sm text-gray-900">{formData.trustDate}</span>
+                <span className="text-sm text-gray-900">{formatDate(formData.trustDate)}</span>
               </div>
               <div className="flex">
                 <span className="text-sm font-medium text-gray-600 w-40">Mailing Address:</span>

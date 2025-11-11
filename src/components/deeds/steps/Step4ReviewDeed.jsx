@@ -7,6 +7,7 @@
 import { useState } from 'react';
 import { Card, Button } from '../../common';
 import { previewTrustTransferDeed } from '../../../services/trustTransferDeedService';
+import { formatDate } from '../../../utils/formatters';
 
 const Step4ReviewDeed = ({ formData, nextStep, prevStep, setError }) => {
   const [previewing, setPreviewing] = useState(false);
@@ -95,7 +96,7 @@ const Step4ReviewDeed = ({ formData, nextStep, prevStep, setError }) => {
             <p className="text-gray-900">
               {formData.trusteeName}, Trustees of the {formData.trustName}
             </p>
-            <p className="text-sm text-gray-600">Dated: {formData.trustDate}</p>
+            <p className="text-sm text-gray-600">Dated: {formatDate(formData.trustDate)}</p>
           </div>
 
           {/* Legal Description */}

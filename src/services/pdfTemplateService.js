@@ -204,7 +204,11 @@ const createPlaceholderMap = (formData) => {
   addField(map, 'IS_RESTATEMENT', formData.isRestatement ? 'Yes' : 'No');
   addField(map, 'ORIGINAL_TRUST_NAME', formData.originalTrustName || '');
   addField(map, 'ORIGINAL_TRUST_DATE', formData.originalTrustDate || '');
-  addField(map, 'CURRENT_DATE', formData.currentDate || new Date().toLocaleDateString('en-US'));
+  addField(map, 'CURRENT_DATE', formData.currentDate || new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }));
 
   // Children
   if (formData.children && formData.children.length > 0) {

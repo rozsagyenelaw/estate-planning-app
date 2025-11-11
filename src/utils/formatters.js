@@ -42,17 +42,22 @@ export const formatZipCode = (value) => {
   return value.replace(/\D/g, '').slice(0, 5);
 };
 
-// Format date for display (MM/DD/YYYY)
+// Format date for display (Month DD, YYYY)
 export const formatDate = (date) => {
   if (!date) return '';
   const d = new Date(date);
   if (isNaN(d.getTime())) return '';
 
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const month = monthNames[d.getMonth()];
+  const day = d.getDate();
   const year = d.getFullYear();
 
-  return `${month}/${day}/${year}`;
+  return `${month} ${day}, ${year}`;
 };
 
 // Format date for input value (YYYY-MM-DD)

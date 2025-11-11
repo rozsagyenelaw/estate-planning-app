@@ -8,7 +8,7 @@ import PizZip from 'pizzip';
 import expressions from 'angular-expressions';
 
 /**
- * Format date to US format (MM/DD/YYYY)
+ * Format date to US format (Month DD, YYYY)
  * Handles YYYY-MM-DD, ISO dates, and Date objects
  */
 const formatDateToUS = (dateString) => {
@@ -18,11 +18,16 @@ const formatDateToUS = (dateString) => {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString; // Return original if invalid
 
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const month = monthNames[date.getMonth()];
+    const day = date.getDate();
     const year = date.getFullYear();
 
-    return `${month}/${day}/${year}`;
+    return `${month} ${day}, ${year}`;
   } catch (e) {
     return dateString; // Return original if error
   }
