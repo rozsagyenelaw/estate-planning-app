@@ -1505,6 +1505,19 @@ export const prepareTemplateData = (formData) => {
       `${i + 1}. ${agent.name || `${agent.firstName || ''} ${agent.lastName || ''}`.trim()}`
     ).join('\n'),
 
+    // POA Agents - Spouse
+    spousePoaAgentPrimary: formData.durablePOA?.spouse && formData.durablePOA.spouse.length > 0
+      ? formData.durablePOA.spouse[0].name || `${formData.durablePOA.spouse[0].firstName || ''} ${formData.durablePOA.spouse[0].lastName || ''}`.trim()
+      : '',
+
+    spousePoaAgentSuccessor: formData.durablePOA?.spouse && formData.durablePOA.spouse.length > 1
+      ? formData.durablePOA.spouse[1].name || `${formData.durablePOA.spouse[1].firstName || ''} ${formData.durablePOA.spouse[1].lastName || ''}`.trim()
+      : '',
+
+    spousePoaSuccessorAgentsList: (formData.durablePOA?.spouse || []).slice(1).map((agent, i) =>
+      `${i + 1}. ${agent.name || `${agent.firstName || ''} ${agent.lastName || ''}`.trim()}`
+    ).join('\n'),
+
     // Healthcare Agents
     healthCareAgentPrimary: formData.healthcarePOA?.client && formData.healthcarePOA.client.length > 0
       ? formData.healthcarePOA.client[0].name || `${formData.healthcarePOA.client[0].firstName || ''} ${formData.healthcarePOA.client[0].lastName || ''}`.trim()
@@ -2288,6 +2301,34 @@ export const prepareTemplateData = (formData) => {
       let groups;
       if (formData.durablePOA?.clientGroups && Array.isArray(formData.durablePOA.clientGroups)) {
         groups = formData.durablePOA.clientGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatPOASuccessorsWithSections(groups, 'appoint', 'as successor agent under my Durable Power of Attorney.');
+    })(),
+
+    // Durable Power of Attorney Agents - SPOUSE - First Group Formatted
+    spouseFirstPoaAgentFormatted: (() => {
+      const agents = formData.durablePOA?.spouse || [];
+      let groups;
+      if (formData.durablePOA?.spouseGroups && Array.isArray(formData.durablePOA.spouseGroups)) {
+        groups = formData.durablePOA.spouseGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    // Durable Power of Attorney Agents - SPOUSE - Successors Formatted
+    spousePoaAgentSuccessorsFormatted: (() => {
+      const agents = formData.durablePOA?.spouse || [];
+      let groups;
+      if (formData.durablePOA?.spouseGroups && Array.isArray(formData.durablePOA.spouseGroups)) {
+        groups = formData.durablePOA.spouseGroups;
       } else if (agents.some(agent => agent.groupType)) {
         groups = buildGroupsFromAgentsWithGroupType(agents);
       } else {
