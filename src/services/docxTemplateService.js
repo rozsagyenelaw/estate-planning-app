@@ -53,16 +53,18 @@ const parsePercentage = (value) => {
 /**
  * Get marital status statement
  */
-const getMaritalStatusStatement = (maritalStatus) => {
+const getMaritalStatusStatement = (maritalStatus, isJoint = false) => {
   const status = (maritalStatus || '').toLowerCase();
+  const pronoun = isJoint ? 'We are' : 'I am';
+
   if (status === 'single' || status === 'unmarried') {
-    return 'I am not married';
+    return `${pronoun} not married`;
   } else if (status === 'married') {
-    return 'I am married';
+    return `${pronoun} married`;
   } else if (status === 'divorced') {
-    return 'I am divorced';
+    return `${pronoun} divorced`;
   } else if (status === 'widowed') {
-    return 'I am widowed';
+    return `${pronoun} widowed`;
   }
   return '';
 };
@@ -660,7 +662,7 @@ export const prepareTemplateData = (formData) => {
       dateOfBirth: formatDateToUS(formData.client?.dateOfBirth) || '',
       sex: formData.client?.sex || '',
       maritalStatus: formData.client?.maritalStatus || '',
-      maritalStatusStatement: getMaritalStatusStatement(formData.client?.maritalStatus),
+      maritalStatusStatement: getMaritalStatusStatement(formData.client?.maritalStatus, formData.isJoint),
       notaryDate: formData.client?.notaryDate || '',
     },
 
@@ -1069,15 +1071,16 @@ export const prepareTemplateData = (formData) => {
     county: formData.client?.county || '',
 
     // Marital status
-    maritalStatus: getMaritalStatusStatement(formData.client?.maritalStatus),
+    maritalStatus: getMaritalStatusStatement(formData.client?.maritalStatus, formData.isJoint),
 
     // Children placeholders - Uses childrenSafe (sanitized array)
     childrenStatement: (() => {
-      if (childrenSafe.length === 0) return 'I have no children.';
+      const pronoun = formData.isJoint ? 'We have' : 'I have';
+      if (childrenSafe.length === 0) return `${pronoun} no children.`;
       if (childrenSafe.length === 1) {
         const c = childrenSafe[0];
         const birthdate = formatDateToUS(c.dateOfBirth) || 'N/A';
-        return `I have 1 child: ${c.firstName} ${c.lastName}, born ${birthdate}.`;
+        return `${pronoun} 1 child: ${c.firstName} ${c.lastName}, born ${birthdate}.`;
       }
       // 2 or more children
       const childPhrases = childrenSafe.map((c, i) => {
@@ -1086,11 +1089,11 @@ export const prepareTemplateData = (formData) => {
       });
       // Use Oxford comma: "A, born X; B, born Y; and C, born Z."
       if (childrenSafe.length === 2) {
-        return `I have ${childrenSafe.length} children: ${childPhrases[0]}; and ${childPhrases[1]}.`;
+        return `${pronoun} ${childrenSafe.length} children: ${childPhrases[0]}; and ${childPhrases[1]}.`;
       }
       const allButLast = childPhrases.slice(0, -1).join('; ');
       const last = childPhrases[childPhrases.length - 1];
-      return `I have ${childrenSafe.length} children: ${allButLast}; and ${last}.`;
+      return `${pronoun} ${childrenSafe.length} children: ${allButLast}; and ${last}.`;
     })(),
 
     childrenReferences: childrenSafe.map(c =>
