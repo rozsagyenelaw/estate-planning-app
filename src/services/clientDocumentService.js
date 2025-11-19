@@ -6,7 +6,7 @@
 
 import { saveClientData, getClientData, searchClients, updateClientData, generateClientId } from './firestoreService';
 import { uploadDocument, uploadMultipleDocuments, listClientDocuments, generateDocumentName } from './storageService';
-import { generateCompleteEstatePlanningPackage, generateLivingTrust } from './documentGenerator';
+import { generateCompleteEstatePlanningPackageWord, generateLivingTrust } from './documentGenerator';
 import { syncClientToLawFirm, updateClientInLawFirm } from './lawFirmSync';
 
 /**
@@ -153,7 +153,7 @@ export const saveClientWithDocuments = async (formData, onProgress = null) => {
     console.log('Trust Type:', formData.trustType);
     console.log('Children:', formData.children);
     console.log('Full formData keys:', Object.keys(formData));
-    const docxBlob = await generateCompleteEstatePlanningPackage(formData);
+    const docxBlob = await generateCompleteEstatePlanningPackageWord(formData);
 
     // Step 4: Upload document to Firebase Storage
     updateProgress(onProgress, 70, 'Uploading document...');
@@ -311,7 +311,7 @@ export const updateClientWithDocuments = async (
     // Step 2: Regenerate documents if requested
     if (regenerateDocuments) {
       updateProgress(onProgress, 40, 'Regenerating estate plan document...');
-      const docxBlob = await generateCompleteEstatePlanningPackage(updatedFormData);
+      const docxBlob = await generateCompleteEstatePlanningPackageWord(updatedFormData);
 
       updateProgress(onProgress, 70, 'Uploading new document...');
       const timestamp = new Date();
