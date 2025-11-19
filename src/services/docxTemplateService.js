@@ -2201,6 +2201,33 @@ export const prepareTemplateData = (formData) => {
       return formatSuccessorGroups(groups, 'nominate', 'as successor Personal Representative.');
     })(),
 
+    // 1b. Personal Representatives - SPOUSE
+    spouseFirstPersonalRepresentativeFormatted: (() => {
+      const reps = formData.pourOverWill?.spouse?.personalRepresentatives || [];
+      let groups;
+      if (formData.pourOverWill?.spouse?.personalRepresentativeGroups && Array.isArray(formData.pourOverWill.spouse.personalRepresentativeGroups)) {
+        groups = formData.pourOverWill.spouse.personalRepresentativeGroups;
+      } else if (reps.some(rep => rep.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(reps);
+      } else {
+        groups = buildGroupsFromFlatArray(reps);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    spousePersonalRepresentativeSuccessorsFormatted: (() => {
+      const reps = formData.pourOverWill?.spouse?.personalRepresentatives || [];
+      let groups;
+      if (formData.pourOverWill?.spouse?.personalRepresentativeGroups && Array.isArray(formData.pourOverWill.spouse.personalRepresentativeGroups)) {
+        groups = formData.pourOverWill.spouse.personalRepresentativeGroups;
+      } else if (reps.some(rep => rep.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(reps);
+      } else {
+        groups = buildGroupsFromFlatArray(reps);
+      }
+      return formatSuccessorGroups(groups, 'nominate', 'as successor Personal Representative.');
+    })(),
+
     // 2. Guardians
     firstGuardianFormatted: (() => {
       const guardians = formData.guardians || [];
