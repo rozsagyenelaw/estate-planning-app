@@ -2564,6 +2564,33 @@ export const prepareTemplateData = (formData) => {
       return formatSuccessorGroups(groups, 'appoint', 'as successor agent under my HIPAA Authorization.');
     })(),
 
+    // 7b. HIPAA Agents - SPOUSE
+    spouseFirstHipaaAgentFormatted: (() => {
+      const agents = formData.healthcarePOA?.spouse || [];
+      let groups;
+      if (formData.healthcarePOA?.spouseGroups && Array.isArray(formData.healthcarePOA.spouseGroups)) {
+        groups = formData.healthcarePOA.spouseGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatFirstGroup(groups);
+    })(),
+
+    spouseHipaaAgentSuccessorsFormatted: (() => {
+      const agents = formData.healthcarePOA?.spouse || [];
+      let groups;
+      if (formData.healthcarePOA?.spouseGroups && Array.isArray(formData.healthcarePOA.spouseGroups)) {
+        groups = formData.healthcarePOA.spouseGroups;
+      } else if (agents.some(agent => agent.groupType)) {
+        groups = buildGroupsFromAgentsWithGroupType(agents);
+      } else {
+        groups = buildGroupsFromFlatArray(agents);
+      }
+      return formatSuccessorGroups(groups, 'appoint', 'as successor agent under my HIPAA Authorization.');
+    })(),
+
     // ============================================================================
     // SNT (Special Needs Trust) Data - Numbered Placeholders for Template
     // ============================================================================
