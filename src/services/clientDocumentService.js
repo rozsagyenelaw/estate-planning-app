@@ -6,7 +6,7 @@
 
 import { saveClientData, getClientData, searchClients, updateClientData, generateClientId } from './firestoreService';
 import { uploadDocument, uploadMultipleDocuments, listClientDocuments, generateDocumentName } from './storageService';
-import { generateCompleteEstatePlanningPackageWord, generateLivingTrust } from './documentGenerator';
+import { generateCompleteEstatePlanningPackageWord, generateLivingTrustWord } from './documentGenerator';
 import { syncClientToLawFirm, updateClientInLawFirm } from './lawFirmSync';
 
 /**
@@ -45,7 +45,7 @@ export const saveClientWithLivingTrust = async (formData, onProgress = null) => 
     console.log('Children:', formData.children);
     console.log('Trustees:', formData.successorTrustees);
     console.log('Full formData keys:', Object.keys(formData));
-    const docxDoc = await generateLivingTrust(formData);
+    const docxDoc = await generateLivingTrustWord(formData);
 
     // Handle both jsPDF objects and Blobs (for backward compatibility)
     const docxBlob = (docxDoc instanceof Blob) ? docxDoc : docxDoc.output('blob');
