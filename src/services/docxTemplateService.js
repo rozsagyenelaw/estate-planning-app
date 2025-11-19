@@ -1573,16 +1573,25 @@ export const prepareTemplateData = (formData) => {
 
     // Spouse aliases (for templates that use "spouse" instead of "spouse2")
     spouseDateOfBirth: formatDateToUS(formData.spouse?.dateOfBirth) || '',
+    spouseAddress: formData.spouse?.address || '',
+    spouseCity: formData.spouse?.city || '',
+    spouseState: formData.spouse?.state || '',
     spouseZip: formData.spouse?.zip || '',
     spouseZipCode: formData.spouse?.zip || '',
 
     // Grantor names (aliases for joint trust template compatibility)
     grantor1FullName: formData.client ? [formData.client.firstName, formData.client.middleName, formData.client.lastName].filter(Boolean).join(' ') : '',
     grantor1DateOfBirth: formatDateToUS(formData.client?.dateOfBirth) || '',
+    grantor1Address: formData.client?.address || '',
+    grantor1City: formData.client?.city || '',
+    grantor1State: formData.client?.state || '',
     grantor1Zip: formData.client?.zip || '',
     grantor1ZipCode: formData.client?.zip || '',
     grantor2FullName: formData.spouse ? [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ') : '',
     grantor2DateOfBirth: formatDateToUS(formData.spouse?.dateOfBirth) || '',
+    grantor2Address: formData.spouse?.address || '',
+    grantor2City: formData.spouse?.city || '',
+    grantor2State: formData.spouse?.state || '',
     grantor2Zip: formData.spouse?.zip || '',
     grantor2ZipCode: formData.spouse?.zip || '',
 
