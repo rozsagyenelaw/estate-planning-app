@@ -2255,6 +2255,21 @@ export const prepareTemplateData = (formData) => {
       return formatSuccessorGroups(groups, 'nominate', 'as successor guardian.');
     })(),
 
+    // Boolean to check if guardians exist
+    hasGuardians: (() => {
+      const guardians = formData.guardians || [];
+      const result = guardians.length > 0 && guardians.some(g =>
+        (g.firstName && g.firstName.trim() !== '') ||
+        (g.lastName && g.lastName.trim() !== '')
+      );
+      console.log('hasGuardians check:', {
+        guardiansCount: guardians.length,
+        guardians: guardians,
+        result: result
+      });
+      return result;
+    })(),
+
     // 3. Trustees During Incapacity
     firstTrusteeIncapacityFormatted: (() => {
       const trustees = formData.successorTrustees || [];
