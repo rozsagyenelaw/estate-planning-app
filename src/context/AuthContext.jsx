@@ -20,12 +20,6 @@ const ALLOWED_EMAILS = [
 ];
 
 export function AuthProvider({ children }) {
-  // TEMP: Auth completely disabled - always authenticated with mock user
-  const [user] = useState({ email: 'rozsagyenelaw1@gmail.com' });
-  const [loading] = useState(false);
-  const [error, setError] = useState('');
-
-  /* Original auth code - commented out for testing:
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -51,7 +45,6 @@ export function AuthProvider({ children }) {
 
     return unsubscribe;
   }, []);
-  */
 
   const login = async (email, password) => {
     try {
