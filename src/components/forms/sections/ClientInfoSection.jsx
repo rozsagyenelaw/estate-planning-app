@@ -112,8 +112,39 @@ const ClientInfoSection = () => {
             value={formData.client?.address || ''}
             onChange={(e) => handleClientChange('address', e.target.value)}
             onSelect={(value) => handleClientChange('address', value)}
-            placeholder="e.g., 123 Main Street, Los Angeles, CA 90001"
+            placeholder="e.g., 123 Main Street"
           />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Autocomplete
+              label="City"
+              name="clientCity"
+              value={formData.client?.city || ''}
+              onChange={(e) => handleClientChange('city', e.target.value)}
+              onSelect={(value) => handleClientChange('city', value)}
+              placeholder="e.g., Los Angeles"
+            />
+            <Select
+              label="State"
+              name="clientState"
+              value={formData.client?.state || 'CA'}
+              onChange={(e) => handleClientChange('state', e.target.value)}
+              options={[
+                { value: 'CA', label: 'California' },
+                { value: 'NY', label: 'New York' },
+                { value: 'TX', label: 'Texas' },
+                { value: 'FL', label: 'Florida' },
+                { value: 'IL', label: 'Illinois' }
+              ]}
+            />
+            <Input
+              label="Zip Code"
+              name="clientZip"
+              value={formData.client?.zip || ''}
+              onChange={(e) => handleClientChange('zip', e.target.value)}
+              placeholder="e.g., 90001"
+            />
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Autocomplete
@@ -210,13 +241,44 @@ const ClientInfoSection = () => {
             </div>
 
             <Autocomplete
-              label="Address (if different)"
+              label="Address"
               name="spouseAddress"
               value={formData.spouse?.address || ''}
               onChange={(e) => handleSpouseChange('address', e.target.value)}
               onSelect={(value) => handleSpouseChange('address', value)}
-              placeholder="Leave blank if same as Client 1, e.g., 123 Main St, Los Angeles, CA 90001"
+              placeholder="e.g., 123 Main Street"
             />
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Autocomplete
+                label="City"
+                name="spouseCity"
+                value={formData.spouse?.city || ''}
+                onChange={(e) => handleSpouseChange('city', e.target.value)}
+                onSelect={(value) => handleSpouseChange('city', value)}
+                placeholder="e.g., Los Angeles"
+              />
+              <Select
+                label="State"
+                name="spouseState"
+                value={formData.spouse?.state || 'CA'}
+                onChange={(e) => handleSpouseChange('state', e.target.value)}
+                options={[
+                  { value: 'CA', label: 'California' },
+                  { value: 'NY', label: 'New York' },
+                  { value: 'TX', label: 'Texas' },
+                  { value: 'FL', label: 'Florida' },
+                  { value: 'IL', label: 'Illinois' }
+                ]}
+              />
+              <Input
+                label="Zip Code"
+                name="spouseZip"
+                value={formData.spouse?.zip || ''}
+                onChange={(e) => handleSpouseChange('zip', e.target.value)}
+                placeholder="e.g., 90001"
+              />
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Autocomplete

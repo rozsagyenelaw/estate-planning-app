@@ -1590,7 +1590,11 @@ export const prepareTemplateData = (formData) => {
     grantor2FullName: formData.spouse ? [formData.spouse.firstName, formData.spouse.middleName, formData.spouse.lastName].filter(Boolean).join(' ') : '',
     grantor2DateOfBirth: formatDateToUS(formData.spouse?.dateOfBirth) || '',
     grantor2Address: formData.spouse?.address || '',
-    grantor2City: formData.spouse?.city || '',
+    grantor2City: (() => {
+      const city = formData.spouse?.city || '';
+      console.log('grantor2City:', city, '| spouse data:', formData.spouse);
+      return city;
+    })(),
     grantor2State: formData.spouse?.state || '',
     grantor2Zip: formData.spouse?.zip || '',
     grantor2ZipCode: formData.spouse?.zip || '',
